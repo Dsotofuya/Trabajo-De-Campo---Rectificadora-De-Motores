@@ -3,9 +3,9 @@ import { createOrder, deleteOrder, getAllOrders, getOrderByCC, updateOrder } fro
 const router  = express.Router();
 
 router.get('/', getAllOrders)
-router.get('/:id', getOrderByCC)
+router.get('/:cc_persona', getOrderByCC)
 router.post('/', createOrder)
-router.put('/:id', updateOrder)
-router.delete('/:id', deleteOrder)
+router.put('/:id_orden', updateOrder)
+router.delete('/:id_orden', deleteOrder)
 
 export default router; 

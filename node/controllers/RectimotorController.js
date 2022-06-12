@@ -4,7 +4,7 @@ import OrdenModel from "../models/OrdenModel.js";
 
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
-    try { 
+    try {
         const orders = await OrdenModel.findAll();
         res.json(orders)
     } catch (error) {
@@ -16,7 +16,7 @@ export const getAllOrders = async (req, res) => {
 export const getOrderByCC = async (req, res) => {
     try {
         const order = await OrdenModel.findAll({
-            where: { id: req.params.id }
+            where: { cc_persona: req.params.cc_persona }
         })
         res.json(order)
     } catch (error) {
@@ -39,7 +39,7 @@ export const createOrder = async (req, res) => {
 export const updateOrder = async (req, res) => {
     try {
         await OrdenModel.update(req.body, {
-            where: { id: req.params.id }
+            where: { id_orden: req.params.id_orden }
         })
         res.json({ message: "Orden actualizada" })
     } catch (error) {
@@ -52,7 +52,7 @@ export const deleteOrder = async (req, res) => {
     try {
         OrdenModel.destroy({
             where:
-                { id: req.params.id }
+                { id_orden: req.params.id_orden }
         })
     } catch (error) {
         res.json({ message: error.message })
