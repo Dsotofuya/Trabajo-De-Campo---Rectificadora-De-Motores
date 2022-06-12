@@ -4,7 +4,7 @@ import OrdenModel from "../models/OrdenModel.js";
 
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
-    try {
+    try { 
         const orders = await OrdenModel.findAll();
         res.json(orders)
     } catch (error) {
