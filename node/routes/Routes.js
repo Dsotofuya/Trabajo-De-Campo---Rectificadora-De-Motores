@@ -1,5 +1,5 @@
 import express from 'express'; 
-import { createOrder, deleteOrder, getAllOrders, getOrderByCC, updateOrder } from '../controllers/RectimotorController';
+import { createOrder, deleteOrder, getAllOrders, getOrderByCC, updateOrder } from '../controllers/RectimotorController.js';
 const router  = express.Router();
 
 router.get('/', getAllOrders)

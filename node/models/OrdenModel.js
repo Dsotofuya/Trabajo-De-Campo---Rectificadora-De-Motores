@@ -1,5 +1,5 @@
 import db from "../db/RectimotorDB.js";
-import { DataTypes } from "sequelize/types";
+import { DataTypes } from "sequelize";
 
 const OrdenModel =  db.define('ORDENES', {
     ID_ORDEN: { type: DataTypes.DECIMAL },
