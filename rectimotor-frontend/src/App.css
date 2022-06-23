@@ -10,16 +10,16 @@ body{
   align-content: center;
   justify-content: center;
   flex-direction: column;
+  margin-top: 100px;
 }
 
 .contenedor-principal{
   background-color: whitesmoke;
-  height: 200px;
+  height: 250px;
   width: 500px;
   display: flex;
-  align-content: center;
+  align-content: flex-start;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   border: 3px solid black;
   border-radius: 25px;
@@ -32,4 +32,11 @@ body{
 
 .input{
   margin: 20px;
+}
+
+.resultados-busqueda{
+  background-color: white;
+  width: 350px;
+  height: 150px;
+  border: 2px solid black;
 }
