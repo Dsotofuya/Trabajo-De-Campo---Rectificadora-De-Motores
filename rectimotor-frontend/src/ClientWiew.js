@@ -51,6 +51,9 @@ function ClientWiew() {
     if(search==''){
       persona=personNull;
     }
+    else if(personasPrueba.includes(search) == false){
+      persona=noEncontrado;
+    }
     for(let i=0; i<personasPrueba.length;i++){
       if(search==personasPrueba[i].ownerId){
         persona=personasPrueba[i];
