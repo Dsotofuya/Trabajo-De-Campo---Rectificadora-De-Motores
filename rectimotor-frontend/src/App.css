@@ -15,8 +15,8 @@ body{
 
 .contenedor-principal{
   background-color: whitesmoke;
-  height: 700px;
-  width: 1000px;
+  height: 50vw;
+  width: 190vh;
   display: flex;
   align-content: flex-start;
   align-items: center;
@@ -35,9 +35,12 @@ body{
 }
 
 .resultados-busqueda{
+  margin: auto;
+  text-align: center;
+  align-items: center;
   background-color: white;
-  width: 850px;
-  height: 50px;
+  width: 90vw;
+  height: 8vh;
   border: 2px solid black;
   display: flex;
   flex-direction: row;
