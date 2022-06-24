@@ -10,7 +10,6 @@ body{
   align-content: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 100px;
 }
 
 .contenedor-principal{
@@ -36,14 +35,13 @@ body{
 
 .resultados-busqueda{
   margin: auto;
+  align-content: center;
   text-align: center;
   align-items: center;
   background-color: white;
   width: 90vw;
   height: 8vh;
   border: 2px solid black;
-  display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   border-radius: 30px;
 }
