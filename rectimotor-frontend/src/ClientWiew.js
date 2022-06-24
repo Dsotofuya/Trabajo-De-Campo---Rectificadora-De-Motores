@@ -4,6 +4,61 @@ import ClientTab from './ClientTab';
 
 function ClientWiew() {
   const [search, setSearch] = useState('');
+  let person1 = {
+    nameMotor: "Land Rover",
+    nameWorkshop: "Serviteca",
+    ownerName: "Julio",
+    ownerId:"123",
+    engineStatus: "En espera"
+  }
+
+  let person2 = {
+    nameMotor: "Bugatti Chiron",
+    nameWorkshop: "Serviteca",
+    ownerName: "Marco",
+    ownerId:"456",
+    engineStatus: "Reparado"
+  }
+
+  let person3 = {
+    nameMotor: " Ford Super Duty",
+    nameWorkshop: "Serviteca",
+    ownerName: "Elias",
+    ownerId:"1051212617",
+    engineStatus: "Enviado"
+  }
+
+  let personNull = {
+    nameMotor: "",
+    nameWorkshop: "",
+    ownerName: "",
+    ownerId:"",
+    engineStatus: ""
+  }
+
+  let noEncontrado = {
+    nameMotor: "No encontrado",
+    nameWorkshop: "No encontrado",
+    ownerName: "No encontrado",
+    ownerId:"No encontrado",
+    engineStatus: "No encontrado"
+  }
+
+  let personasPrueba = [person1, person2, person3];
+
+  function resultado(search){
+    let persona;
+    if(search==''){
+      persona=personNull;
+    }
+    for(let i=0; i<personasPrueba.length;i++){
+      if(search==personasPrueba[i].ownerId){
+        persona=personasPrueba[i];
+      }
+    }
+    return persona;
+  }
+
   return (
     <div className="App">
       <div className='contenedor-principal'>
@@ -16,12 +71,13 @@ function ClientWiew() {
         <p>Resultados para: {search}</p>
 
         <ClientTab
-        nameMotor= "Land Rover"
-        nameWorkshop= "Serviteca"
-        ownerName= "Julio"
-        ownerId= "123"
-        engineStatus= "en espera"
-        />
+            nameMotor= {resultado(search).nameMotor}
+            nameWorkshop= {resultado(search).nameWorkshop}
+            ownerName= {resultado(search).ownerName}
+            ownerId= {resultado(search).ownerId}
+            engineStatus= {resultado(search).engineStatus}
+            />
+        
         {/* <div className='resultados-busqueda'>
           <p>Nombre del motor:</p>
           <p>Nombre del taller:</p>
