@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     30/05/2022 1:22:10 p. m.                     */
+/* Created on:     26/06/2022 1:23:07 p. m.                     */
 /*==============================================================*/
 
 
@@ -48,8 +48,8 @@ create table DETALLES_ORDEN
 create table DETALLES_REPORTE
 (
    ID_DETALLE_REPORTE   numeric(8,0) not null,
+   ID_REPORTE           numeric(8,0) not null,
    ID_TRABAJO           numeric(8,0) not null,
-   CC_PERSONA           numeric(8,0) not null,
    primary key (ID_DETALLE_REPORTE)
 );
 
@@ -58,11 +58,11 @@ create table DETALLES_REPORTE
 /*==============================================================*/
 create table HISTORICOS_MOTORES
 (
-   ATTRIBUTE_22         numeric(8,0) not null,
+   ID_HISTORICO         numeric(8,0) not null,
    ID_MEDIDA_INICIAL    numeric(8,0) not null,
    ID_MEDIDA_FINAL      numeric(8,0) not null,
    ID_DETALLE_ORDEN     numeric(8,0),
-   primary key (ATTRIBUTE_22)
+   primary key (ID_HISTORICO)
 );
 
 /*==============================================================*/
@@ -140,10 +140,10 @@ create table PERSONAS
 /*==============================================================*/
 create table REPORTES
 (
-   CC_PERSONA           numeric(8,0) not null,
    ID_REPORTE           numeric(8,0) not null,
+   CC_PERSONA           numeric(8,0) not null,
    TOTAL                numeric(8,0) not null,
-   primary key (CC_PERSONA)
+   primary key (ID_REPORTE)
 );
 
 /*==============================================================*/
@@ -181,8 +181,8 @@ alter table DETALLES_ORDEN add constraint FK_ORD_DET foreign key (ID_ORDEN)
 alter table DETALLES_ORDEN add constraint FK_PART_DET_ORD foreign key (ID_PARTE)
       references PARTES (ID_PARTE) on delete restrict on update restrict;
 
-alter table DETALLES_REPORTE add constraint FK_DET_REP foreign key (CC_PERSONA)
-      references REPORTES (CC_PERSONA) on delete restrict on update restrict;
+alter table DETALLES_REPORTE add constraint FK_DET_REP foreign key (ID_REPORTE)
+      references REPORTES (ID_REPORTE) on delete restrict on update restrict;
 
 alter table DETALLES_REPORTE add constraint FK_DET_TRAB_REP foreign key (ID_TRABAJO)
       references TRABAJOS (ID_TRABAJO) on delete restrict on update restrict;

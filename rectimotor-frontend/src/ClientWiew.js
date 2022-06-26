@@ -4,38 +4,7 @@ import ClientTab from './ClientTab';
 
 function ClientWiew() {
   const [search, setSearch] = useState('');
-  let person1 = {
-    nameMotor: "Land Rover",
-    nameWorkshop: "Serviteca",
-    ownerName: "Julio",
-    ownerId:"123",
-    engineStatus: "En espera"
-  }
-
-  let person2 = {
-    nameMotor: "Bugatti Chiron",
-    nameWorkshop: "Serviteca",
-    ownerName: "Marco",
-    ownerId:"456",
-    engineStatus: "Reparado"
-  }
-
-  let person3 = {
-    nameMotor: " Ford Super Duty",
-    nameWorkshop: "Serviteca",
-    ownerName: "Elias",
-    ownerId:"1051212617",
-    engineStatus: "Enviado"
-  }
-
-  let personNull = {
-    nameMotor: "",
-    nameWorkshop: "",
-    ownerName: "",
-    ownerId:"",
-    engineStatus: ""
-  }
-
+  
   let noEncontrado = {
     nameMotor: "No encontrado",
     nameWorkshop: "No encontrado",
@@ -80,15 +49,6 @@ function ClientWiew() {
             ownerId= {resultado(search).ownerId}
             engineStatus= {resultado(search).engineStatus}
             />
-        
-        {/* <div className='resultados-busqueda'>
-          <p>Nombre del motor:</p>
-          <p>Nombre del taller:</p>
-          <p>Nombre del propietario:</p>
-          <p>Cédula del propietario: {search}</p>
-        </div>
-
-        <p>Estado del motor:</p> */}
       </div>
     </div>
   );

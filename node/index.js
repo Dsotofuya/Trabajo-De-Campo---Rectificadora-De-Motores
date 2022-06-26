@@ -8,6 +8,7 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 app.use('/orders', orderRoutes)
+//app.use('/', orderRoutes)
 
 try {
     await db.authenticate()
@@ -15,10 +16,6 @@ try {
 } catch (error) {
     console.log(`Database conn error: ${error}`)
 }
-
-app.get('/', (req, res)=>{
-    res.send('Prueba')
-})
 
 app.listen(3412, () => {
     console.log('Server Up, running in http://localhost:3412')
