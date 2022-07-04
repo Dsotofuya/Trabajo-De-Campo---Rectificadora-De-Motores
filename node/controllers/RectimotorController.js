@@ -10,7 +10,7 @@ import PersonasModel from "../models/PersonasModel.js";
 import ReportesModel from "../models/ReportesModel.js";
 import TalleresModel from "../models/TalleresModel.js";
 import TrabajosModel from "../models/TrabajosModel.js";
-
+import db from "../db/RectimotorDB.js";
 // Metodos
 
 // Mostrar todas las ordenes
@@ -26,16 +26,51 @@ export const getAllOrders = async (req, res) => {
 // Buscar orden por número de orden
 export const getOrderByCC = async (req, res) => {
     try {
-        const order = await OrdenModel.findAll({
-            //attributes: ["id_orden", "nombre_motor", "cc_persona", "fecha_recibido", "fecha_entrega", "estado_orden"],
-            where: { cc_persona: req.params.cc_persona}
-           // include: [{model: MOTORES, attributes}]
-        })
+        //     const order = await OrdenModel.findAll({
+        //attributes: ["id_orden", "nombre_motor", "cc_persona", "fecha_recibido", "fecha_entrega", "estado_orden"],
+        //            where: { cc_persona: req.params.cc_persona}
+        // include: [{model: MOTORES, attributes}]
+        //        })
+        const order = await db.query(
+            `SELECT o.id_orden, m.nombre_motor, o.id_taller, o.cc_persona, o.placa, o.fecha_recibido, o.fecha_entrega, o.estado_orden FROM ORDENES o, MOTORES m WHERE m.ID_MOTOR = o.ID_MOTOR AND o.CC_PERSONA = ${req.params.cc_persona};`
+        );
         res.json(order)
     } catch (error) {
         res.json({ message: error.message })
     }
 }
+
+
+export const getReportsDetailsById2 = async (req, res) => {
+    try {
+        DetallesReporteModel
+        ReportesModel.hasMany()
+        PersonasModel
+        TrabajosModel
+        
+        res.json(order)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+
+export const getReportsDetailsById = async (req, res) => {
+    try {
+        const order = await db.query(
+            `Select p.CC_PERSONA, p.NOMBRES_APELLIDOS, p.TELEFONO_PERSONA, r.ID_REPORTE, t.NOMBRE_TRABAJO, t.VALOR_TRABAJO, r.TOTAL 
+            From DETALLES_REPORTE dr, TRABAJOS t, REPORTES r, PERSONAS p 
+            WHERE dr.ID_TRABAJO = t.ID_TRABAJO 
+            AND dr.ID_REPORTE = r.ID_REPORTE 
+            and r.CC_PERSONA = p.CC_PERSONA 
+            AND dr.ID_REPORTE = ${req.params.id_orden};`
+        );
+        res.json(order)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
 
 //Crear Una Orden 
 export const createOrder = async (req, res) => {
