@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrder, deleteOrder, getAllHistorics, getAllOrders, getAllOrdersDetails, getAllReportsDetails, getAllMedidas, getAllMotors, getOrderByCC, updateOrder, getAllNuevoRepuesto,  getAllParts, getAllPersons, getAllReportss, getAllTalleres, getAllTrabajos} from '../controllers/RectimotorController.js';
+import { createOrder, deleteOrder, getAllHistorics, getAllOrders, getAllOrdersDetails, getAllReportsDetails, getReportsDetailsById, getAllMedidas, getAllMotors, getOrderByCC, updateOrder, getAllNuevoRepuesto,  getAllParts, getAllPersons, getAllReportss, getAllTalleres, getAllTrabajos} from '../controllers/RectimotorController.js';
 const router = express.Router();
 
 router.get('/', getAllOrders)
@@ -7,6 +7,7 @@ router.get('/:cc_persona', getOrderByCC)
 router.post('/', createOrder)
 router.put('/:id_orden', updateOrder)
 router.delete('/:id_orden', deleteOrder)
+router.get('/details/:id_orden', getReportsDetailsById)
 
 //router.get('/', getAllOrdersDetails)
 //router.get('/', getAllReportsDetails)
