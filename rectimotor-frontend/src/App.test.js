@@ -1,8 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders App', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  screen.debug();
+  const title = screen.getByText();
 });
+
+test('renders content', () => {
+    const note = {
+      content: 'This is a test', 
+      important: true
+    }
+  }
+)
+
+const component = render(<ConsultOrders />)
+console.log(component);

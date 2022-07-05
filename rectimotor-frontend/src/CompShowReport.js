@@ -41,17 +41,20 @@ const CompShowReports = () => {
                                         <td>{detail.CC_PERSONA}</td>
                                         <td>{detail.ID_REPORTE}</td>
                                         <td>{detail.NOMBRES_APELLIDOS}</td>
-                                        
+                                        <td>{detail.NOMBRE_TRABAJO}</td>
                                         <td>{detail.TELEFONO_PERSONA}</td>
                                         <td>{detail.TOTAL}</td>
-                                        
-                                        <td>{detail.NOMBRE_TRABAJO}</td>
                                         <td>{detail.VALOR_TRABAJO}</td>                                         
                                     </tr>
                                      
                                 })}
                                 </tbody>
                             </table>
+
+                            <div>
+                                {function a(){return details[0].VALOR_TRABAJO}}
+                            </div>
+
                         </div>
                     </div>
                     <button className='boton-regresar' onClick={() => navigate('/orders/id')}>Regresar</button> 
