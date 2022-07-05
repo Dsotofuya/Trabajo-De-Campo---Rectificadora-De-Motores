@@ -13,48 +13,43 @@ const CompShowReports = () => {
         fetch(URI + params.id_order).then((res) => res.json()).then((data) => { setDetails(data) })
     }, [])
     // -------------------------------------------------------------------
-    console.log(details)
+    
+    let detailxd = details[0]
+    let detailxdd = detailxd[0]
+    let  total ='';
     // Returning the component 
     return (
         <div className="App"> 
             <div className='contenedor-principal'>
             <div className='reporte'>
                     <h1>Reporte del motor</h1>
+                    <div className='detalles'>
+                                <p>Reporte número: {detailxdd.ID_REPORTE}</p>
+                                <p> Nombre del propietario: {detailxdd.NOMBRES_APELLIDOS}</p>                
+                                <p>Cédula: {detailxdd.CC_PERSONA}</p>
+                                <p>Número de teléfono: {detailxdd.TELEFONO_PERSONA}</p>
+                            </div>
                     <div className='row'>
                         <div className='col'>
                             <table className='table'>
                                 <thead className='table-primary'>
                                     <tr>
-                                        <th>Cédula: </th>
-                                        <th>Identificación de reporte: </th>
-                                        <th>Nombres y apelldos: </th>
-                                        <th>Nombre del trabajo: </th>
-                                        <th>Número de teléfono: </th>
-                                        <th>Total: </th>     
-                                        <th>Valor del trabajo: </th>                 
+                                        <th>Nombre del trabajo: </th>    
+                                        <th>Valor del trabajo: </th>                                                
                                     </tr>
                                 </thead>
                                 <tbody>
                                 { 
-                                    (details[0] || []).map((detail, i) => {
+                                    (details[1] || []).map((detail, i) => {
                                     return <tr className='fila-reporte' key={i}>
-                                        <td>{detail.CC_PERSONA}</td>
-                                        <td>{detail.ID_REPORTE}</td>
-                                        <td>{detail.NOMBRES_APELLIDOS}</td>
                                         <td>{detail.NOMBRE_TRABAJO}</td>
-                                        <td>{detail.TELEFONO_PERSONA}</td>
-                                        <td>{detail.TOTAL}</td>
-                                        <td>{detail.VALOR_TRABAJO}</td>                                         
+                                        <td>{detail.VALOR_TRABAJO}</td>                                          
                                     </tr>
                                      
                                 })}
+                                   <tr className='total'>Total: {detailxdd.TOTAL}</tr>                             
                                 </tbody>
                             </table>
-
-                            <div>
-                                {function a(){return details[0].VALOR_TRABAJO}}
-                            </div>
-
                         </div>
                     </div>
                     <button className='boton-regresar' onClick={() => navigate('/orders/id')}>Regresar</button> 

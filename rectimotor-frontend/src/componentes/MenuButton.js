@@ -17,7 +17,7 @@ function MenuButton(props){
         return ruta;
     }
     return(
-        <button className="boton">
+        <button className="rounded boton">
         <div>
             <p>{props.nombre}</p>
             <img className='imagen-boton' alt='icon' src={rutaImagen(props.nombre)}/>

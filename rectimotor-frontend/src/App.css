@@ -47,13 +47,11 @@ body{
 }
 
 .menu{
-  margin-top: 15%;
+  margin-top: 10%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80%;
-  width: 80%;
 }
 
 .orderRow:hover{
