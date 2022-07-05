@@ -1,11 +1,12 @@
 import './App.css';
 import React from 'react';
 import ClientWiew from './ClientWiew';
+import RegisterOrder from './RegisterOrder';
 
 function App() {
   return (
     <div>
-      <ClientWiew />
+      <RegisterOrder />
     </div>
   );
 }
