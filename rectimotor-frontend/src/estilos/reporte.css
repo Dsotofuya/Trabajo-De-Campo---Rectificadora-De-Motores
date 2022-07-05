@@ -1,0 +1,25 @@
+.reporte{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15%;
+    width: 75%;
+}
+
+.table{
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.fila-reporte{
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
+}
+
+.boton-regresar{
+    margin-top: 5%;
+    width: 20%;
+    height: 20%;
+}
