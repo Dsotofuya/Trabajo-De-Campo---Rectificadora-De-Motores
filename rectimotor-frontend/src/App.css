@@ -14,8 +14,8 @@ body{
 
 .contenedor-principal{
   background-color: whitesmoke;
-  height: 50vw;
-  width: 190vh;
+  height: 35vw;
+  width: 195vh;
   display: flex;
   align-content: flex-start;
   align-items: center;
@@ -44,4 +44,19 @@ body{
   border: 2px solid black;
   flex-wrap: wrap;
   border-radius: 30px;
+}
+
+.menu{
+  margin-top: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 80%;
+}
+
+.orderRow:hover{
+  background-color: white;
+  border: 3px solid black;
 }
