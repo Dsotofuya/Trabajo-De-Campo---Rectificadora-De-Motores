@@ -20,7 +20,7 @@ const CompShowOrders = () => {
                 <h1>Consulte el estado de su motor</h1>
                 {/* Input de la cedula u orden */}
                 <form onSubmit={() => navigate(`/orders/${document.getElementById('cc').value}`)}>
-                    <input id="cc" className='input' type='text' name='search'></input>
+                    <input id="cc" className='input' type='text' name='search' autoComplete='off'></input>
                     <button className='buton' variant='primary' type='submit'>Buscar</button>
                 </form>
 
@@ -43,14 +43,15 @@ const CompShowOrders = () => {
                                     {
                                         //Se verifica si el array existe antes de renderizar las targetas
                                         (orders[0] || []).map((order, i) => {
-                                            return <tr key={i} onClick={() => navigate(`/orders/details/${order.id_orden}`)}>
-                                                <td>{order.id_orden}</td>
-                                                <td>{order.cc_persona}</td>
-                                                <td>{order.nombre_motor}</td>
-                                                <td>{order.placa}</td>
-                                                <td>{order.fecha_recibido}</td>
-                                                <td>{order.fecha_entrega}</td>
-                                                <td>{order.estado_orden}</td>
+                                            return <tr className='orderRow' key={i} onClick={() => navigate(`/orders/details/${order.id_orden}`)}>
+                                                    <td>{order.id_orden}</td>
+                                                    <td>{order.cc_persona}</td>
+                                                    <td>{order.nombre_motor}</td>
+                                                    <td>{order.placa}</td>
+                                                    <td>{order.fecha_recibido}</td>
+                                                    <td>{order.fecha_entrega}</td>
+                                                    <td>{order.estado_orden}</td>
+                                                
                                             </tr>
                                         })
                                     }

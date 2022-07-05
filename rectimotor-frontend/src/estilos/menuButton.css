@@ -1,0 +1,13 @@
+.imagen-boton{
+    height: 40%;
+    width: 40%;
+}
+
+.boton{
+    border-radius: 25%;
+    width: 60%;
+    height: 60%;
+    background-color: white;
+    margin: 3%;
+    padding: 1em;
+}
