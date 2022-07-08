@@ -29,9 +29,9 @@ const CompShowReports = () => {
                                         <th>Identificación de reporte: </th>
                                         <th>Nombres y apelldos: </th>
                                         <th>Nombre del trabajo: </th>
-                                        <th>Número de teléfono: </th>
-                                        <th>Total: </th>     
-                                        <th>Valor del trabajo: </th>                 
+                                        <th>Número de teléfono: </th>    
+                                        <th>Valor del trabajo: </th> 
+                                        <th>Total: </th>                 
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,12 +41,10 @@ const CompShowReports = () => {
                                         <td>{detail.CC_PERSONA}</td>
                                         <td>{detail.ID_REPORTE}</td>
                                         <td>{detail.NOMBRES_APELLIDOS}</td>
-                                        
-                                        <td>{detail.TELEFONO_PERSONA}</td>
-                                        <td>{detail.TOTAL}</td>
-                                        
                                         <td>{detail.NOMBRE_TRABAJO}</td>
-                                        <td>{detail.VALOR_TRABAJO}</td>                                         
+                                        <td>{detail.TELEFONO_PERSONA}</td>
+                                        <td>{detail.VALOR_TRABAJO}</td>   
+                                        <td>{detail.TOTAL}</td>                                      
                                     </tr>
                                      
                                 })}
