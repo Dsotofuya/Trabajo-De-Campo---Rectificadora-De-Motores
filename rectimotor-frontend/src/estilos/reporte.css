@@ -16,10 +16,12 @@
     border-top: 2px solid black;
     border-right: 2px solid black;
     border-left: 2px solid black;
+    border-bottom: 2px solid black;
 }
 
 .boton-regresar{
-    margin-top: 5%;
+    margin-top: 3%;
     width: 20%;
-    height: 20%;
+    height: 50%;
+    margin-bottom: 3%;
 }

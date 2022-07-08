@@ -20,34 +20,48 @@ const CompShowReports = () => {
             <div className='contenedor-principal'>
             <div className='reporte'>
                     <h1>Reporte del motor</h1>
+                    {
+                        (details[0] || []).map((detail, i) => {
+                            if(i==0){
+                                return <div className='detalles'>
+                                            <p>Reporte número: {detail.ID_REPORTE}</p>
+                                            <p> Nombre del propietario: {detail.NOMBRES_APELLIDOS}</p>                
+                                            <p>Cédula: {detail.CC_PERSONA}</p>
+                                            <p>Número de teléfono: {detail.TELEFONO_PERSONA}</p>
+                                        </div>
+                                    }
+                            })
+                
+                    }
                     <div className='row'>
                         <div className='col'>
                             <table className='table'>
                                 <thead className='table-primary'>
                                     <tr>
-                                        <th>Cédula: </th>
-                                        <th>Identificación de reporte: </th>
-                                        <th>Nombres y apelldos: </th>
-                                        <th>Nombre del trabajo: </th>
-                                        <th>Número de teléfono: </th>    
-                                        <th>Valor del trabajo: </th> 
-                                        <th>Total: </th>                 
+                                        <th>Nombre del trabajo: </th>  
+                                        <th>Valor del trabajo: </th>                
                                     </tr>
                                 </thead>
                                 <tbody>
                                 { 
                                     (details[0] || []).map((detail, i) => {
                                     return <tr className='fila-reporte' key={i}>
-                                        <td>{detail.CC_PERSONA}</td>
-                                        <td>{detail.ID_REPORTE}</td>
-                                        <td>{detail.NOMBRES_APELLIDOS}</td>
                                         <td>{detail.NOMBRE_TRABAJO}</td>
-                                        <td>{detail.TELEFONO_PERSONA}</td>
-                                        <td>{detail.VALOR_TRABAJO}</td>   
-                                        <td>{detail.TOTAL}</td>                                      
-                                    </tr>
-                                     
-                                })}
+                                        <td>{detail.VALOR_TRABAJO}</td>                                    
+                                        </tr>
+                                    })
+
+                                    
+                                }
+
+                                {(details[0] || []).map((detail, i) => {
+                                        if(i==0){
+                                            return <tr className='fila-reporte' key={i}>
+                                            <td>Total: </td>  
+                                            <td>{detail.TOTAL}</td> 
+                                            </tr>
+                                        }
+                                        })}
                                 </tbody>
                             </table>
                         </div>

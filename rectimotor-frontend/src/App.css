@@ -14,14 +14,14 @@ body{
 
 .contenedor-principal{
   background-color: whitesmoke;
-  height: 35vw;
+  height: 80%;
   width: 195vh;
   display: flex;
   align-content: flex-start;
   align-items: center;
   flex-direction: column;
   border: 3px solid black;
-  border-radius: 25px;
+  border-radius: 15px;
   margin-top: 50px;
 }
 
