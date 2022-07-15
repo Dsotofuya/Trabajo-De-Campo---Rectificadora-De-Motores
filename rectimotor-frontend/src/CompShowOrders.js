@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 const CompShowOrders = () => {
@@ -20,6 +21,8 @@ const CompShowOrders = () => {
     // Returning the component 
     return (
         <div className="App">
+            <Link to='/menu'><button className="btn btn-outline-info"><h1 >Rectimotor</h1></button></Link>
+
             <div className='contenedor-principal'>
                 <h1>Consulte el estado de su motor</h1>
                 {/* Input de la cedula u orden */}

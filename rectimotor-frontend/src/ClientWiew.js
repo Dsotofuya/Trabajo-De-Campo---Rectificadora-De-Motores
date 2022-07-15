@@ -13,7 +13,7 @@ function ClientWiew() {
     engineStatus: "No encontrado"
   }
 
-  let personasPrueba = [person1, person2, person3];
+   let personasPrueba = [person1, person2, person3];
 
   function resultado(search){
     let persona;

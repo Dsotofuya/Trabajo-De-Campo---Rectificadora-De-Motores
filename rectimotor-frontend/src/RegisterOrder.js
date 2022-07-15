@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import './ROrder.css';
 import PartFE from "./PartFE";
 import JobFE from "./JobFE";
+import { Link } from 'react-router-dom';
 
 const RegisterOrder = () => {
   const [name, setName] = useState("");
   const handleInputChange = () => setName
   return (
     <div>
-      <h1 className="text-center">   Registro de orden de Ingreso  </h1>
+      <Link to='/menu'><button className="btn btn-outline-info"><h1 >Rectimotor</h1></button></Link>
+
+
+      <h2 className="text-center">   Registro de orden de Ingreso  </h2>
       <div className="container-xl w-100 p-3" >
 
         <form className="CampDiv">
@@ -123,6 +127,10 @@ const RegisterOrder = () => {
               <PartFE namePart="Tapon de Resortes" />
             </div>
 
+            <div className="row">
+              <button><p>+ agregar parte</p></button>
+            </div>
+
             <p>
               <hr />
               <hr />
@@ -157,6 +165,10 @@ const RegisterOrder = () => {
             <JobFE
               nameJob="Cambiar tapones"
               priceJob="50000" />
+
+            <div className="row">
+              <button><p>+ agregar Trabajo</p></button>
+            </div>
           </div>
 
           <p>
@@ -187,7 +199,20 @@ const RegisterOrder = () => {
                 Pendiente de repuestos</label>
             </div>
           </div>
-
+          <Link to='/menu' className="text-decoration-none">
+            <div className="row">
+              <button className="btn btn-success">
+                <h1>Confirmar</h1>
+              </button>
+            </div>
+          </Link>
+          <Link to='/menu' className="text-decoration-none">
+            <div className="row">
+              <button className="btn btn-danger">
+                <h1 className="text-decoration-none">Descartar</h1>
+              </button>
+            </div>
+          </Link>
         </form>
       </div>
     </div>
