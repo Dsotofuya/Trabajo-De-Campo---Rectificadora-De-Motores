@@ -5,6 +5,6 @@ const router = express.Router();
 router.get('/', getAllPersons)
 router.get('/:cc_persona', getPersonById)
 router.put('/edit/:cc_persona', updatePerson)
-router.post('/:cc_persona', createPerson)
+router.post('/', createPerson)
 
 export default router; 

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     17/07/2022 3:21:47 p. m.                     */
+/* Created on:     17/07/2022 5:20:56 p. m.                     */
 /*==============================================================*/
 
 
@@ -105,7 +105,7 @@ create table ORDENES
    ID_ORDEN             numeric(8,0) not null,
    ID_MOTOR             numeric(8,0) not null,
    ID_TALLER            numeric(8,0) not null,
-   CC_PERSONA           numeric(8,0) not null,
+   CC_PERSONA           numeric(15,0) not null,
    PLACA                varchar(6),
    FECHA_RECIBIDO       datetime not null,
    FECHA_ENTREGA        datetime not null,
@@ -128,7 +128,7 @@ create table PARTES
 /*==============================================================*/
 create table PERSONAS
 (
-   CC_PERSONA           numeric(8,0) not null,
+   CC_PERSONA           numeric(15,0) not null,
    NOMBRES_APELLIDOS    varchar(64) not null,
    TELEFONO_PERSONA     numeric(10,0) not null,
    primary key (CC_PERSONA)
@@ -140,7 +140,7 @@ create table PERSONAS
 create table REPORTES
 (
    ID_REPORTE           numeric(8,0) not null,
-   CC_PERSONA           numeric(8,0) not null,
+   CC_PERSONA           numeric(15,0) not null,
    TOTAL                numeric(8,0) not null,
    primary key (ID_REPORTE)
 );
