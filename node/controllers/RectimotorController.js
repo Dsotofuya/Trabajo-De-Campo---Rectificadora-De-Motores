@@ -11,9 +11,9 @@ import ReportesModel from "../models/ReportesModel.js";
 import TalleresModel from "../models/TalleresModel.js";
 import TrabajosModel from "../models/TrabajosModel.js";
 import db from "../db/RectimotorDB.js";
+
+
 // Metodos
-
-
 // Obtener todas las personas
 export const getAllPersons = async (req, res) => {
     try {
@@ -38,8 +38,10 @@ export const getPersonById = async (req, res) => {
 //Actualizar Datos de persona
 export const updatePerson = async (req, res) => {
     try {
-        const orders = await PersonasModel.findAll();
-        res.json(orders)
+        await PersonasModel.update(req.body, {
+            where: { cc_persona: req.params.cc_persona }
+        })
+        res.json({ message: "Persona actualizada" })
     } catch (error) {
         res.json({ message: error.message })
     }
@@ -54,14 +56,6 @@ export const createPerson = async (req, res) => {
         res.json({ message: error.message })
     }
 }
-
-
-
-
-
-
-
-
 
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
