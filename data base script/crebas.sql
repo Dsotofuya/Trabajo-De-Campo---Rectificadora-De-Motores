@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     26/06/2022 1:23:07 p. m.                     */
+/* Created on:     17/07/2022 3:21:47 p. m.                     */
 /*==============================================================*/
 
 
@@ -71,7 +71,6 @@ create table HISTORICOS_MOTORES
 create table MEDIDAS
 (
    ID_MEDIDA            numeric(8,0) not null,
-   ID_MOTOR             numeric(8,0),
    ID_PARTE             numeric(8,0) not null,
    NOMBRE_MEDIDA        varchar(32) not null,
    VALOR_MEDIDA         float(10) not null,
@@ -195,9 +194,6 @@ alter table HISTORICOS_MOTORES add constraint FK_MED_FIN_HIST foreign key (ID_ME
 
 alter table HISTORICOS_MOTORES add constraint FK_MED_INI_HIST foreign key (ID_MEDIDA_INICIAL)
       references MEDIDAS (ID_MEDIDA) on delete restrict on update restrict;
-
-alter table MEDIDAS add constraint FK_MOT_MED foreign key (ID_MOTOR)
-      references MOTORES (ID_MOTOR) on delete restrict on update restrict;
 
 alter table MEDIDAS add constraint FK_PART_MED foreign key (ID_PARTE)
       references PARTES (ID_PARTE) on delete restrict on update restrict;
