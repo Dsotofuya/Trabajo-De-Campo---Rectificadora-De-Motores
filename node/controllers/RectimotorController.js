@@ -13,6 +13,56 @@ import TrabajosModel from "../models/TrabajosModel.js";
 import db from "../db/RectimotorDB.js";
 // Metodos
 
+
+// Obtener todas las personas
+export const getAllPersons = async (req, res) => {
+    try {
+        const orders = await PersonasModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener Persona Por Cc
+export const getPersonById = async (req, res) => {
+    try {
+        const orders = await await db.query(
+            `SELECT * FROM PERSONAS WHERE CC_PERSONA = ${req.params.cc_persona};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de persona
+export const updatePerson = async (req, res) => {
+    try {
+        const orders = await PersonasModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear persona
+export const createPerson = async (req, res) => {
+    try {
+        await PersonasModel.create(req.body);
+        res.json({ message: "Persona agregada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+
+
+
+
+
+
+
+
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
     try {
@@ -47,7 +97,7 @@ export const getReportsDetailsById2 = async (req, res) => {
         ReportesModel.hasMany()
         PersonasModel
         TrabajosModel
-        
+
         res.json(order)
     } catch (error) {
         res.json({ message: error.message })
@@ -169,15 +219,6 @@ export const getAllNuevoRepuesto = async (req, res) => {
 export const getAllParts = async (req, res) => {
     try {
         const orders = await PartesModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-export const getAllPersons = async (req, res) => {
-    try {
-        const orders = await PersonasModel.findAll();
         res.json(orders)
     } catch (error) {
         res.json({ message: error.message })

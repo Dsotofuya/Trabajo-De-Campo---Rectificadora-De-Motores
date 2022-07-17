@@ -1,14 +1,15 @@
 import express from "express";
 import cors from 'cors';
 import db from "./db/RectimotorDB.js";
-import orderRoutes from './routes/Routes.js'
+import OrderRoutes from './routes/RoutesOrders.js'
+import PersonRoutes from './routes/RoutesPerson.js'
 
 const app = express();
 
 app.use(cors())
 app.use(express.json())
-app.use('/orders', orderRoutes)
-//app.use('/', orderRoutes)
+app.use('/orders', OrderRoutes)
+app.use('/persons', PersonRoutes)
 
 try {
     await db.authenticate()
