@@ -13,7 +13,7 @@ import TrabajosModel from "../models/TrabajosModel.js";
 import db from "../db/RectimotorDB.js";
 
 
-// Metodos
+// Metodos Personas
 // Obtener todas las personas
 export const getAllPersons = async (req, res) => {
     try {
@@ -57,6 +57,52 @@ export const createPerson = async (req, res) => {
     }
 }
 
+// Metodos Talleres
+// Obtener todos los talleres
+export const getAllWorkshops = async (req, res) => {
+    try {
+        const orders = await TalleresModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener Taller Por id de taller
+export const getWorkshopById = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM TALLERES WHERE ID_TALLER = ${req.params.id_taller};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de un taller
+export const updateWorkshop = async (req, res) => {
+    try {
+        await TalleresModel.update(req.body, {
+            where: { id_taller: req.params.id_taller }
+        })
+        res.json({ message: "Taller actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear taller
+export const createWorkshop = async (req, res) => {
+    try {
+        await TalleresModel.create(req.body);
+        res.json({ message: "Taller agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+
+
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
     try {
@@ -70,11 +116,6 @@ export const getAllOrders = async (req, res) => {
 // Buscar orden por número de orden
 export const getOrderByCC = async (req, res) => {
     try {
-        //     const order = await OrdenModel.findAll({
-        //attributes: ["id_orden", "nombre_motor", "cc_persona", "fecha_recibido", "fecha_entrega", "estado_orden"],
-        //            where: { cc_persona: req.params.cc_persona}
-        // include: [{model: MOTORES, attributes}]
-        //        })
         const order = await db.query(
             `SELECT o.id_orden, m.nombre_motor, o.id_taller, o.cc_persona, o.placa, o.fecha_recibido, o.fecha_entrega, o.estado_orden FROM ORDENES o, MOTORES m WHERE m.ID_MOTOR = o.ID_MOTOR AND o.CC_PERSONA = ${req.params.cc_persona};`
         );

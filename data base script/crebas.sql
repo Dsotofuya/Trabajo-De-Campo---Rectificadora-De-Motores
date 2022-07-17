@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     17/07/2022 5:20:56 p. m.                     */
+/* Created on:     17/07/2022 6:09:07 p. m.                     */
 /*==============================================================*/
 
 
@@ -33,11 +33,11 @@ drop table if exists TRABAJOS;
 /*==============================================================*/
 create table DETALLES_ORDEN
 (
-   ID_DETALLE_ORDEN     numeric(8,0) not null,
-   ID_ORDEN             numeric(8,0) not null,
-   ID_TRABAJO           numeric(8,0),
-   ID_REPUESTO          numeric(8,0),
-   ID_PARTE             numeric(8,0),
+   ID_DETALLE_ORDEN     int not null AUTO_INCREMENT,
+   ID_ORDEN             int not null,
+   ID_TRABAJO           int,
+   ID_REPUESTO          int,
+   ID_PARTE             int,
    CANTIDAD             numeric(3,0),
    primary key (ID_DETALLE_ORDEN)
 );
@@ -47,9 +47,9 @@ create table DETALLES_ORDEN
 /*==============================================================*/
 create table DETALLES_REPORTE
 (
-   ID_DETALLE_REPORTE   numeric(8,0) not null,
-   ID_REPORTE           numeric(8,0) not null,
-   ID_TRABAJO           numeric(8,0) not null,
+   ID_DETALLE_REPORTE   int not null AUTO_INCREMENT,
+   ID_REPORTE           int not null,
+   ID_TRABAJO           int not null,
    primary key (ID_DETALLE_REPORTE)
 );
 
@@ -58,10 +58,10 @@ create table DETALLES_REPORTE
 /*==============================================================*/
 create table HISTORICOS_MOTORES
 (
-   ID_HISTORICO         numeric(8,0) not null,
-   ID_MEDIDA_INICIAL    numeric(8,0) not null,
-   ID_MEDIDA_FINAL      numeric(8,0) not null,
-   ID_DETALLE_ORDEN     numeric(8,0),
+   ID_HISTORICO         int not null AUTO_INCREMENT,
+   ID_MEDIDA_INICIAL    int not null,
+   ID_MEDIDA_FINAL      int not null,
+   ID_DETALLE_ORDEN     int,
    primary key (ID_HISTORICO)
 );
 
@@ -70,8 +70,8 @@ create table HISTORICOS_MOTORES
 /*==============================================================*/
 create table MEDIDAS
 (
-   ID_MEDIDA            numeric(8,0) not null,
-   ID_PARTE             numeric(8,0) not null,
+   ID_MEDIDA            int not null AUTO_INCREMENT,
+   ID_PARTE             int not null,
    NOMBRE_MEDIDA        varchar(32) not null,
    VALOR_MEDIDA         float(10) not null,
    primary key (ID_MEDIDA)
@@ -82,7 +82,7 @@ create table MEDIDAS
 /*==============================================================*/
 create table MOTORES
 (
-   ID_MOTOR             numeric(8,0) not null,
+   ID_MOTOR             int not null AUTO_INCREMENT,
    NOMBRE_MOTOR         varchar(32) not null,
    primary key (ID_MOTOR)
 );
@@ -92,7 +92,7 @@ create table MOTORES
 /*==============================================================*/
 create table NUEVOS_REPUESTOS
 (
-   ID_REPUESTO          numeric(8,0) not null,
+   ID_REPUESTO          int not null AUTO_INCREMENT,
    NOMBRE_REPUESTO      varchar(32) not null,
    primary key (ID_REPUESTO)
 );
@@ -102,9 +102,9 @@ create table NUEVOS_REPUESTOS
 /*==============================================================*/
 create table ORDENES
 (
-   ID_ORDEN             numeric(8,0) not null,
-   ID_MOTOR             numeric(8,0) not null,
-   ID_TALLER            numeric(8,0) not null,
+   ID_ORDEN             int not null AUTO_INCREMENT,
+   ID_MOTOR             int not null,
+   ID_TALLER            int not null,
    CC_PERSONA           numeric(15,0) not null,
    PLACA                varchar(6),
    FECHA_RECIBIDO       datetime not null,
@@ -118,7 +118,7 @@ create table ORDENES
 /*==============================================================*/
 create table PARTES
 (
-   ID_PARTE             numeric(8,0) not null,
+   ID_PARTE             int not null AUTO_INCREMENT,
    NOMBRE_PARTE         varchar(32) not null,
    primary key (ID_PARTE)
 );
@@ -139,7 +139,7 @@ create table PERSONAS
 /*==============================================================*/
 create table REPORTES
 (
-   ID_REPORTE           numeric(8,0) not null,
+   ID_REPORTE           int not null AUTO_INCREMENT,
    CC_PERSONA           numeric(15,0) not null,
    TOTAL                numeric(8,0) not null,
    primary key (ID_REPORTE)
@@ -150,7 +150,7 @@ create table REPORTES
 /*==============================================================*/
 create table TALLERES
 (
-   ID_TALLER            numeric(8,0) not null,
+   ID_TALLER            int not null AUTO_INCREMENT,
    NOMBRE_TALLER        varchar(64) not null,
    NOMBRE_PROPIETARIO   varchar(64),
    TELEFONO_TALLER      numeric(10,0) not null,
@@ -162,7 +162,7 @@ create table TALLERES
 /*==============================================================*/
 create table TRABAJOS
 (
-   ID_TRABAJO           numeric(8,0) not null,
+   ID_TRABAJO           int not null AUTO_INCREMENT,
    NOMBRE_TRABAJO       varchar(32) not null,
    VALOR_TRABAJO        numeric(10,0) not null,
    primary key (ID_TRABAJO)
