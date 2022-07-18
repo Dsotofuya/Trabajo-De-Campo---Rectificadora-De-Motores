@@ -101,7 +101,49 @@ export const createWorkshop = async (req, res) => {
     }
 }
 
+// Metodos Motores
+// Obtener todos los Motores
+export const getAllEngines = async (req, res) => {
+    try {
+        const orders = await MotorModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
 
+//Obtener Taller Por id de taller
+export const getEngineById = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT * FROM MOTORES WHERE ID_MOTOR = ${req.params.id_motor};`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de un taller
+export const updateEngine = async (req, res) => {
+    try {
+        await MotorModel.update(req.body, {
+            where: { id_motor: req.params.id_motor }
+        })
+        res.json({ message: "Motor actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear taller
+export const createEngine = async (req, res) => {
+    try {
+        await MotorModel.create(req.body);
+        res.json({ message: "Motor agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
 
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
