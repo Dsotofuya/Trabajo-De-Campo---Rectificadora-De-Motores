@@ -4,6 +4,7 @@ import db from "./db/RectimotorDB.js";
 import OrderRoutes from './routes/RoutesOrders.js'
 import PersonRoutes from './routes/RoutesPerson.js'
 import WorkshopsRoutes from './routes/RoutesWorkshops.js'
+import EnginesRoutes from './routes/RoutesEngines.js'
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use('/orders', OrderRoutes)
 app.use('/persons', PersonRoutes)
 app.use('/workshops', WorkshopsRoutes)
+app.use('/engines', EnginesRoutes)
 
 try {
     await db.authenticate()
