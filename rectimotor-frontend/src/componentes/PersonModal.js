@@ -5,8 +5,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 function PersonModal() {
-    const { children, toggle, active } = this.props
-
 
     return (
         <div className="container">
@@ -59,15 +57,13 @@ function PersonModal() {
                         </button>
                     </div>
                 </Link>
-                {/* <Link to='/menu' className="text-decoration-none"> */}
+                <Link to='/menu' className="text-decoration-none">
                 <div className="row">
                     <button className="btn btn-danger" onClick={toggle}>
                         <h3 className="text-decoration-none">Descartar</h3>
                     </button>
                 </div>
-
-                <div>{children}</div>
-                {/* </Link> */}
+                </Link>
 
             </div>
 
