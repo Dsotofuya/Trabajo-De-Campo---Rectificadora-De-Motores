@@ -75,3 +75,4 @@ function PersonModal() {
     );
 }
 
+export default PersonModal;
