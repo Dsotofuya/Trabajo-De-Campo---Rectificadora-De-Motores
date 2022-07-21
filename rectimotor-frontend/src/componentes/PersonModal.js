@@ -59,7 +59,7 @@ function PersonModal() {
                 </Link>
                 <Link to='/menu' className="text-decoration-none">
                 <div className="row">
-                    <button className="btn btn-danger" onClick={toggle}>
+                    <button className="btn btn-danger">
                         <h3 className="text-decoration-none">Descartar</h3>
                     </button>
                 </div>
