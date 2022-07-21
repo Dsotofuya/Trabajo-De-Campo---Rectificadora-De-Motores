@@ -3,10 +3,19 @@ import './ROrder.css';
 import PartFE from "./PartFE";
 import JobFE from "./JobFE";
 import { Link } from 'react-router-dom';
+import WorkshopModal from "./componentes/WorkshopModal";
+import PersonModal from "./componentes/PersonModal";
+import Modal from "./componentes/Modal";
 
 const RegisterOrder = () => {
   const [name, setName] = useState("");
+  const [active, setActive] = useState(false);
+  const toggle = () => {
+    setActive(!active)
+  }
   const handleInputChange = () => setName
+  const addWorkshop = false
+  const addPerson = false
   return (
     <div>
       <Link to='/menu'><button className="btn btn-outline-info"><h1 >Rectimotor</h1></button></Link>
@@ -15,7 +24,7 @@ const RegisterOrder = () => {
       <h2 className="text-center">   Registro de orden de Ingreso  </h2>
       <div className="container-xl w-100 p-3" >
 
-        <form className="CampDiv">
+        <form className="CampDiv" >
 
           <div className="row">
             <div className="col">
@@ -23,6 +32,9 @@ const RegisterOrder = () => {
             </div>
             <div className="col">
               <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Taller" />
+            </div>
+            <div className="col">
+              <button className="btn btn-success" onClick={toggle}>agregar</button>
             </div>
 
 
@@ -73,6 +85,12 @@ const RegisterOrder = () => {
           </div>
           <p>
             <hr />
+            <div className="row">
+              <Modal active={active} toggle={toggle}>
+                <h1>funciona</h1>
+                <WorkshopModal/>
+              </Modal>
+            </div>
             <hr />
           </p>
 
