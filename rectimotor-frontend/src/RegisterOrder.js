@@ -90,7 +90,7 @@ function RegisterOrder(){
               </label>
             </div>
             <div className="col">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable" value={PersonModal.arguments}/>
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable"/>
             </div>
 
           </div>
