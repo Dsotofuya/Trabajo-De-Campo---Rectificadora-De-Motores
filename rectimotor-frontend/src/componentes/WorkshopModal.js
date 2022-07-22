@@ -15,7 +15,7 @@ function WorkshopModal() {
         console.log(workShopName + ', ' + OwnerName + ', ' + number)
         
         const requestOption = {
-            method: "post", 
+            method: "POST", 
             body: JSON.stringify({
                 NOMBRE_TALLER: workShopName, 
                 NOMBRE_PROPIETARIO: OwnerName, 
