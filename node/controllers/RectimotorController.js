@@ -94,7 +94,8 @@ export const updateWorkshop = async (req, res) => {
 //Crear taller
 export const createWorkshop = async (req, res) => {
     try {
-        await TalleresModel.create(req.body);
+        //await TalleresModel.create(req.body);
+        await console.log(req.body)
         res.json({ message: "Taller agregado" })
     } catch (error) {
         res.json({ message: error.message })
