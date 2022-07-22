@@ -8,7 +8,7 @@ function WorkshopModal() {
     const [OwnerName, setOwnerName] = useState('');
     const [number, setNumber] = useState('');
     
-    const URI = "http://localhost:3412/workShops";
+    const URI = "http://localhost:3412/workshops/";
     
     const addWorkShop = () => {
         
@@ -16,6 +16,7 @@ function WorkshopModal() {
         
         const requestOption = {
             method: "POST", 
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 NOMBRE_TALLER: workShopName, 
                 NOMBRE_PROPIETARIO: OwnerName, 
@@ -77,13 +78,13 @@ function WorkshopModal() {
 
                     <br/>
 
-                    <Link to='/menu' className="text-decoration-none">
+                    {/* <Link to='/menu' className="text-decoration-none">*/}
                         <div className="row">
                             <button className="btn btn-success" onClick={addWorkShop}>
                                 <h3>Confirmar</h3>
                             </button>
                         </div>
-                    </Link>
+                    {/*</Link> */}
                     <Link to='/menu' className="text-decoration-none">
                         <div className="row">
                             <button className="btn btn-danger">
