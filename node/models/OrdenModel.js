@@ -6,7 +6,6 @@ const OrdenModel = db.define('ORDENES', {
     id_motor: { type: DataTypes.INTEGER },
     id_taller: { type: DataTypes.INTEGER },
     cc_persona: { type: DataTypes.DECIMAL },
-    placa: { type: DataTypes.STRING },
     fecha_recibido: { type: DataTypes.DATE },
     fecha_entrega: { type: DataTypes.DATE },
     estado_orden: { type: DataTypes.STRING },
