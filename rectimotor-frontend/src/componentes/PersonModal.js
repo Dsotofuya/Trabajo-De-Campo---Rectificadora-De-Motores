@@ -9,13 +9,14 @@ function PersonModal() {
     const [personDoc, setPersonDoc] = useState('');
     const [phoneNumber, setPhone] = useState('');
 
-    const URI = "http://localhost:3412/";
+    const URI = "http://localhost:3412/persons";
 
     const addPerson = () => {
         console.log(personName + ', ' + personDoc + ', ' + phoneNumber)
 
         const requestOption = {
             method: "POST",
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 NOMBRES_APELLIDOS: personName,
                 CC_PERSONA: personDoc,
