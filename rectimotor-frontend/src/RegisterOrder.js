@@ -7,11 +7,16 @@ import WorkshopModal from "./componentes/WorkshopModal";
 import PersonModal from "./componentes/PersonModal";
 import Modal from "./componentes/Modal";
 
-const RegisterOrder = () => {
-  const [name, setName] = useState("");
-  const [active, setActive] = useState(false);
-  const toggle = () => {
-    setActive(!active)
+function RegisterOrder(){
+  const [activePersonModal, setActivePerson] = useState(false);
+  const [name, setName] = useState("");  
+  const [activeWorkshopModal, setActiveWorkshop] = useState(false);
+  
+  const togglePersonModal = () => {
+    setActivePerson(!activePersonModal)
+  }
+  const toggleWorkshopModal = () => {
+    setActiveWorkshop((isActive)=>!isActive)
   }
   const handleInputChange = () => setName
   const addWorkshop = false
@@ -24,8 +29,6 @@ const RegisterOrder = () => {
       <h2 className="text-center">   Registro de orden de Ingreso  </h2>
       <div className="container-xl w-100 p-3" >
 
-        <form className="CampDiv" >
-
           <div className="row">
             <div className="col">
               <label>Taller:</label>
@@ -34,7 +37,7 @@ const RegisterOrder = () => {
               <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Taller" />
             </div>
             <div className="col">
-              <button className="btn btn-success" onClick={toggle}>agregar</button>
+              <button className="btn btn-success" onClick={toggleWorkshopModal}>agregar</button>
             </div>
 
 
@@ -53,6 +56,9 @@ const RegisterOrder = () => {
             </div>
             <div className="col">
               <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" />
+            </div>
+            <div className="col">
+              <button className="btn btn-success" onClick={togglePersonModal}>agregar</button>
             </div>
 
 
@@ -86,9 +92,11 @@ const RegisterOrder = () => {
           <p>
             <hr />
             <div className="row">
-              <Modal active={active} toggle={toggle}>
-                <h1>funciona</h1>
+              <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
                 <WorkshopModal/>
+              </Modal>
+              <Modal active={activePersonModal} toggle={togglePersonModal}>
+                <PersonModal/>
               </Modal>
             </div>
             <hr />
@@ -231,7 +239,6 @@ const RegisterOrder = () => {
               </button>
             </div>
           </Link>
-        </form>
       </div>
     </div>
   );

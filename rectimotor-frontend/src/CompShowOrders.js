@@ -22,9 +22,9 @@ const CompShowOrders = () => {
     // Returning the component 
     return (
         <div className="App ">
-            <Link to='/menu'><button className="btn btn-outline-info"><h1 >Rectimotor</h1></button></Link>
+            <Link to='/menu'><button className="btn btn-outline-info"><h1>Rectimotor</h1></button></Link>
 
-            <div >
+            <div>
                 <div className='contenedor-principal'>
 
                     <h1 className='d-flex justify-content-center'>Consulte el estado de su motor</h1>
