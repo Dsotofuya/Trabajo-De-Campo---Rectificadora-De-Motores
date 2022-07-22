@@ -9,8 +9,9 @@ import Modal from "./componentes/Modal";
 
 function RegisterOrder(){
   const [activePersonModal, setActivePerson] = useState(false);
-  const [name, setName] = useState("");  
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
+
+  const [name, setName] = useState("");  
   
   const togglePersonModal = () => {
     setActivePerson(!activePersonModal)
@@ -21,6 +22,10 @@ function RegisterOrder(){
   const handleInputChange = () => setName
   const addWorkshop = false
   const addPerson = false
+
+  const [vehicle, setVehicle] = useState(false);
+
+
   return (
     <div>
       <Link to='/menu'><button className="btn btn-outline-info"><h1 >Rectimotor</h1></button></Link>
@@ -45,7 +50,7 @@ function RegisterOrder(){
               <label>Vehiculo:</label>
             </div>
             <div className="col">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del vehiculo" />
+              <input onChange={({ target: { value } }) => setVehicle(value)} type="text" placeholder="Nombre del vehiculo" />
             </div>
           </div>
 
@@ -66,7 +71,7 @@ function RegisterOrder(){
               <label>Ingreso:</label>
             </div>
             <div className="col">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Fecha de ingreso" />
+              <input type="date" placeholder="Fecha de ingreso"  readonly="readonly" id="current"/>
             </div>
           </div>
 
@@ -85,7 +90,7 @@ function RegisterOrder(){
               </label>
             </div>
             <div className="col">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable" />
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable"/>
             </div>
 
           </div>
