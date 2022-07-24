@@ -1,10 +1,12 @@
 import express from 'express';
-import { createOrder, deleteOrder, getAllHistorics, getAllOrders, getAllOrdersDetails, getAllReportsDetails, getReportsDetailsById, getAllMedidas, getAllMotors, getOrderByCC, updateOrder, getAllNuevoRepuesto,  getAllParts, getAllPersons, getAllReportss, getAllTalleres, getAllTrabajos, getPersonById, updatePerson,createPerson} from '../controllers/RectimotorController.js';
+import { createOrder, deleteOrder, getAllHistorics, getAllOrders,  getOrderId, getAllOrdersDetails, getAllReportsDetails, getReportsDetailsById, getAllMedidas, getAllMotors, getOrderByCC, updateOrder, getAllNuevoRepuesto,  getAllParts, getAllPersons, getAllReportss, getAllTalleres, getAllTrabajos, getPersonById, updatePerson,createPerson} from '../controllers/RectimotorController.js';
 const router = express.Router();
 
 //Rutas De Ordenes
 router.get('/', getAllOrders)
+router.get('/count', getOrderId)
 router.get('/:cc_persona', getOrderByCC)
+
 router.post('/', createOrder)
 router.put('/:id_orden', updateOrder)
 router.delete('/:id_orden', deleteOrder)

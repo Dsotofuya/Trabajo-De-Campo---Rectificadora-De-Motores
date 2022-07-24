@@ -79,6 +79,18 @@ export const getWorkshopById = async (req, res) => {
     }
 }
 
+
+//Obtener  id de taller por el nombre
+export const getWorkShopIdByName = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT ID_TALLER FROM TALLERES WHERE NOMBRE_TALLER = "${req.params.workshop_name}";`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
 //Actualizar Datos de un taller
 export const updateWorkshop = async (req, res) => {
     try {
@@ -145,11 +157,35 @@ export const createEngine = async (req, res) => {
     }
 }
 
+//Obtener Taller Por id de taller
+export const getEngineIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_MOTOR FROM MOTORES WHERE NOMBRE_MOTOR = "${req.params.motor_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+
 // Mostrar todas las ordenes
 export const getAllOrders = async (req, res) => {
     try {
         const orders = await OrdenModel.findAll();
         res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id de la orden
+export const getOrderId = async (req, res) => {
+    try {
+        const order = await db.query(
+            `SELECT (AUTO_INCREMENT-1) AS ID_ORDEN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dsotofuya_trabajodecampo_rectimotor' AND TABLE_NAME = 'ORDENES';`
+        );
+        res.json(order[0])
     } catch (error) {
         res.json({ message: error.message })
     }
