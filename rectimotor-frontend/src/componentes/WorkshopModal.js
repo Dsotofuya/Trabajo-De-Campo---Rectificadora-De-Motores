@@ -3,7 +3,7 @@ import MenuButton from "./MenuButton";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-function WorkshopModal() {
+function WorkshopModal(props) {
     const [workShopName, setworkShopName] = useState('');
     const [OwnerName, setOwnerName] = useState('');
     const [number, setNumber] = useState('');
@@ -13,18 +13,18 @@ function WorkshopModal() {
     const addWorkShop = () => {
         
         console.log(workShopName + ', ' + OwnerName + ', ' + number)
-        
         const requestOption = {
             method: "POST", 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 NOMBRE_TALLER: workShopName, 
                 NOMBRE_PROPIETARIO: OwnerName, 
-                TELEFONO_TALLER: number}),
+                TELEFONO_TALLER: number
+            }),
         };
         
         console.log(requestOption.body)
-        
+        props.toggle()
         return fetch(URI, requestOption);
     }
 
@@ -85,13 +85,13 @@ function WorkshopModal() {
                             </button>
                         </div>
                     {/*</Link> */}
-                    <Link to='/menu' className="text-decoration-none">
-                        <div className="row">
+                    {/* <Link to='/menu' className="text-decoration-none"> */}
+                        <div className="row" onClick={props.toggle}>
                             <button className="btn btn-danger">
                                 <h3 className="text-decoration-none">Descartar</h3>
                             </button>
                         </div>
-                    </Link>
+                    {/* </Link> */}
 
                 </div>
 

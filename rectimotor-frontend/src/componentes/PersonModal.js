@@ -4,12 +4,21 @@ import MenuButton from "./MenuButton";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-function PersonModal() {
+
+function PersonModal(props) {
+
+    
     const [personName, setPersonName] = useState('');
     const [personDoc, setPersonDoc] = useState('');
     const [phoneNumber, setPhone] = useState('');
 
     const URI = "http://localhost:3412/persons";
+
+    const num=(value)=>{
+        setPersonDoc(value)
+    }
+
+
 
     const addPerson = () => {
         console.log(personName + ', ' + personDoc + ', ' + phoneNumber)
@@ -25,10 +34,12 @@ function PersonModal() {
         };
 
         console.log(requestOption.body)
-
+        props.toggle()
+        props.name(personName)
+        props.document(personDoc)
         return fetch(URI, requestOption);
     }
-
+    
     return (
         <div className="container">
             <h2 className="text-center">Registro de Cliente</h2>
@@ -58,7 +69,7 @@ function PersonModal() {
 
                     <div className="col">
                         <input
-                            onChange={({ target: { value } }) => setPersonDoc(value)}
+                            onChange={({ target: { value } }) => num(value)}
                             type="text" placeholder="Cedula" />
                     </div>
 
@@ -88,7 +99,7 @@ function PersonModal() {
                 {/* </Link> */}
                 {/* <Link to='/menu' className="text-decoration-none"> */}
                 <div className="row">
-                    <button className="btn btn-danger">
+                    <button className="btn btn-danger" onClick={props.toggle}>
                         <h3 className="text-decoration-none">Descartar</h3>
                     </button>
                 </div>

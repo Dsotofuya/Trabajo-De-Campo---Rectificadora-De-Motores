@@ -10,18 +10,24 @@ import Modal from "./componentes/Modal";
 function RegisterOrder(){
   const [activePersonModal, setActivePerson] = useState(false);
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
+  
 
-  const [name, setName] = useState("");  
+  const [name, setName] = useState("");
+  const [document, setDocument] = useState("");  
+
+
+
+  const getNum=(doc)=>{
+    setDocument(doc)
+  }
   
   const togglePersonModal = () => {
     setActivePerson(!activePersonModal)
   }
+
   const toggleWorkshopModal = () => {
     setActiveWorkshop((isActive)=>!isActive)
   }
-  const handleInputChange = () => setName
-  const addWorkshop = false
-  const addPerson = false
 
   const [vehicle, setVehicle] = useState(false);
 
@@ -35,61 +41,63 @@ function RegisterOrder(){
       <div className="container-xl w-100 p-3" >
 
           <div className="row">
-            <div className="col">
+            <div className="col-md-2">
               <label>Taller:</label>
             </div>
-            <div className="col">
+            <div className="col-md-3">
               <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Taller" />
             </div>
-            <div className="col">
+            <div className="col-md-2">
               <button className="btn btn-success" onClick={toggleWorkshopModal}>agregar</button>
             </div>
 
 
-            <div className="col">
+            <div className="col-md-2">
               <label>Vehiculo:</label>
             </div>
-            <div className="col">
+            <div className="col-md-2">
               <input onChange={({ target: { value } }) => setVehicle(value)} type="text" placeholder="Nombre del vehiculo" />
             </div>
           </div>
+          <br/>
 
 
           <div className="row">
-            <div className="col">
+            <div className="col-md-2">
               <label>Responsable:</label>
             </div>
-            <div className="col">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" />
+            <div className="col-md-3">
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name}/>
             </div>
-            <div className="col">
+            <div className="col-md-2">
               <button className="btn btn-success" onClick={togglePersonModal}>agregar</button>
             </div>
 
 
-            <div className="col">
+            <div className="col-md-2">
               <label>Ingreso:</label>
             </div>
-            <div className="col">
+            <div className="col-md-2">
               <input type="date" placeholder="Fecha de ingreso"  readonly="readonly" id="current"/>
             </div>
           </div>
+          <br/>
 
 
           <div className="row">
-            <div className="col">
+            <div className="col-md-2">
               <label>Cedula:</label>
             </div>
-            <div className="col">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Cedula del responsable" />
+            <div className="col-md-5">
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Cedula del responsable" value={document}/>
             </div>
 
 
-            <div className="col">
+            <div className="col-md-2">
               <label>Telefono:
               </label>
             </div>
-            <div className="col">
+            <div className="col-md-2">
               <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable"/>
             </div>
 
@@ -98,10 +106,10 @@ function RegisterOrder(){
             <hr />
             <div className="row">
               <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
-                <WorkshopModal/>
+                <WorkshopModal toggle={toggleWorkshopModal} />
               </Modal>
-              <Modal active={activePersonModal} toggle={togglePersonModal}>
-                <PersonModal/>
+              <Modal active={activePersonModal} toggle={togglePersonModal} >
+                <PersonModal toggle={togglePersonModal} name={setName} document={setDocument}/>
               </Modal>
             </div>
             <hr />
