@@ -34,14 +34,14 @@ function RegisterOrder() {
     setParts((partes) => [...partes, parte])
   }
 
-  function defineWorksArray(nameWork, priceWork) {
+  function defineWorksArray(nameWork, priceWork, active) {
     // console.log(namePart)
-    const work = { nameJob: nameWork, priceJob: priceWork }
+    const work = { nameJob: nameWork, priceJob: priceWork, isActive: active}
     setWorks((works) => [...works, work])
   }
 
   function defineVoidWorksLine() {
-    const work = { nameJob: "", priceJob:null}
+    const work = { nameJob: "", priceJob:null, isActive:false}
     setWorks((works) => [...works, work])
   }
 
@@ -57,10 +57,10 @@ function RegisterOrder() {
     defineArray("Carter");
     defineArray("Tapon de Resortes");
 
-    defineWorksArray("Encamisar Bloque", 200000)
-    defineWorksArray("Ensamblar pistones", 120000)
-    defineWorksArray("rectificar cigüeñal", 130000)
-    defineWorksArray("Cambiar tapones", 20000)
+    defineWorksArray("Encamisar Bloque", 200000, false)
+    defineWorksArray("Ensamblar pistones", 120000, false)
+    defineWorksArray("rectificar cigüeñal", 130000, false)
+    defineWorksArray("Cambiar tapones", 20000, true)
   }, [])
 
 
@@ -212,7 +212,7 @@ function RegisterOrder() {
           })}
 
           <div className="row">
-            <button onClick={defineVoidLine}><p>+ agregar parte</p></button>
+            <button onClick={defineVoidLine} className="btn btn-primary btn-lg"><h3>+ Agregar Parte</h3></button>
           </div>
 
           <p>
@@ -245,7 +245,7 @@ function RegisterOrder() {
 
 
           <div className="row">
-            <button onClick={defineVoidWorksLine}><p>+ agregar Trabajo</p></button>
+            <button onClick={defineVoidWorksLine} className="btn btn-primary btn-lg"><h3>+ Agregar Trabajo</h3></button>
           </div>
         </div>
 
@@ -253,6 +253,8 @@ function RegisterOrder() {
           <hr />
           <hr />
         </p>
+        <br/>
+
 
         <h1 className="text-center">Estados</h1>
         <div className="row">
@@ -277,17 +279,19 @@ function RegisterOrder() {
               Pendiente de repuestos</label>
           </div>
         </div>
+        <br/>
+        <br/>
         {/* <Link to='/menu' className="text-decoration-none"> */}
         <div className="row">
           <button className="btn btn-success" onClick={addOrderBase}>
-            <h1>Confirmar</h1>
+            <h2>Confirmar</h2>
           </button>
         </div>
         {/* </Link> */}
         <Link to='/menu' className="text-decoration-none">
           <div className="row">
             <button className="btn btn-danger">
-              <h1 className="text-decoration-none">Descartar</h1>
+              <h2 className="text-decoration-none">Descartar</h2>
             </button>
           </div>
         </Link>

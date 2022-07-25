@@ -9,11 +9,11 @@ const PartFE = ({namePart}) => {
             <div>
                 <div className="row">
 
-                    <div className="col-sm-1">
+                    <div className="col-sm-4">
                         <input type="checkBox"></input>
-                    </div>
-                    <div className="col-sm-3">
+                        <label>
                         <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre de la parte" value={nameP}/>
+                        </label>
                     </div>
 
                     <div className="col-sm-3">

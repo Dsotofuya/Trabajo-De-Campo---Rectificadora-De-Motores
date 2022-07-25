@@ -1,6 +1,6 @@
 import './App.css';
 
-const JobFE = ({ nameJob, priceJob }) => {
+const JobFE = ({ nameJob, priceJob, isActive }) => {
     return (
         <div className="row">
             <div>
@@ -8,7 +8,8 @@ const JobFE = ({ nameJob, priceJob }) => {
 
                     <div className="col-sm">
 
-                        <input class="form-check-input" type="checkBox" name="flexRadioDefault" id="flexRadioDefault1" />
+                        <input class="form-check-input" type="checkBox" name="flexRadioDefault" id="flexRadioDefault1" 
+                        onChange={({ target: {value}}) => isActive = (!isActive)} checked = {isActive}/>
                         <label class="form-check-label" for="flexRadioDefault1">
                         <input onChange={({ target: { value } }) => nameJob = (value)} type="text" defaultValue={nameJob} placeholder="nombre del trabajo"/>
                         </label>
