@@ -10,21 +10,13 @@ const JobFE = ({ nameJob, priceJob }) => {
 
                         <input class="form-check-input" type="checkBox" name="flexRadioDefault" id="flexRadioDefault1" />
                         <label class="form-check-label" for="flexRadioDefault1">
-                            {nameJob}
+                        <input onChange={({ target: { value } }) => nameJob = (value)} type="text" defaultValue={nameJob} placeholder="nombre del trabajo"/>
                         </label>
 
                     </div>
                     <div className='col-sm'>
                         <div className='row'>
-                            <div className="col-sm">
-                                <label>
-                                    {nameJob}
-                                </label>
-                            </div>
-
-                            <div className="col-sm">
-                                <input type="number" defaultValue={priceJob} />
-                            </div>
+                                <input onChange={({ target: { value } }) => nameJob = (value)} type="number" defaultValue={priceJob} placeholder="precio del trabajo"/>
                         </div>
                     </div>
                 </div>

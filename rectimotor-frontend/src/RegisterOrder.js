@@ -19,6 +19,7 @@ function RegisterOrder() {
   const [workshopName, setWorkshop] = useState("");
   const [vehicle, setVehicle] = useState(false);
   const [parts, setParts] = useState([]);
+  const [works, setWorks] = useState([]);
   const [engineName, setEngineName] = useState([]);
   const [engineId, setEngineId] = useState([]);
 
@@ -29,10 +30,20 @@ function RegisterOrder() {
   }
 
   function defineVoidLine() {
-    const parte = {name: ""}
+    const parte = { name: "" }
     setParts((partes) => [...partes, parte])
   }
 
+  function defineWorksArray(nameWork, priceWork) {
+    // console.log(namePart)
+    const work = { nameJob: nameWork, priceJob: priceWork }
+    setWorks((works) => [...works, work])
+  }
+
+  function defineVoidWorksLine() {
+    const work = { nameJob: "", priceJob:null}
+    setWorks((works) => [...works, work])
+  }
 
   useEffect(() => {
     defineArray("Bloque");
@@ -45,6 +56,11 @@ function RegisterOrder() {
     defineArray("Eje de Levas");
     defineArray("Carter");
     defineArray("Tapon de Resortes");
+
+    defineWorksArray("Encamisar Bloque", 200000)
+    defineWorksArray("Ensamblar pistones", 120000)
+    defineWorksArray("rectificar cigüeñal", 130000)
+    defineWorksArray("Cambiar tapones", 20000)
   }, [])
 
 
@@ -52,8 +68,8 @@ function RegisterOrder() {
     //console.log(engineName)
     await fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
 
-    /* se retorna la id en base al nombre del motor en el campo */ 
-    console.log("La id del motor ",  engineName, " es: ", engineId[0].ID_MOTOR)
+    /* se retorna la id en base al nombre del motor en el campo */
+    console.log("La id del motor ", engineName, " es: ", engineId[0].ID_MOTOR)
     //const idMotor = await fetch(URI2 + workshopName)
     // console.log(idMotor + ', ' + idWorkshop + ', ' + document)
     // const requestOption = {
@@ -187,7 +203,7 @@ function RegisterOrder() {
           </div>
 
           {parts.map((part) => {
-            console.log(part)
+            // console.log(part)
             return (
               <div>
                 <PartFE namePart={part.name ? part.name : ""} />
@@ -210,30 +226,26 @@ function RegisterOrder() {
         <div>
           <h1 className="text-center">Trabajos</h1>
 
+
           <div className="row">
             <div className="col"> <h5 className="font-weight-bold">Nombre de trabajo </h5> </div>
             <div className="col"> <h5 className="font-weight-bold">Precio del trabajo</h5> </div>
           </div>
+          <br/>
 
+          {works.map((work) => {
+            // console.log(part)
+            return (
+              <div>
+                <JobFE nameJob={work.nameJob ? work.nameJob : ""} priceJob={work.priceJob ? work.priceJob : ""} />
+                <br />
+              </div>
+            )
+          })}
 
-          <JobFE
-            nameJob="Encamisar Bloque"
-            priceJob="200000" />
-
-          <JobFE
-            nameJob="Ensamblar pistones"
-            priceJob="120000" />
-
-          <JobFE
-            nameJob="rectificar cigüeñal"
-            priceJob="130000" />
-
-          <JobFE
-            nameJob="Cambiar tapones"
-            priceJob="50000" />
 
           <div className="row">
-            <button><p>+ agregar Trabajo</p></button>
+            <button onClick={defineVoidWorksLine}><p>+ agregar Trabajo</p></button>
           </div>
         </div>
 
