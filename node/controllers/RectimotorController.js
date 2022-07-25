@@ -259,16 +259,6 @@ export const getAllOrdersDetails = async (req, res) => {
     }
 }
 
-// Mostrar todas los detalles de reportes
-export const getAllReportsDetails = async (req, res) => {
-    try {
-        const orders = await DetallesReporteModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
 // Mostrar todas los historicos
 export const getAllHistorics = async (req, res) => {
     try {
@@ -283,16 +273,6 @@ export const getAllHistorics = async (req, res) => {
 export const getAllMedidas = async (req, res) => {
     try {
         const orders = await MedidasModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-// Mostrar todas los medidas
-export const getAllMotors = async (req, res) => {
-    try {
-        const orders = await MotorModel.findAll();
         res.json(orders)
     } catch (error) {
         res.json({ message: error.message })
@@ -317,28 +297,54 @@ export const getAllParts = async (req, res) => {
     }
 }
 
-export const getAllReportss = async (req, res) => {
-    try {
-        const orders = await ReportesModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
 
-export const getAllTalleres = async (req, res) => {
-    try {
-        const orders = await TalleresModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-export const getAllTrabajos = async (req, res) => {
+export const getAllWorks = async (req, res) => {
     try {
         const orders = await TrabajosModel.findAll();
         res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener Taller Por id de taller
+export const getWorkIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_TRABAJO FROM TRABAJOS WHERE NOMBRE_TRABAJO = "${req.params.work_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener trabajo por id
+export const getWorkById = async (req, res) => {
+    try {
+        const orders = await await db.query(
+            `SELECT * FROM TRABAJOS WHERE ID_TRABAJO = ${req.params.id_trabajo};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+//Actualizar Datos de persona
+export const updateWork = async (req, res) => {
+    try {
+        await TrabajosModel.update(req.body, {
+            where: { id_trabajo: req.params.id_trabajo }
+        })
+        res.json({ message: "Trabajo actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear trabajo
+export const createWork = async (req, res) => {
+    try {
+        await TrabajosModel.create(req.body);
+        res.json({ message: "Trabajo agregado" })
     } catch (error) {
         res.json({ message: error.message })
     }

@@ -5,6 +5,7 @@ import OrderRoutes from './routes/RoutesOrders.js'
 import PersonRoutes from './routes/RoutesPerson.js'
 import WorkshopsRoutes from './routes/RoutesWorkshops.js'
 import EnginesRoutes from './routes/RoutesEngines.js'
+import WorksRoutes from './routes/RoutesWorks.js'
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use('/orders', OrderRoutes)
 app.use('/persons', PersonRoutes)
 app.use('/workshops', WorkshopsRoutes)
 app.use('/engines', EnginesRoutes)
+app.use('/works', WorksRoutes)
 
 try {
     await db.authenticate()
