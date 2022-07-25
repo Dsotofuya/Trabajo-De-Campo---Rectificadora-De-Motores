@@ -12,7 +12,7 @@ function PersonModal(props) {
     const [personDoc, setPersonDoc] = useState('');
     const [phoneNumber, setPhone] = useState('');
 
-    const URI = "http://localhost:3412/persons";
+    const URI = "http://localhost:3412/persons"; 
 
     const num=(value)=>{
         setPersonDoc(value)
@@ -37,6 +37,7 @@ function PersonModal(props) {
         props.toggle()
         props.name(personName)
         props.document(personDoc)
+        props.phone(phoneNumber)
         return fetch(URI, requestOption);
     }
     
@@ -96,6 +97,7 @@ function PersonModal(props) {
                         <h3>Confirmar</h3>
                     </button>
                 </div>
+                <br/>
                 {/* </Link> */}
                 {/* <Link to='/menu' className="text-decoration-none"> */}
                 <div className="row">

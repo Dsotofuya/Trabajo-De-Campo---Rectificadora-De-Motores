@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './ROrder.css';
 import PartFE from "./PartFE";
 import JobFE from "./JobFE";
@@ -6,16 +6,59 @@ import { Link } from 'react-router-dom';
 import WorkshopModal from "./componentes/WorkshopModal";
 import PersonModal from "./componentes/PersonModal";
 import Modal from "./componentes/Modal";
+// import RectimotorController from "../../../node/controllers/RectimotorController";
 
 function RegisterOrder(){
   const [activePersonModal, setActivePerson] = useState(false);
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
-  
+  const URI = "http://localhost:3412/orders/";
+  const URI2="http://localhost:3412/engines/name/";
 
   const [name, setName] = useState("");
   const [document, setDocument] = useState("");  
+  const [phone, setPhone] = useState("");
+  const [workshopName, setWorkshop] = useState("");
+  const [vehicle, setVehicle] = useState(false);
+  const [parts, setParts] = useState([]);
+
+  function defineArray(namePart){
+    // console.log(namePart)
+    const parte = {name:namePart}
+    setParts((partes)=>[...partes,parte])
+  }
+
+  useEffect(()=>{
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+    defineArray("bloque");
+  },[])
 
 
+  const addOrderBase = async () => {
+    const idMotor = await fetch(URI2 + workshopName)
+    // console.log(idMotor + ', ' + idWorkshop + ', ' + document)
+    // const requestOption = {
+    //     method: "POST", 
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //         ID_MOTOR: workShopName, 
+    //         ID_TALLER: OwnerName, 
+    //         CC_PERSONA: document
+    //     }),
+    // };
+    
+    // console.log(requestOption.body)
+    setWorkshop(idMotor);
+    console.log(idMotor)
+    // return fetch(URI, requestOption);
+}
 
   const getNum=(doc)=>{
     setDocument(doc)
@@ -29,7 +72,14 @@ function RegisterOrder(){
     setActiveWorkshop((isActive)=>!isActive)
   }
 
-  const [vehicle, setVehicle] = useState(false);
+  const addGenericLine = () => {
+    return(
+      <div>
+        <PartFE/>
+      </div>
+    )
+  }
+
 
 
   return (
@@ -45,7 +95,7 @@ function RegisterOrder(){
               <label>Taller:</label>
             </div>
             <div className="col-md-3">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Taller" />
+              <input onChange={({ target: { value } }) => setWorkshop(value)} type="text" placeholder="Nombre del Taller" value={workshopName}/>
             </div>
             <div className="col-md-2">
               <button className="btn btn-success" onClick={toggleWorkshopModal}>agregar</button>
@@ -98,7 +148,7 @@ function RegisterOrder(){
               </label>
             </div>
             <div className="col-md-2">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable"/>
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable" value={phone}/>
             </div>
 
           </div>
@@ -106,10 +156,10 @@ function RegisterOrder(){
             <hr />
             <div className="row">
               <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
-                <WorkshopModal toggle={toggleWorkshopModal} />
+                <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop}/>
               </Modal>
               <Modal active={activePersonModal} toggle={togglePersonModal} >
-                <PersonModal toggle={togglePersonModal} name={setName} document={setDocument}/>
+                <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone}/>
               </Modal>
             </div>
             <hr />
@@ -120,13 +170,22 @@ function RegisterOrder(){
           <div>
 
             <div className="row">
-              <div className="col"> <h5 className="font-weight-bold">Partes Recibidas </h5> </div>
-              <div className="col"> <h5 className="font-weight-bold">cantidad </h5> </div>
-              <div className="col"> <h5 className="font-weight-bold">Medidas Iniciales </h5> </div>
-              <div className="col"> <h5 className="font-weight-bold">Medidas Finales </h5> </div>
+              <div className="col-sm-4"> <h5 className="font-weight-bold">Partes Recibidas </h5> </div>
+              <div className="col-sm-3"> <h5 className="font-weight-bold">Cantidad </h5> </div>
+              <div className="col-sm-3"> <h5 className="font-weight-bold">Medidas Iniciales </h5> </div>
+              <div className="col-sm-2"> <h5 className="font-weight-bold">Medidas Finales </h5> </div>
             </div>
 
-            <div className="row">
+            {parts.map ((part)=>{
+              console.log(part)
+              return(
+              <div>
+                <PartFE namePart={part.name ? part.name : ""}/>
+              </div>
+              )
+            })}
+
+            {/* <div className="row">
               <PartFE namePart="Bloque" />
             </div>
 
@@ -135,7 +194,7 @@ function RegisterOrder(){
             </div>
 
             <div className="row">
-              <PartFE namePart="Culata" />
+              <PartFE namePart="Culata"/>
             </div>
 
             <div className="row">
@@ -164,10 +223,10 @@ function RegisterOrder(){
 
             <div className="row">
               <PartFE namePart="Tapon de Resortes" />
-            </div>
+            </div> */}
 
             <div className="row">
-              <button><p>+ agregar parte</p></button>
+              <button onClick={addGenericLine}><p>+ agregar parte</p></button>
             </div>
 
             <p>
@@ -238,13 +297,13 @@ function RegisterOrder(){
                 Pendiente de repuestos</label>
             </div>
           </div>
-          <Link to='/menu' className="text-decoration-none">
+          {/* <Link to='/menu' className="text-decoration-none"> */}
             <div className="row">
-              <button className="btn btn-success">
+              <button className="btn btn-success" onClick={addOrderBase}>
                 <h1>Confirmar</h1>
               </button>
             </div>
-          </Link>
+          {/* </Link> */}
           <Link to='/menu' className="text-decoration-none">
             <div className="row">
               <button className="btn btn-danger">

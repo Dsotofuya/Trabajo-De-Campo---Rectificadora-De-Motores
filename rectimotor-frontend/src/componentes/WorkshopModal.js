@@ -24,7 +24,8 @@ function WorkshopModal(props) {
         };
         
         console.log(requestOption.body)
-        props.toggle()
+        props.workshopName(workShopName);
+        props.toggle();
         return fetch(URI, requestOption);
     }
 
@@ -84,6 +85,7 @@ function WorkshopModal(props) {
                                 <h3>Confirmar</h3>
                             </button>
                         </div>
+                        <br/>
                     {/*</Link> */}
                     {/* <Link to='/menu' className="text-decoration-none"> */}
                         <div className="row" onClick={props.toggle}>
