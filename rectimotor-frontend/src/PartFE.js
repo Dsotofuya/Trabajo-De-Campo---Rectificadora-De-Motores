@@ -1,6 +1,9 @@
 import './App.css';
+import React, { useState } from "react";
+
 
 const PartFE = ({namePart}) => {
+    const [nameP, setName] = useState(""+namePart);
     return (
         <div>
             <div>
@@ -10,7 +13,7 @@ const PartFE = ({namePart}) => {
                         <input type="checkBox"></input>
                     </div>
                     <div className="col-sm-3">
-                        <input type="text" placeholder="cantidad" value={namePart}/>
+                        <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre de la parte" value={nameP}/>
                     </div>
 
                     <div className="col-sm-3">
