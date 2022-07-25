@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import WorkshopModal from "./componentes/WorkshopModal";
 import PersonModal from "./componentes/PersonModal";
 import Modal from "./componentes/Modal";
-// import RectimotorController from "../../../node/controllers/RectimotorController";
 
 function RegisterOrder() {
   const [activePersonModal, setActivePerson] = useState(false);
@@ -20,6 +19,8 @@ function RegisterOrder() {
   const [workshopName, setWorkshop] = useState("");
   const [vehicle, setVehicle] = useState(false);
   const [parts, setParts] = useState([]);
+  const [engineName, setEngineName] = useState([]);
+  const [engineId, setEngineId] = useState([]);
 
   function defineArray(namePart) {
     // console.log(namePart)
@@ -48,7 +49,12 @@ function RegisterOrder() {
 
 
   const addOrderBase = async () => {
-    const idMotor = await fetch(URI2 + workshopName)
+    //console.log(engineName)
+    await fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
+
+    /* se retorna la id en base al nombre del motor en el campo */ 
+    console.log("La id del motor ",  engineName, " es: ", engineId[0].ID_MOTOR)
+    //const idMotor = await fetch(URI2 + workshopName)
     // console.log(idMotor + ', ' + idWorkshop + ', ' + document)
     // const requestOption = {
     //     method: "POST", 
@@ -61,8 +67,6 @@ function RegisterOrder() {
     // };
 
     // console.log(requestOption.body)
-    setWorkshop(idMotor);
-    console.log(idMotor)
     // return fetch(URI, requestOption);
   }
 

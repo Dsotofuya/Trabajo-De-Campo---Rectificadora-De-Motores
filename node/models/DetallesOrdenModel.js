@@ -8,6 +8,7 @@ const DetallesOrdenModel = db.define('DETALLES_ORDEN', {
     ID_REPUESTO: { type: DataTypes.INTEGER},
     ID_PARTE: { type: DataTypes.INTEGER},
     CANTIDAD: { type: DataTypes.DECIMAL},
+    VALOR_TRABAJO: { type: DataTypes.DECIMAL }
 }, { tableName: 'DETALLES_ORDEN' })
 
 export default DetallesOrdenModel;

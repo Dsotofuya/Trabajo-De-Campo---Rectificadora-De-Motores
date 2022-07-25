@@ -7,6 +7,7 @@ const CompShowReports = () => {
     // Getting the data from de database and setting the variable to render
     const URI = 'http://localhost:3412/orders/details/'
     const [details, setDetails] = useState([])
+    var total = 0
     const params = useParams()
     const navigate = useNavigate()
     useEffect(() => {
@@ -24,7 +25,7 @@ const CompShowReports = () => {
                         (details[0] || []).map((detail, i) => {
                             if(i==0){
                                 return <div className='detalles'>
-                                            <p>Reporte número: {detail.ID_REPORTE}</p>
+                                            <p>Reporte número: {detail.ID_ORDEN}</p>
                                             <p> Nombre del propietario: {detail.NOMBRES_APELLIDOS}</p>                
                                             <p>Cédula: {detail.CC_PERSONA}</p>
                                             <p>Número de teléfono: {detail.TELEFONO_PERSONA}</p>
@@ -45,6 +46,7 @@ const CompShowReports = () => {
                                 <tbody>
                                 { 
                                     (details[0] || []).map((detail, i) => {
+                                        total += parseInt(detail.VALOR_TRABAJO)
                                     return <tr className='fila-reporte' key={i}>
                                         <td>{detail.NOMBRE_TRABAJO}</td>
                                         <td>{detail.VALOR_TRABAJO}</td>                                    
@@ -58,7 +60,7 @@ const CompShowReports = () => {
                                         if(i==0){
                                             return <tr className='fila-reporte' key={i}>
                                             <td>Total: </td>  
-                                            <td>{detail.TOTAL}</td> 
+                                            <td>{total}</td> 
                                             </tr>
                                         }
                                         })}

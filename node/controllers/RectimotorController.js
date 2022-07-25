@@ -1,5 +1,4 @@
 import DetallesOrdenModel from "../models/DetallesOrdenModel.js";
-import DetallesReporteModel from "../models/DetallesReporteModel.js";
 import HistoricoReportesModel from "../models/HistoricoMotores.js";
 import MedidasModel from "../models/MedidasModel.js";
 import MotorModel from "../models/MotorModel.js";
@@ -7,7 +6,6 @@ import NuevosRepuestosModel from "../models/NuevosRepuestosModel.js";
 import OrdenModel from "../models/OrdenModel.js";
 import PartesModel from "../models/PartesModel.js";
 import PersonasModel from "../models/PersonasModel.js";
-import ReportesModel from "../models/ReportesModel.js";
 import TalleresModel from "../models/TalleresModel.js";
 import TrabajosModel from "../models/TrabajosModel.js";
 import db from "../db/RectimotorDB.js";
@@ -195,22 +193,8 @@ export const getOrderId = async (req, res) => {
 export const getOrderByCC = async (req, res) => {
     try {
         const order = await db.query(
-            `SELECT o.id_orden, m.nombre_motor, o.id_taller, o.cc_persona, o.placa, o.fecha_recibido, o.fecha_entrega, o.estado_orden FROM ORDENES o, MOTORES m WHERE m.ID_MOTOR = o.ID_MOTOR AND o.CC_PERSONA = ${req.params.cc_persona};`
+            `SELECT o.id_orden, m.nombre_motor, o.id_taller, o.cc_persona, o.fecha_recibido, o.fecha_entrega, o.estado_orden FROM ORDENES o, MOTORES m WHERE m.ID_MOTOR = o.ID_MOTOR AND o.CC_PERSONA = ${req.params.cc_persona};`
         );
-        res.json(order)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-
-export const getReportsDetailsById2 = async (req, res) => {
-    try {
-        DetallesReporteModel
-        ReportesModel.hasMany()
-        PersonasModel
-        TrabajosModel
-
         res.json(order)
     } catch (error) {
         res.json({ message: error.message })
@@ -221,12 +205,7 @@ export const getReportsDetailsById2 = async (req, res) => {
 export const getReportsDetailsById = async (req, res) => {
     try {
         const order = await db.query(
-            `Select p.CC_PERSONA, p.NOMBRES_APELLIDOS, p.TELEFONO_PERSONA, r.ID_REPORTE, t.NOMBRE_TRABAJO, t.VALOR_TRABAJO, r.TOTAL 
-            From DETALLES_REPORTE dr, TRABAJOS t, REPORTES r, PERSONAS p 
-            WHERE dr.ID_TRABAJO = t.ID_TRABAJO 
-            AND dr.ID_REPORTE = r.ID_REPORTE 
-            and r.CC_PERSONA = p.CC_PERSONA 
-            AND dr.ID_REPORTE = ${req.params.id_orden};`
+            `Select p.CC_PERSONA, p.NOMBRES_APELLIDOS, p.TELEFONO_PERSONA, o.ID_ORDEN, t.NOMBRE_TRABAJO, dor.VALOR_TRABAJO From DETALLES_ORDEN dor, TRABAJOS t, ORDENES o, PERSONAS p WHERE dor.ID_TRABAJO = t.ID_TRABAJO AND dor.ID_ORDEN = o.ID_ORDEN and o.CC_PERSONA = p.CC_PERSONA AND dor.ID_ORDEN = ${req.params.id_orden};`
         );
         res.json(order)
     } catch (error) {
