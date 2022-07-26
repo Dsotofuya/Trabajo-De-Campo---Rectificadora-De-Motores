@@ -17,15 +17,15 @@ function RegisterOrder() {
   const [document, setDocument] = useState("");
   const [phone, setPhone] = useState("");
   const [workshopName, setWorkshop] = useState("");
-  const [vehicle, setVehicle] = useState(false);
+  // const [vehicle, setVehicle] = useState(false);
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
   const [engineName, setEngineName] = useState([]);
   const [engineId, setEngineId] = useState([]);
 
-  function defineArray(namePart) {
+  function defineArray(namePart, quant, initialM, finalM, isChecked) {
     // console.log(namePart)
-    const parte = { name: namePart }
+    const parte = { name: namePart, quantity: quant, initialMed: initialM, finalMed: finalM, isChecked: isChecked }
     setParts((partes) => [...partes, parte])
   }
 
@@ -36,31 +36,31 @@ function RegisterOrder() {
 
   function defineWorksArray(nameWork, priceWork, active) {
     // console.log(namePart)
-    const work = { nameJob: nameWork, priceJob: priceWork, isActive: active}
+    const work = { nameJob: nameWork, priceJob: priceWork, isActive: active }
     setWorks((works) => [...works, work])
   }
 
   function defineVoidWorksLine() {
-    const work = { nameJob: "", priceJob:null, isActive:false}
+    const work = { nameJob: "", priceJob: null, isActive: false }
     setWorks((works) => [...works, work])
   }
 
   useEffect(() => {
-    defineArray("Bloque");
-    defineArray("Cigüeñal");
-    defineArray("Culata");
-    defineArray("Pistones Usados");
-    defineArray("Bielas");
-    defineArray("Valvulas");
-    defineArray("Tapas de Bancada");
-    defineArray("Eje de Levas");
-    defineArray("Carter");
-    defineArray("Tapon de Resortes");
+    defineArray("Bloque", "", "", "", false);
+    defineArray("Cigüeñal", "", "", "", false);
+    defineArray("Culata", "", "", "", false);
+    defineArray("Pistones Usados", "", "", "", false);
+    defineArray("Bielas", "", "", "", false);
+    defineArray("Valvulas", "", "", "", false);
+    defineArray("Tapas de Bancada", "", "", "", false);
+    defineArray("Eje de Levas", "", "", "", false);
+    defineArray("Carter", "", "", "", false);
+    defineArray("Tapon de Resortes", "", "", "", false);
 
-    defineWorksArray("Encamisar Bloque", 200000, false)
+    defineWorksArray("Encamisar Bloque", 15000, false)
     defineWorksArray("Ensamblar pistones", 120000, false)
     defineWorksArray("rectificar cigüeñal", 130000, false)
-    defineWorksArray("Cambiar tapones", 20000, true)
+    defineWorksArray("Cambiar tapones", 20000, false)
   }, [])
 
 
@@ -70,6 +70,7 @@ function RegisterOrder() {
 
     /* se retorna la id en base al nombre del motor en el campo */
     console.log("La id del motor ", engineName, " es: ", engineId[0].ID_MOTOR)
+    setPhone(engineId[0].ID_MOTOR)
     //const idMotor = await fetch(URI2 + workshopName)
     // console.log(idMotor + ', ' + idWorkshop + ', ' + document)
     // const requestOption = {
@@ -86,10 +87,6 @@ function RegisterOrder() {
     // return fetch(URI, requestOption);
   }
 
-  const getNum = (doc) => {
-    setDocument(doc)
-  }
-
   const togglePersonModal = () => {
     setActivePerson(!activePersonModal)
   }
@@ -97,16 +94,6 @@ function RegisterOrder() {
   const toggleWorkshopModal = () => {
     setActiveWorkshop((isActive) => !isActive)
   }
-
-  const addGenericLine = () => {
-    return (
-      <div>
-        <PartFE />
-      </div>
-    )
-  }
-
-
 
   return (
     <div>
@@ -132,7 +119,7 @@ function RegisterOrder() {
             <label>Vehiculo:</label>
           </div>
           <div className="col-md-2">
-            <input onChange={({ target: { value } }) => setVehicle(value)} type="text" placeholder="Nombre del vehiculo" />
+            <input onChange={({ target: { value } }) => setEngineName(value)} type="text" placeholder="Nombre del vehiculo" />
           </div>
         </div>
         <br />
@@ -165,7 +152,7 @@ function RegisterOrder() {
             <label>Cedula:</label>
           </div>
           <div className="col-md-5">
-            <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Cedula del responsable" value={document} />
+            <input onChange={({ target: { value } }) => setDocument(value)} type="text" placeholder="Cedula del responsable" value={document} />
           </div>
 
 
@@ -174,7 +161,7 @@ function RegisterOrder() {
             </label>
           </div>
           <div className="col-md-2">
-            <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Telefono del responsable" value={phone} />
+            <input onChange={({ target: { value } }) => setPhone(value)} type="text" placeholder="Telefono del responsable" value={phone} />
           </div>
 
         </div>
@@ -206,7 +193,8 @@ function RegisterOrder() {
             // console.log(part)
             return (
               <div>
-                <PartFE namePart={part.name ? part.name : ""} />
+                <PartFE namePart={part.name ? part.name : ""} quantity={part.quantity ? part.quantity : ""}
+                  initialMed={part.initialMed ? part.initialMed : ""} finalMed={part.finalMed ? part.finalMed : ""} isChecked={part.isChecked ? part.isChecked : ""} />
               </div>
             )
           })}
@@ -215,10 +203,10 @@ function RegisterOrder() {
             <button onClick={defineVoidLine} className="btn btn-primary btn-lg"><h3>+ Agregar Parte</h3></button>
           </div>
 
-          <p>
+          <div className="row-xl">
             <hr />
             <hr />
-          </p>
+          </div>
 
 
 
@@ -231,13 +219,13 @@ function RegisterOrder() {
             <div className="col"> <h5 className="font-weight-bold">Nombre de trabajo </h5> </div>
             <div className="col"> <h5 className="font-weight-bold">Precio del trabajo</h5> </div>
           </div>
-          <br/>
+          <br />
 
           {works.map((work) => {
             // console.log(part)
             return (
               <div>
-                <JobFE nameJob={work.nameJob ? work.nameJob : ""} priceJob={work.priceJob ? work.priceJob : ""} />
+                <JobFE nameJob={work.nameJob ? work.nameJob : ""} priceJob={work.priceJob ? work.priceJob : ""} isActive={work.isActive ? work.isActive : ""} />
                 <br />
               </div>
             )
@@ -249,11 +237,11 @@ function RegisterOrder() {
           </div>
         </div>
 
-        <p>
+        <div className="row">
           <hr />
           <hr />
-        </p>
-        <br/>
+        </div>
+        <br />
 
 
         <h1 className="text-center">Estados</h1>
@@ -279,8 +267,8 @@ function RegisterOrder() {
               Pendiente de repuestos</label>
           </div>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
         {/* <Link to='/menu' className="text-decoration-none"> */}
         <div className="row">
           <button className="btn btn-success" onClick={addOrderBase}>
