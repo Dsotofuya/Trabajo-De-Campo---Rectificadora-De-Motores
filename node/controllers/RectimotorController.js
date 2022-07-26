@@ -270,7 +270,7 @@ export const getAllHistorics = async (req, res) => {
 }
 
 // Mostrar todas los medidas
-export const getAllMedidas = async (req, res) => {
+export const getAllMeasures = async (req, res) => {
     try {
         const orders = await MedidasModel.findAll();
         res.json(orders)
@@ -432,6 +432,50 @@ export const getPartById = async (req, res) => {
     try {
         const orders = await db.query(
             `SELECT * FROM PARTES WHERE ID_PARTE = ${req.params.id_parte};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de medida
+export const updateMeasures = async (req, res) => {
+    try {
+        await MedidasModel.update(req.body, {
+            where: { id_medida: req.params.id_medida }
+        })
+        res.json({ message: "medida actualizada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear medida
+export const createMeasures = async (req, res) => {
+    try {
+        await MedidasModel.create(req.body);
+        res.json({ message: "medida agregada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id de una parte por nombre
+export const getMeasuresIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_MEDIDA FROM MEDIDAS WHERE NOMBRE_MEDIDA = "${req.params.measure_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener repuesto por id
+export const getMeasuresByIdPart = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM MEDIDAS m, PARTES p WHERE m.ID_PARTE = p.ID_PARTE AND m.ID_PARTE = ${req.params.id_parte};`);
         res.json(orders[0])
     } catch (error) {
         res.json({ message: error.message })
