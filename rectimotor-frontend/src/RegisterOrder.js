@@ -64,27 +64,28 @@ function RegisterOrder() {
   }, [])
 
 
-  const addOrderBase = async () => {
+  const addOrderBase = () => {
     //console.log(engineName)
-    await fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
+    fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
 
     /* se retorna la id en base al nombre del motor en el campo */
     console.log("La id del motor ", engineName, " es: ", engineId[0].ID_MOTOR)
     setPhone(engineId[0].ID_MOTOR)
-    //const idMotor = await fetch(URI2 + workshopName)
-    // console.log(idMotor + ', ' + idWorkshop + ', ' + document)
-    // const requestOption = {
-    //     method: "POST", 
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //         ID_MOTOR: workShopName, 
-    //         ID_TALLER: OwnerName, 
-    //         CC_PERSONA: document
-    //     }),
-    // };
+    const idMotor = engineId[0].ID_MOTOR
+    console.log(idMotor + ', ' +  + ', ' + document)
+    const requestOption = {
+        method: "POST", 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            ID_MOTOR: idMotor,
+            ID_TALLER: 205,
+            CC_PERSONA: document, 
+            ESTADO_ORDEN: "En Espera"
+        }),
+    };
 
-    // console.log(requestOption.body)
-    // return fetch(URI, requestOption);
+    console.log(requestOption.body)
+    return fetch(URI, requestOption);
   }
 
   const togglePersonModal = () => {
@@ -141,7 +142,7 @@ function RegisterOrder() {
             <label>Ingreso:</label>
           </div>
           <div className="col-md-2">
-            <input type="date" placeholder="Fecha de ingreso" readonly="readonly" id="current" />
+            <input type="date" placeholder="Fecha de ingreso" readOnly="readOnly" id="current" />
           </div>
         </div>
         <br />
@@ -165,8 +166,7 @@ function RegisterOrder() {
           </div>
 
         </div>
-        <p>
-          <hr />
+          <hr/>
           <div className="row">
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
               <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop} />
@@ -176,7 +176,6 @@ function RegisterOrder() {
             </Modal>
           </div>
           <hr />
-        </p>
 
         <h1 className="text-center">Partes</h1>
 
@@ -247,23 +246,23 @@ function RegisterOrder() {
         <h1 className="text-center">Estados</h1>
         <div className="row">
           <div className="col-sm">
-            <label class="form-check-label" for="inlineCheckbox1">
-              <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" />
+            <label className="form-check-label" htmlFor="inlineCheckbox1">
+              <input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" />
               Reparado</label>
           </div>
           <div className="col-sm">
-            <label class="form-check-label" for="inlineCheckbox2">
-              <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" />
+            <label className="form-check-label" htmlFor="inlineCheckbox2">
+              <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" />
               Pagado</label>
           </div>
           <div className="col-sm">
-            <label class="form-check-label" for="inlineCheckbox3">
-              <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" />
+            <label className="form-check-label" htmlFor="inlineCheckbox3">
+              <input className="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" />
               Enviado</label>
           </div>
           <div className="col-sm">
-            <label class="form-check-label" for="inlineCheckbox4">
-              <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" />
+            <label className="form-check-label" htmlFor="inlineCheckbox4">
+              <input className="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" />
               Pendiente de repuestos</label>
           </div>
         </div>
