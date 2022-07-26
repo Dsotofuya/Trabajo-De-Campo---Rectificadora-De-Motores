@@ -279,15 +279,6 @@ export const getAllMedidas = async (req, res) => {
     }
 }
 
-export const getAllNuevoRepuesto = async (req, res) => {
-    try {
-        const orders = await NuevosRepuestosModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
 export const getAllParts = async (req, res) => {
     try {
         const orders = await PartesModel.findAll();
@@ -345,6 +336,59 @@ export const createWork = async (req, res) => {
     try {
         await TrabajosModel.create(req.body);
         res.json({ message: "Trabajo agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener todos los repuestos
+export const getAllNewReplacements = async (req, res) => {
+    try {
+        const orders = await NuevosRepuestosModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id del repuesto por nombre
+export const getNewReplacementsNameById = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_REPUESTO FROM NUEVOS_REPUESTOS WHERE NOMBRE_REPUESTO = "${req.params.replacement_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener repuesto por id
+export const getNewReplacementsById = async (req, res) => {
+    try {
+        const orders = await await db.query(
+            `SELECT * FROM NUEVOS_REPUESTOS WHERE ID_REPUESTO = ${req.params.id_repuesto};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+//Actualizar Datos de Repuesto
+export const updateNewReplacement = async (req, res) => {
+    try {
+        await NuevosRepuestosModel.update(req.body, {
+            where: { id_repuesto: req.params.id_repuesto }
+        })
+        res.json({ message: "Repuesto actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear repuesto
+export const createNewReplacement = async (req, res) => {
+    try {
+        await NuevosRepuestosModel.create(req.body);
+        res.json({ message: "Repuesto agregado" })
     } catch (error) {
         res.json({ message: error.message })
     }
