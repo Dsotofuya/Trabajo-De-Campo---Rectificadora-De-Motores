@@ -25,7 +25,7 @@ export const getAllPersons = async (req, res) => {
 //Obtener Persona Por Cc
 export const getPersonById = async (req, res) => {
     try {
-        const orders = await await db.query(
+        const orders = await db.query(
             `SELECT * FROM PERSONAS WHERE CC_PERSONA = ${req.params.cc_persona};`);
         res.json(orders[0])
     } catch (error) {
@@ -312,14 +312,14 @@ export const getWorkIdByName = async (req, res) => {
 //Obtener trabajo por id
 export const getWorkById = async (req, res) => {
     try {
-        const orders = await await db.query(
+        const orders = await db.query(
             `SELECT * FROM TRABAJOS WHERE ID_TRABAJO = ${req.params.id_trabajo};`);
         res.json(orders[0])
     } catch (error) {
         res.json({ message: error.message })
     }
 }
-//Actualizar Datos de persona
+//Actualizar Datos de trabajo
 export const updateWork = async (req, res) => {
     try {
         await TrabajosModel.update(req.body, {
@@ -365,7 +365,7 @@ export const getNewReplacementsNameById = async (req, res) => {
 //Obtener repuesto por id
 export const getNewReplacementsById = async (req, res) => {
     try {
-        const orders = await await db.query(
+        const orders = await db.query(
             `SELECT * FROM NUEVOS_REPUESTOS WHERE ID_REPUESTO = ${req.params.id_repuesto};`);
         res.json(orders[0])
     } catch (error) {
@@ -389,6 +389,50 @@ export const createNewReplacement = async (req, res) => {
     try {
         await NuevosRepuestosModel.create(req.body);
         res.json({ message: "Repuesto agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de persona
+export const updatePart = async (req, res) => {
+    try {
+        await PartesModel.update(req.body, {
+            where: { id_parte: req.params.id_parte }
+        })
+        res.json({ message: "Parte actualizada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear trabajo
+export const createPart = async (req, res) => {
+    try {
+        await PartesModel.create(req.body);
+        res.json({ message: "Parte agregada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id de una parte por nombre
+export const getPartIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_PARTE FROM PARTES WHERE NOMBRE_PARTE = "${req.params.part_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener repuesto por id
+export const getPartById = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM PARTES WHERE ID_PARTE = ${req.params.id_parte};`);
+        res.json(orders[0])
     } catch (error) {
         res.json({ message: error.message })
     }
