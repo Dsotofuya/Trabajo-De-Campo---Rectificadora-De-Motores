@@ -25,7 +25,7 @@ export const getAllPersons = async (req, res) => {
 //Obtener Persona Por Cc
 export const getPersonById = async (req, res) => {
     try {
-        const orders = await await db.query(
+        const orders = await db.query(
             `SELECT * FROM PERSONAS WHERE CC_PERSONA = ${req.params.cc_persona};`);
         res.json(orders[0])
     } catch (error) {
@@ -259,16 +259,6 @@ export const getAllOrdersDetails = async (req, res) => {
     }
 }
 
-// Mostrar todas los detalles de reportes
-export const getAllReportsDetails = async (req, res) => {
-    try {
-        const orders = await DetallesReporteModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
 // Mostrar todas los historicos
 export const getAllHistorics = async (req, res) => {
     try {
@@ -280,28 +270,9 @@ export const getAllHistorics = async (req, res) => {
 }
 
 // Mostrar todas los medidas
-export const getAllMedidas = async (req, res) => {
+export const getAllMeasures = async (req, res) => {
     try {
         const orders = await MedidasModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-// Mostrar todas los medidas
-export const getAllMotors = async (req, res) => {
-    try {
-        const orders = await MotorModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-export const getAllNuevoRepuesto = async (req, res) => {
-    try {
-        const orders = await NuevosRepuestosModel.findAll();
         res.json(orders)
     } catch (error) {
         res.json({ message: error.message })
@@ -317,28 +288,195 @@ export const getAllParts = async (req, res) => {
     }
 }
 
-export const getAllReportss = async (req, res) => {
-    try {
-        const orders = await ReportesModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
 
-export const getAllTalleres = async (req, res) => {
-    try {
-        const orders = await TalleresModel.findAll();
-        res.json(orders)
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
-
-export const getAllTrabajos = async (req, res) => {
+export const getAllWorks = async (req, res) => {
     try {
         const orders = await TrabajosModel.findAll();
         res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener Taller Por id de taller
+export const getWorkIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_TRABAJO FROM TRABAJOS WHERE NOMBRE_TRABAJO = "${req.params.work_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener trabajo por id
+export const getWorkById = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM TRABAJOS WHERE ID_TRABAJO = ${req.params.id_trabajo};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+//Actualizar Datos de trabajo
+export const updateWork = async (req, res) => {
+    try {
+        await TrabajosModel.update(req.body, {
+            where: { id_trabajo: req.params.id_trabajo }
+        })
+        res.json({ message: "Trabajo actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear trabajo
+export const createWork = async (req, res) => {
+    try {
+        await TrabajosModel.create(req.body);
+        res.json({ message: "Trabajo agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener todos los repuestos
+export const getAllNewReplacements = async (req, res) => {
+    try {
+        const orders = await NuevosRepuestosModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id del repuesto por nombre
+export const getNewReplacementsNameById = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_REPUESTO FROM NUEVOS_REPUESTOS WHERE NOMBRE_REPUESTO = "${req.params.replacement_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener repuesto por id
+export const getNewReplacementsById = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM NUEVOS_REPUESTOS WHERE ID_REPUESTO = ${req.params.id_repuesto};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+//Actualizar Datos de Repuesto
+export const updateNewReplacement = async (req, res) => {
+    try {
+        await NuevosRepuestosModel.update(req.body, {
+            where: { id_repuesto: req.params.id_repuesto }
+        })
+        res.json({ message: "Repuesto actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear repuesto
+export const createNewReplacement = async (req, res) => {
+    try {
+        await NuevosRepuestosModel.create(req.body);
+        res.json({ message: "Repuesto agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de persona
+export const updatePart = async (req, res) => {
+    try {
+        await PartesModel.update(req.body, {
+            where: { id_parte: req.params.id_parte }
+        })
+        res.json({ message: "Parte actualizada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear trabajo
+export const createPart = async (req, res) => {
+    try {
+        await PartesModel.create(req.body);
+        res.json({ message: "Parte agregada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id de una parte por nombre
+export const getPartIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_PARTE FROM PARTES WHERE NOMBRE_PARTE = "${req.params.part_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener repuesto por id
+export const getPartById = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM PARTES WHERE ID_PARTE = ${req.params.id_parte};`);
+        res.json(orders[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de medida
+export const updateMeasures = async (req, res) => {
+    try {
+        await MedidasModel.update(req.body, {
+            where: { id_medida: req.params.id_medida }
+        })
+        res.json({ message: "medida actualizada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear medida
+export const createMeasures = async (req, res) => {
+    try {
+        await MedidasModel.create(req.body);
+        res.json({ message: "medida agregada" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id de una parte por nombre
+export const getMeasuresIdByName = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT ID_MEDIDA FROM MEDIDAS WHERE NOMBRE_MEDIDA = "${req.params.measure_name}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener repuesto por id
+export const getMeasuresByIdPart = async (req, res) => {
+    try {
+        const orders = await db.query(
+            `SELECT * FROM MEDIDAS m, PARTES p WHERE m.ID_PARTE = p.ID_PARTE AND m.ID_PARTE = ${req.params.id_parte};`);
+        res.json(orders[0])
     } catch (error) {
         res.json({ message: error.message })
     }
