@@ -1,5 +1,6 @@
 import './App.css';
 import React from 'react';
+import Login from './componentes/Login';
 import CompShowOrders from './CompShowOrders';
 import CompShowReport from './CompShowReport.js';
 import WorkshopModal from './componentes/WorkshopModal.js';
@@ -14,6 +15,7 @@ function App() {
     
     <BrowserRouter>
       <Routes>
+        <Route path='/login' element={<Login />}/>
         <Route path='/menu' element={<Menu />}/>
         <Route path='/menu/agregar' element={<RegisterOrder />}/>
         <Route path='/menu/buscar' element={<CompShowOrders />}/>
