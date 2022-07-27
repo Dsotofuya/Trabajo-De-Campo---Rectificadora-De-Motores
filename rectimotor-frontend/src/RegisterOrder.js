@@ -12,6 +12,7 @@ function RegisterOrder() {
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
   const URI = "http://localhost:3412/orders/";
   const URI2 = "http://localhost:3412/engines/name/";
+  const URIWorkshops = "http://localhost:3412/workshops/name/"
 
   const [name, setName] = useState("");
   const [document, setDocument] = useState("");
@@ -21,7 +22,8 @@ function RegisterOrder() {
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
   const [engineName, setEngineName] = useState([]);
-  const [engineId, setEngineId] = useState([]);
+  const [engineId, setEngineId] = useState("");
+  const [workshopID, setWorkshopId] = useState("");
 
   function defineArray(namePart, quant, initialM, finalM, isChecked) {
     // console.log(namePart)
@@ -67,18 +69,21 @@ function RegisterOrder() {
   const addOrderBase = () => {
     //console.log(engineName)
     fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
+    fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
+    // console.log("taller: "+)
 
     /* se retorna la id en base al nombre del motor en el campo */
-    console.log("La id del motor ", engineName, " es: ", engineId[0].ID_MOTOR)
+    // console.log("La id del motor ", engineName, " es: ", engineId[0].ID_MOTOR)
     setPhone(engineId[0].ID_MOTOR)
     const idMotor = engineId[0].ID_MOTOR
+    const idWorkshop = workshopID[0].ID_TALLER
     console.log(idMotor + ', ' +  + ', ' + document)
     const requestOption = {
         method: "POST", 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             ID_MOTOR: idMotor,
-            ID_TALLER: 205,
+            ID_TALLER: idWorkshop,
             CC_PERSONA: document, 
             ESTADO_ORDEN: "En Espera"
         }),
