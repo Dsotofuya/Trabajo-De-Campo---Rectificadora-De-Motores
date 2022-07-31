@@ -20,8 +20,12 @@ function RegisterOrder() {
   const [phone, setPhone] = useState("");
   const [workshopName, setWorkshop] = useState("");
   // const [vehicle, setVehicle] = useState(false);
+
+  //listas de partes y trabajos
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
+  
+  //constantes de motores
   const [engineName, setEngineName] = useState([]);
   const [engineId, setEngineId] = useState("");
 
@@ -31,17 +35,16 @@ function RegisterOrder() {
 
   function getAllWorkshops() {
     fetch(URIAllWorkshops).then((res) => res.json()).then((data) => { setWorkshops(data) })
-    console.log("holi"+workshops[1])
   }
 
   function defineArray(namePart, quant, initialM, finalM, isChecked) {
-    const parte = { name: namePart, quantity: quant, initialMed: initialM, finalMed: finalM, isChecked: isChecked }
-    setParts((partes) => [...partes, parte])
+    const part = { name: namePart, quantity: quant, initialMed: initialM, finalMed: finalM, isChecked: isChecked }
+    setParts((partes) => [...partes, part])
   }
 
   function defineVoidLine() {
-    const parte = { name: "" }
-    setParts((partes) => [...partes, parte])
+    const part = { name: "", quantity: "", initialMed: "", finalMed: "", isChecked: false }
+    setParts((partes) => [...partes, part])
   }
 
   function defineWorksArray(nameWork, priceWork, active) {
@@ -62,13 +65,28 @@ function RegisterOrder() {
     })
   }
 
+  function partMapTrial() {
+    parts.map((part) => {
+      console.log("nombre: " + part.name + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed+ "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+    })
+  }
+
   function updateWork(index, name, price, checked){
     let worksTemp = [...works]
     worksTemp[index].nameJob = name
     worksTemp[index].priceJob = price
     worksTemp[index].isActive = checked
     setWorks(worksTemp)
+  }
 
+  function updatePart(index, name, quant, iMed, fMed, checked){
+    let partsTemp = [...parts]
+    partsTemp[index].name = name
+    partsTemp[index].quantity = quant
+    partsTemp[index].initialMed = iMed
+    partsTemp[index].finalMed = fMed
+    partsTemp[index].isChecked = checked
+    setParts(partsTemp)
   }
 
   useEffect(() => {
@@ -212,6 +230,10 @@ function RegisterOrder() {
 
           <h1 className="text-center">Partes</h1>
 
+          <div className="row">
+              <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar mapa de Trabajos</button>
+            </div>
+
           <div>
 
             <div className="row">
@@ -221,12 +243,10 @@ function RegisterOrder() {
               <div className="col-sm-2"> <h5 className="font-weight-bold">Medidas Finales </h5> </div>
             </div>
 
-            {parts.map((part) => {
-              // console.log(part)
+            {parts.map((part, i) => {
               return (
                 <div>
-                  <PartFE namePart={part.name ? part.name : ""} quantity={part.quantity ? part.quantity : ""}
-                    initialMed={part.initialMed ? part.initialMed : ""} finalMed={part.finalMed ? part.finalMed : ""} isChecked={part.isChecked ? part.isChecked : ""} />
+                  <PartFE idx={i} part={part} updater={updatePart} />
                 </div>
               )
             })}
