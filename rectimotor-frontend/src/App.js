@@ -8,7 +8,6 @@ import PersonModal from './componentes/PersonModal.js';
 import Menu from './componentes/Menu.js';
 import RegisterOrder from './RegisterOrder';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ClientWiew from './ClientWiew';
 
 function App() {
   return (

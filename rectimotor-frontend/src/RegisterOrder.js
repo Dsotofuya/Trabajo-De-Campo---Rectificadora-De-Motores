@@ -35,7 +35,6 @@ function RegisterOrder() {
   }
 
   function defineArray(namePart, quant, initialM, finalM, isChecked) {
-    // console.log(namePart)
     const parte = { name: namePart, quantity: quant, initialMed: initialM, finalMed: finalM, isChecked: isChecked }
     setParts((partes) => [...partes, parte])
   }
@@ -46,14 +45,13 @@ function RegisterOrder() {
   }
 
   function defineWorksArray(nameWork, priceWork, active) {
-    // console.log(namePart)
-    const work = { nameJob: nameWork, priceJob: priceWork, isActive: active }
+    const work = {nameJob: nameWork, priceJob: priceWork, isActive: active }
     // const work = <JobFE nameJob={nameWork ? nameWork : ""} priceJob={priceWork ? priceWork : ""} isActive={active ? active : ""}/>
     setWorks((works) => [...works, work])
   }
 
   function defineVoidWorksLine() {
-    const work = { nameJob: "", priceJob: null, isActive: false }
+    const work = {nameJob: "", priceJob: null, isActive: false }
     // const work = <JobFE nameJob={""} priceJob={priceJob} isActive={isActive}/>
     setWorks((works) => [...works, work])
   }
@@ -62,6 +60,15 @@ function RegisterOrder() {
     works.map((work) => {
       console.log("nombre: " + work.nameJob + "; precio: " + work.priceJob + "; activo: " + work.isActive)
     })
+  }
+
+  function updateWork(index, name, price, checked){
+    let worksTemp = [...works]
+    worksTemp[index].nameJob = name
+    worksTemp[index].priceJob = price
+    worksTemp[index].isActive = checked
+    setWorks(worksTemp)
+
   }
 
   useEffect(() => {
@@ -85,13 +92,10 @@ function RegisterOrder() {
 
 
   const addOrderBase = () => {
-    //console.log(engineName)
     fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
     fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-    // console.log("taller: "+)
 
     /* se retorna la id en base al nombre del motor en el campo */
-    // console.log("La id del motor ", engineName, " es: ", engineId[0].ID_MOTOR)
     setPhone(engineId[0].ID_MOTOR)
     const idMotor = engineId[0].ID_MOTOR
     const idWorkshop = workshopID[0].ID_TALLER
@@ -106,8 +110,6 @@ function RegisterOrder() {
         ESTADO_ORDEN: "En Espera"
       }),
     };
-
-    console.log(requestOption.body)
     return fetch(URI, requestOption);
   }
 
@@ -254,11 +256,11 @@ function RegisterOrder() {
             </div>
             <br />
 
-            {works.map((work) => {
-              // console.log(part)
+            {works.map((work, i) => {
+              // console.log(i)
               return (
                 <div>
-                  <JobFE nameJob={work.nameJob ? work.nameJob : ""} priceJob={work.priceJob ? work.priceJob : ""} isActive={work.isActive ? work.isActive : ""} />
+                  <JobFE idx={i} Job={work} updater={updateWork}></JobFE>
                   {/* <JobFE nameJob={work.nameJob} priceJob={work.priceJob} isActive={work.isActive} /> */}
                   <br />
                 </div>

@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 const JobFE = (props) => {
+    // props
     // { nameJob, priceJob, isActive}
-    const[nameJob, setName] = useState('')
-    const[priceJob, setprice] = useState('')
-    const[isActive, setActive] = useState('')
+    const[nameJ, setName] = useState('')
+    const[priceJ, setprice] = useState('')
+    const[Active, setActive] = useState(false)
+
+    // useEffect(() => {
+    //     props.nameJob = nameJ
+    //     props.priceJob = priceJ
+    //     props.isActive = Active
+    // }, [])
+
     return (
         <div className="row">
             <div>
@@ -13,14 +21,17 @@ const JobFE = (props) => {
 
                     <div className="col-sm">
                         <input type="checkBox" name="flexRadioDefault" id="flexRadioDefault1" 
-                        onChange={({ target: {value}}) => setActive(!isActive)} defaultChecked = {isActive}/>
+                        onChange={() => {
+                        props.updater(props.idx, props.Job.nameJob, props.Job.priceJob, !props.Job.isActive)}} defaultChecked = {props.Job.isActive}/>
                         <label className="form-check-label" htmlFor="flexRadioDefault1">
-                        <input onChange={({ target: { value } }) => setName(value)} type="text" defaultValue={nameJob} placeholder="nombre del trabajo"/>
+                        <input onChange={({ target: { value } }) =>{
+                            props.updater(props.idx, value, props.Job.priceJob, props.Job.isActive)
+                            }} type="text" defaultValue={props.Job.nameJob} placeholder="nombre del trabajo"/>
                         </label>
                     </div>
                     <div className='col-sm'>
                         <div className='row'>
-                                <input onChange={({ target: { value } }) => setprice(value)} type="number" defaultValue={priceJob} placeholder="precio del trabajo"/>
+                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.Job.nameJob, value, !props.Job.isActive)} type="number" defaultValue={props.Job.priceJob} placeholder="precio del trabajo"/>
                         </div>
                     </div>
                 </div>
