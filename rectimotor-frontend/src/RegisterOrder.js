@@ -43,11 +43,6 @@ function RegisterOrder() {
     fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
   }
 
-  function defineArray(namePart, quant, initialM, finalM, isChecked) {
-    const part = { name: namePart, quantity: quant, initialMed: initialM, finalMed: finalM, isChecked: isChecked }
-    setParts((partes) => [...partes, part])
-  }
-
   function defineVoidLine() {
     const part = { name: "", quantity: "", initialMed: "", finalMed: "", isChecked: false }
     setParts((partes) => [...partes, part])
@@ -73,7 +68,7 @@ function RegisterOrder() {
 
   function partMapTrial() {
     parts.map((part) => {
-      console.log("nombre: " + part.name + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed+ "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+      console.log("nombre: " + part.ID_PARTE + "; cantidad: " + part.NOMBRE_PARTE + "; iMed: " + part.initialMed+ "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
     })
   }
 
@@ -98,16 +93,6 @@ function RegisterOrder() {
   useEffect(() => {
     getAllParts();
     getAllWorkshops();
-    defineArray("Bloque", "", "", "", false);
-    defineArray("Cigüeñal", "", "", "", false);
-    defineArray("Culata", "", "", "", false);
-    defineArray("Pistones Usados", "", "", "", false);
-    defineArray("Bielas", "", "", "", false);
-    defineArray("Valvulas", "", "", "", false);
-    defineArray("Tapas de Bancada", "", "", "", false);
-    defineArray("Eje de Levas", "", "", "", false);
-    defineArray("Carter", "", "", "", false);
-    defineArray("Tapon de Resortes", "", "", "", false);
 
     defineWorksArray("Encamisar Bloque", 15000, false)
     defineWorksArray("Ensamblar pistones", 120000, false)

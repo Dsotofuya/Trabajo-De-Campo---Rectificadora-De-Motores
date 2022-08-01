@@ -13,7 +13,7 @@ const PartFE = (props) => {
                         props.updater(props.idx, props.part.name, props.part.quantity, props.part.initialMed, props.part.finalMed, !props.part.isChecked)
                         } defaultChecked = {props.part.isChecked}/>
                         <label>
-                        <input onChange={({ target: { value } }) => props.updater(props.idx, value, props.part.quantity, props.part.initialMed, props.part.finalMed, props.part.isChecked)} type="text" placeholder="Nombre de la parte" defaultValue={props.part.name}/>
+                        <input onChange={({ target: { value } }) => props.updater(props.idx, value, props.part.quantity, props.part.initialMed, props.part.finalMed, props.part.isChecked)} id={props.part.ID_PARTE} type="text" placeholder="Nombre de la parte" defaultValue={props.part.NOMBRE_PARTE}/>
                         </label>
                     </div>
 
