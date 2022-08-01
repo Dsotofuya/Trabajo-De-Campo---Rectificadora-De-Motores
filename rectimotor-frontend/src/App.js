@@ -8,11 +8,13 @@ import PersonModal from './componentes/PersonModal.js';
 import Menu from './componentes/Menu.js';
 import RegisterOrder from './RegisterOrder';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import NavBar from './componentes/NavBar';
 
 function App() {
   return (
     
     <BrowserRouter>
+    <NavBar />
       <Routes>
         <Route path='/login' element={<Login />}/>
         <Route path='/menu' element={<Menu />}/>
