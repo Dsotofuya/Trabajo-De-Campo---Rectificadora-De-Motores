@@ -12,9 +12,10 @@ import NavBar from './componentes/NavBar';
 
 function App() {
   return (
-    
+    <>
     <BrowserRouter>
-    <NavBar />
+    
+      <div className='app'>
       <Routes>
         <Route path='/login' element={<Login />}/>
         <Route path='/menu' element={<Menu />}/>
@@ -27,7 +28,9 @@ function App() {
         <Route path='/orders/workshopModal' element={<WorkshopModal />} />
         <Route path='/orders/personModal' element={<PersonModal />} />
       </Routes>
+      </div>
     </BrowserRouter>
+    </>
   );
 }
 

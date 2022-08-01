@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import NavBar from './componentes/NavBar';
 
 const CompShowOrders = () => {
     // Getting the data from de database and setting the variable to render
@@ -20,10 +20,11 @@ const CompShowOrders = () => {
 
 
     // Returning the component 
-    return (
+    return (       
+       <>
+       
         <div className="App ">
-            <Link to='/menu'><button className="btn btn-outline-info"><h1>Rectimotor</h1></button></Link>
-
+        <NavBar />
             <div>
                 <div className='contenedor-principal'>
 
@@ -90,6 +91,7 @@ const CompShowOrders = () => {
                 </div>
             </div>
         </div>
+       </>
     )
 }
 
