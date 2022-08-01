@@ -528,7 +528,7 @@ export const updateDetOrd = async (req, res) => {
     }
 }
 
-//Crear medida
+//Crear detalle de una orden
 export const createDetOrd = async (req, res) => {
     try {
         await DetallesOrdenModel.create(req.body);
@@ -543,6 +543,38 @@ export const getAllDetails = async (req, res) => {
     try {
         await db.query(
             `SELECT * FROM DETALLES_ORDEN WHERE ID_ORDEN = ${req.params.id_ord};`);
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de detalles de un trabajo
+export const updateHistorics = async (req, res) => {
+    try {
+        await HistoricoReportesModel.update(req.body, {
+            where: { id_orden: req.params.id_ord }
+        })
+        res.json({ message: "Historico actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear detalle de una orden
+export const createHistorics = async (req, res) => {
+    try {
+        await HistoricoReportesModel.create(req.body);
+        res.json({ message: "Historico agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener todos los historicos de una oden
+export const getHistoricsIdOrder = async (req, res) => {
+    try {
+        await db.query(
+            `SELECT * FROM HISTORICOS_MOTORES WHERE ID_ORDEN = ${req.params.id_ord};`);
     } catch (error) {
         res.json({ message: error.message })
     }
