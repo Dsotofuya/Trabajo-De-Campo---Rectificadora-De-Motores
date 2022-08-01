@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {Link} from 'react-router-dom';
-//import * as FaIcons from 'react-icons/fa';
-//import * as AiIcons from 'react-icons/ai';
-import {FaBars} from 'react-icons/fa';
-import {AiOutlineClose} from 'react-icons/ai';
+import bars from '../imagenes/bars.png';
+import close from '../imagenes/close.png';
 import { NavBarContent } from "./NavBarContent";
 import '../estilos/navBar.css'
 
@@ -15,14 +13,14 @@ const NavBar = () => {
     <>
     <div className="navbar">
         <Link to="#" className="bars-button">
-            <FaBars onClick={showSideBar}/>
+            <img className="navIcon" src={bars} onClick={showSideBar}/>
         </Link>
     </div>
     <nav className={sideBar ? 'nav-menu active' : 'nav-menu'}>
         <ul className="nav-elements" onClick={showSideBar}>
             <li className="nav-element">
                 <Link to='#' className="bars-button">
-                    <AiOutlineClose/>
+                    <img className="navIcon" src={close}/>
                 </Link>
             </li>
             {NavBarContent.map((item, index) => {
