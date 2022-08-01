@@ -15,6 +15,7 @@ function RegisterOrder() {
   const URI2 = "http://localhost:3412/engines/name/";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
+  const URIParts = "http://localhost:3412/parts/"
 
   const [name, setName] = useState("");
   const [document, setDocument] = useState("");
@@ -36,6 +37,10 @@ function RegisterOrder() {
 
   function getAllWorkshops() {
     fetch(URIAllWorkshops).then((res) => res.json()).then((data) => { setWorkshops(data) })
+  }
+
+  function getAllParts() {
+    fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
   }
 
   function defineArray(namePart, quant, initialM, finalM, isChecked) {
@@ -91,6 +96,7 @@ function RegisterOrder() {
   }
 
   useEffect(() => {
+    getAllParts();
     getAllWorkshops();
     defineArray("Bloque", "", "", "", false);
     defineArray("Cigüeñal", "", "", "", false);
