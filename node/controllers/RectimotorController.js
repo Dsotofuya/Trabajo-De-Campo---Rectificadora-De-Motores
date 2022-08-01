@@ -481,3 +481,69 @@ export const getMeasuresByIdPart = async (req, res) => {
         res.json({ message: error.message })
     }
 }
+
+//Metodos de los detalles de una orden
+//Obtener todos los detalles de partes de una orden
+export const getAllDetailsParts = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT dor.ID_DETALLE_ORDEN, dor.ID_ORDEN, p.ID_PARTE, p.NOMBRE_PARTE, dor.CANTIDAD FROM DETALLES_ORDEN dor, PARTES p WHERE dor.ID_PARTE = p.ID_PARTE AND dor.ID_PARTE IS NOT NULL AND ID_ORDEN = "${req.params.id_ord}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener todos los detalles de repuestos de una orden
+export const getAllDetailsReplacements = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT dor.ID_DETALLE_ORDEN, dor.ID_ORDEN, nr.ID_REPUESTO, nr.NOMBRE_REPUESTO, dor.CANTIDAD FROM DETALLES_ORDEN dor, NUEVOS_REPUESTOS nr WHERE dor.ID_REPUESTO = nr.ID_REPUESTO AND dor.ID_REPUESTO IS NOT NULL AND ID_ORDEN = "${req.params.id_ord}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener todos los detalles de trabajos de una orden
+export const getAllDetailsWorks = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT dor.ID_DETALLE_ORDEN, dor.ID_ORDEN, t.ID_TRABAJO, t.NOMBRE_TRABAJO, dor.VALOR_TRABAJO FROM DETALLES_ORDEN dor, TRABAJOS t WHERE dor.ID_TRABAJO = t.ID_TRABAJO AND dor.ID_TRABAJO IS NOT NULL AND ID_ORDEN = "${req.params.id_ord}";`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de detalles de un trabajo
+export const updateDetOrd = async (req, res) => {
+    try {
+        await DetallesOrdenModel.update(req.body, {
+            where: { id_orden: req.params.id_ord }
+        })
+        res.json({ message: "Detalle de la orden actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear medida
+export const createDetOrd = async (req, res) => {
+    try {
+        await DetallesOrdenModel.create(req.body);
+        res.json({ message: "Detalle agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener todos los detalles de una oden
+export const getAllDetails = async (req, res) => {
+    try {
+        await db.query(
+            `SELECT * FROM DETALLES_ORDEN WHERE ID_ORDEN = ${req.params.id_ord};`);
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
