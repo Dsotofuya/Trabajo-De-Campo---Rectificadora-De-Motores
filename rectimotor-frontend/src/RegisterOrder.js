@@ -151,7 +151,7 @@ function RegisterOrder() {
     
     <div style={styles.window}>
       <NavBar />
-    <h2 className="text-center">   Registro de orden de Ingreso  </h2>
+    <h2 className="text-center"> Registro de orden de Ingreso  </h2>
     <div className="container-xl w-100 p-3" >
 
     <div className="row">
