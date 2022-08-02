@@ -4,7 +4,7 @@ import './estilos/reporte.css';
 
 
 const CompShowReports = () => {
-    // Getting the data from de database and setting the variable to render
+    
     const URI = 'http://localhost:3412/orders/details/'
     const [details, setDetails] = useState([])
     var total = 0
@@ -31,16 +31,8 @@ const CompShowReports = () => {
     useEffect(() => {
         fetch(URIReplacements + params.id_order).then((res) => res.json()).then((data) => { setReplacements(data) })
     }, [])
-    // -------------------------------------------------------------------
-    console.log('Detalles')
-    console.log(details)
-    console.log('Partes')
-    console.log(parts)
-    console.log('Trabajos')
-    console.log(works)
-    console.log('Repuestos')
-    console.log(replacements)
-    // Returning the component 
+    
+     
     return (
         <div className="App"> 
             <div className='contenedor-principal'>
@@ -49,13 +41,31 @@ const CompShowReports = () => {
                     {
                         (details[0] || []).map((detail, i) => {
                             if(i==0){
-                                return <div className='detalles'>
-                                            <p>Reporte número: {detail.ID_ORDEN}</p>
-                                            <p> Nombre del propietario: {detail.NOMBRES_APELLIDOS}</p>                
-                                            <p>Cédula: {detail.CC_PERSONA}</p>
-                                            <p>Número de teléfono: {detail.TELEFONO_PERSONA}</p>
-                                        </div>
-                                    }
+                                return <table className='table'>
+                                    <tbody>
+                                        <tr className='fila-reporte' key={i}>
+                                            <td>Número de reporte</td>
+                                            <td>:</td>
+                                            <td>{detail.ID_ORDEN}</td>
+                                        </tr>
+                                        <tr className='fila-reporte'>
+                                            <td>Nombre del propietario</td>
+                                            <td>:</td>
+                                            <td>{detail.NOMBRES_APELLIDOS}</td>
+                                        </tr >
+                                        <tr className='fila-reporte'>
+                                            <td>Cédula del propietario</td>
+                                            <td>:</td>
+                                            <td>{detail.CC_PERSONA}</td>
+                                        </tr>
+                                        <tr className='fila-reporte'>
+                                            <td>Número de teléfono</td>
+                                            <td>:</td>
+                                            <td>{detail.TELEFONO_PERSONA}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                }
                             })
                 
                     }
@@ -64,7 +74,7 @@ const CompShowReports = () => {
                             <table className='table'>
                                 <thead className='table-head'>
                                     <tr>
-                                        <th>Nombre del trabajo: </th>  
+                                        <th className='columna1'>Nombre del trabajo: </th> 
                                         <th>Valor del trabajo: </th>                
                                     </tr>
                                 </thead>
@@ -73,7 +83,7 @@ const CompShowReports = () => {
                                     works.map((work, i) => {
                                         total += parseInt(work.VALOR_TRABAJO)
                                     return <tr className='fila-reporte' key={i}>
-                                        <td>{work.NOMBRE_TRABAJO}</td>
+                                        <td className='columna1'>{work.NOMBRE_TRABAJO}</td>
                                         <td>{work.VALOR_TRABAJO}</td>                                    
                                         </tr>
                                     })
@@ -84,7 +94,7 @@ const CompShowReports = () => {
                                 {works.map((work, i) => {
                                         if(i==0){
                                             return <tr className='fila-reporte' key={i}>
-                                            <td>Total: </td>  
+                                            <td className='columna1'>Total: </td> 
                                             <td>{total}</td> 
                                             </tr>
                                         }
@@ -96,7 +106,7 @@ const CompShowReports = () => {
                             <table className='table'>
                                 <thead className='table-head'>
                                     <tr>
-                                        <th>Nombre parte </th>
+                                        <th className='columna1'>Nombre parte </th>
                                         <th>Cantidad parte </th>
                                     </tr>
                                 </thead>
@@ -104,7 +114,7 @@ const CompShowReports = () => {
                                     {parts.map(
                                         (part, i) => {
                                             return <tr className='fila-reporte' key={i}>
-                                            <td>{part.NOMBRE_PARTE}</td>
+                                            <td className='columna1'>{part.NOMBRE_PARTE}</td>
                                             <td>{part.CANTIDAD}</td>
                                             </tr>
                                         }
@@ -115,15 +125,15 @@ const CompShowReports = () => {
                             <table className='table'>
                                 <thead className='table-head'>
                                     <tr>
-                                        <th>Nombre repuesto </th>
-                                        <th>Cantidad repuesto </th>
+                                        <th className='columna1'>Nombre del repuesto </th>
+                                        <th>Cantidad del repuesto </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {replacements.map(
                                         (replacement, i) => {
                                             return <tr className='fila-reporte' key={i}>
-                                            <td>{replacement.NOMBRE_REPUESTO}</td>
+                                            <td className='columna1'>{replacement.NOMBRE_REPUESTO}</td>
                                             <td>{replacement.CANTIDAD}</td>
                                             </tr>
                                         }
@@ -137,6 +147,5 @@ const CompShowReports = () => {
         </div>
     )
 }
-//<!-- Se verifica si el array existe antes de renderizar las targetas
-//</div>(details[0] || []).map((detail, i) => { -->
+
 export default CompShowReports;
