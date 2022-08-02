@@ -15,6 +15,7 @@ function RegisterOrder() {
   const URI2 = "http://localhost:3412/engines/name/";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
+  const URIWorks = "http://localhost:3412/works/"
   const URIParts = "http://localhost:3412/parts/"
 
   const [name, setName] = useState("");
@@ -41,6 +42,10 @@ function RegisterOrder() {
 
   function getAllParts() {
     fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
+  }
+
+  function getAllWorks() {
+    fetch(URIWorks).then((res) => res.json()).then((data) => { setWorks(data) })
   }
 
   function defineVoidLine() {
@@ -93,11 +98,12 @@ function RegisterOrder() {
   useEffect(() => {
     getAllParts();
     getAllWorkshops();
+    getAllWorks();
 
-    defineWorksArray("Encamisar Bloque", 15000, false)
+    /*defineWorksArray("Encamisar Bloque", 15000, false)
     defineWorksArray("Ensamblar pistones", 120000, false)
     defineWorksArray("rectificar cigüeñal", 130000, false)
-    defineWorksArray("Cambiar tapones", 20000, false)
+    defineWorksArray("Cambiar tapones", 20000, false)*/
   }, [])
 
 

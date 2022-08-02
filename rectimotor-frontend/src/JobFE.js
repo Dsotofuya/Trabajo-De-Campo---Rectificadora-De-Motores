@@ -10,17 +10,17 @@ const JobFE = (props) => {
                     <div className="col-sm">
                         <input type="checkBox" name="flexRadioDefault" id="flexRadioDefault1" 
                         onChange={() => {
-                        props.updater(props.idx, props.Job.nameJob, props.Job.priceJob, !props.Job.isActive)}} defaultChecked = {props.Job.isActive}/>
+                        props.updater(props.idx, props.Job.NOMBRE_TRABAJO, props.Job.priceJob, !props.Job.isActive)}} defaultChecked = {props.Job.isActive}/>
                         
                         <label className="form-check-label" htmlFor="flexRadioDefault1">
                         <input onChange={({ target: { value } }) =>{
                             props.updater(props.idx, value, props.Job.priceJob, props.Job.isActive)
-                            }} type="text" defaultValue={props.Job.nameJob} placeholder="nombre del trabajo"/>
+                            }} type="text" id={props.Job.ID_TRABAJO} defaultValue={props.Job.NOMBRE_TRABAJO} placeholder="nombre del trabajo"/>
                         </label>
                     </div>
                     <div className='col-sm'>
                         <div className='row'>
-                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.Job.nameJob, value, props.Job.isActive)} type="number" defaultValue={props.Job.priceJob} placeholder="precio del trabajo"/>
+                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.Job.NOMBRE_TRABAJO, value, props.Job.isActive)} type="number" defaultValue={props.Job.priceJob} placeholder="precio del trabajo"/>
                         </div>
                     </div>
                 </div>
