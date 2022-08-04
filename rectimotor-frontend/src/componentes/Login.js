@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import MenuButton from "./MenuButton";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -6,10 +7,29 @@ import { Link } from 'react-router-dom';
 function Login() {
     const [nickName, setNickname] = useState('');
     const [password, setPass] = useState('');
+    const [user, setUser] = useState('');
+
+    const URI = 'http://localhost:3412/users/'
+    const params = useParams()
+    const navigate = useNavigate()
+   
+   console.log(user)
+    
+    function searchUser (){
+        fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
+        if(user != '' && user[0].CONTRASENIA_USUARIO == password){
+            navigate('/menu')
+            
+        }else{
+           alert('Contraseña o usuario incorrectos')
+        }
+           
+    }
+
     return (
         <div style={styles.wrapper}>
-                    <div style={styles.window}>
-                    <h2 className="text-center">Iniciar Sesion</h2>
+            <div style={styles.window}>
+                <h2 className="text-center">Iniciar Sesion</h2>
                 <br />
                 <br />
                 <div className="row">
@@ -20,7 +40,9 @@ function Login() {
 
                     <div className="col">
                         <input
-                            onChange={({ target: { value } }) => setNickname(value)}
+                            onChange={({ target: { value } }) => {
+                                setNickname(value)
+                                }}
                             type="text" placeholder="Nombre de usuario" />
                     </div>
 
@@ -37,7 +59,7 @@ function Login() {
                     <div className="col">
                         <input
                             onChange={({ target: { value } }) => setPass(value)}
-                            type="password" placeholder="Ingrese su contraseña" />
+                           type="password" placeholder="Ingrese su contraseña" />
                     </div>
 
                 </div>
@@ -45,13 +67,15 @@ function Login() {
                 <br />
 
                 <div className="col text-center">
-                <Link to='/menu' className="text-decoration-none">
-                    <button style={styles.acceptBtn} className="btn btn-info btn-center"><h3 className="text-decoration-none">Ingresar</h3></button>
-                </Link>
+                    <button 
+                    style={styles.acceptBtn} 
+                    className="btn btn-info btn-center"
+                    onClick={searchUser}
+                    ><h3 className="text-decoration-none">Ingresar</h3></button>
                 </div>
                     </div>
-                    <div style={styles.background}/>
-                </div>
+                    <div style={styles.background}/>    
+        </div>
     );
 }
 
