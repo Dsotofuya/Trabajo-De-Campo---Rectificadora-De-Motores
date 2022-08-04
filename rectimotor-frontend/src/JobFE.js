@@ -20,7 +20,8 @@ const JobFE = (props) => {
                     </div>
                     <div className='col-sm'>
                         <div className='row'>
-                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.Job.NOMBRE_TRABAJO, value, props.Job.isActive)} type="number" defaultValue={props.Job.priceJob} placeholder="precio del trabajo"/>
+                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.Job.NOMBRE_TRABAJO, value, props.Job.isActive)} 
+                                onClick={({ target: { value } }) => props.updater(props.idx, props.Job.NOMBRE_TRABAJO, value, !props.Job.isActive)} type="number" defaultValue={props.Job.priceJob} placeholder="precio del trabajo"/>
                         </div>
                     </div>
                 </div>

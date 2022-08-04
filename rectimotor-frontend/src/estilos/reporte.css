@@ -7,9 +7,23 @@
     width: 75%;
 }
 
+.contenedor-principal{
+    background-color: whitesmoke;
+    height: 80%;
+    /* width: 195vh; */
+    display: flex;
+    align-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    border: 3px solid black;
+    border-radius: 15px;
+    margin-top: 50px;
+  }
+
 .table{
     margin-top: 5%;
     margin-bottom: 5%;
+    background-color: white;
 }
 
 .fila-reporte{
@@ -28,4 +42,8 @@
 
 .table-head{
     background-color: rgb(13, 206, 206);
+}
+
+.columna1{
+    width: 500px;
 }
