@@ -40,6 +40,50 @@ function RegisterOrder() {
     fetch(URIAllWorkshops).then((res) => res.json()).then((data) => { setWorkshops(data) })
   }
 
+  //funcion para enviar trabajos a DB
+  function sendTheWorksToDB(idOrder){
+    works.map((work)=>{
+      //falta verificacion si no tiene id de trabajo
+      if(work.isActive || work.priceJob!=""){
+        const requestOption ={
+          method: "POST",
+          headers:{ 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ID_ORDEN : idOrder,
+            ID_TRABAJO : work.ID_TRABAJO,
+            NOMBRE_TRABAJO : work.NOMBRE_TRABAJO,
+            VALOR_TRABAJO : work.priceJob
+          })
+        }
+        fetch(URIWorks, requestOption)
+      }
+    })
+  }
+
+
+  //funcion para enviar partes a DB
+  function sendThePartsToDB(idOrder){
+    parts.map((part)=>{
+      //falta verificacion si no tiene id de partes
+      if(part.isChecked || part.quantity!=""){
+        const requestOption ={
+          method: "POST",
+          headers:{ 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ID_ORDEN : idOrder,
+            ID_PARTE : part.ID_PARTE,
+            NOMBRE_PARTE : part.NOMBRE_PARTE,
+            CANTIDAD : part.quantity,
+            //no sé como meter lo de medida inicial y final, dejo una medida comentada
+            VALOR_MEDIDA : part.initialMed,
+            // VALOR_MEDIDA : part.finalMed
+          })
+        }
+        fetch(URIParts, requestOption)
+      }
+    })
+  }
+
   function getAllParts() {
     fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
   }
@@ -55,19 +99,17 @@ function RegisterOrder() {
 
   function defineWorksArray(nameWork, priceWork, active) {
     const work = {nameJob: nameWork, priceJob: priceWork, isActive: active }
-    // const work = <JobFE nameJob={nameWork ? nameWork : ""} priceJob={priceWork ? priceWork : ""} isActive={active ? active : ""}/>
     setWorks((works) => [...works, work])
   }
 
   function defineVoidWorksLine() {
     const work = {nameJob: "", priceJob: null, isActive: false }
-    // const work = <JobFE nameJob={""} priceJob={priceJob} isActive={isActive}/>
     setWorks((works) => [...works, work])
   }
 
   function workMapTrial() {
     works.map((work) => {
-      console.log("nombre: " + work.nameJob + "; precio: " + work.priceJob + "; activo: " + work.isActive)
+      console.log("id: " + work.ID_TRABAJO+"; nombre: " + work.nameJob + "; precio: " + work.priceJob + "; activo: " + work.isActive)
     })
   }
 
