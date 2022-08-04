@@ -11,6 +11,7 @@ import PartsRoutes from './routes/RoutesPart.js'
 import MeasureRoutes from './routes/RoutesMeasure.js'
 import DetOrdRoutes from './routes/RoutesDetOrd.js'
 import HistoricRoutes from './routes/RoutesHistoric.js'
+import UserRoutes from './routes/RoutesUser.js'
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/parts', PartsRoutes)
 app.use('/measures', MeasureRoutes)
 app.use('/detord', DetOrdRoutes)
 app.use('/historic', HistoricRoutes)
+app.use('/users', UserRoutes)
 
 try {
     await db.authenticate()

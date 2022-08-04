@@ -9,6 +9,7 @@ import PersonasModel from "../models/PersonasModel.js";
 import TalleresModel from "../models/TalleresModel.js";
 import TrabajosModel from "../models/TrabajosModel.js";
 import db from "../db/RectimotorDB.js";
+import UsuariosModel from "../models/UsuariosModel.js";
 
 
 // Metodos Personas
@@ -541,8 +542,9 @@ export const createDetOrd = async (req, res) => {
 //Obtener todos los detalles de una oden
 export const getAllDetails = async (req, res) => {
     try {
-        await db.query(
+        const engines =  await db.query(
             `SELECT * FROM DETALLES_ORDEN WHERE ID_ORDEN = ${req.params.id_ord};`);
+        res.json(engines[0])
     } catch (error) {
         res.json({ message: error.message })
     }
@@ -573,8 +575,42 @@ export const createHistorics = async (req, res) => {
 //Obtener todos los historicos de una oden
 export const getHistoricsIdOrder = async (req, res) => {
     try {
-        await db.query(
+        const engines = await db.query(
             `SELECT * FROM HISTORICOS_MOTORES WHERE ID_ORDEN = ${req.params.id_ord};`);
+        res.json(engines[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Actualizar Datos de un usuario
+export const updateUser = async (req, res) => {
+    try {
+        await UsuariosModel.update(req.body, {
+            where: { nombre_usuario: req.params.nombre_usuario }
+        })
+        res.json({ message: "Usuario actualizado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Crear detalle de una orden
+export const createUser = async (req, res) => {
+    try {
+        await UsuariosModel.create(req.body);
+        res.json({ message: "Usuario agregado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Autenticar usuario
+export const getAuthuser = async (req, res) => {
+    try {
+        const engines = await db.query(
+            `SELECT CONTRASENIA_USUARIO, TIPO_USUARIO FROM USUARIOS WHERE NOMBRE_USUARIO = "${req.params.nombre_usuario}";`);
+            res.json(engines[0]);
     } catch (error) {
         res.json({ message: error.message })
     }
