@@ -7,6 +7,7 @@ import WorkshopModal from "./componentes/WorkshopModal";
 import PersonModal from "./componentes/PersonModal";
 import Modal from "./componentes/Modal";
 import NavBar from "./componentes/NavBar";
+import ReplacementFE from "./ReplacementFE";
 
 function RegisterOrder() {
   const [activePersonModal, setActivePerson] = useState(false);
@@ -24,9 +25,10 @@ function RegisterOrder() {
   const [workshopName, setWorkshop] = useState("");
   // const [vehicle, setVehicle] = useState(false);
 
-  //listas de partes y trabajos
+  //listas de partes, trabajos y repuestos
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
+  const [replacements, setReplacements] = useState([]);
   
   //constantes de motores
   const [engineName, setEngineName] = useState([]);
@@ -97,14 +99,14 @@ function RegisterOrder() {
     setParts((partes) => [...partes, part])
   }
 
-  function defineWorksArray(nameWork, priceWork, active) {
-    const work = {nameJob: nameWork, priceJob: priceWork, isActive: active }
-    setWorks((works) => [...works, work])
-  }
-
   function defineVoidWorksLine() {
     const work = {nameJob: "", priceJob: null, isActive: false }
     setWorks((works) => [...works, work])
+  }
+
+  function defineVoidReplacementLine() {
+    const replacement = {nameRep: "", measure: null, isActive: false }
+    setReplacements((replacements) => [...replacements, replacement])
   }
 
   function workMapTrial() {
@@ -135,6 +137,14 @@ function RegisterOrder() {
     partsTemp[index].finalMed = fMed
     partsTemp[index].isChecked = checked
     setParts(partsTemp)
+  }
+
+  function updateReplacement(index, nameRep, measure, isActive){
+    let replacementTemp = [...replacements]
+    replacementTemp[index].nameRep = nameRep
+    replacementTemp[index].measure = measure
+    replacementTemp[index].isActive = isActive
+    setReplacements(replacementTemp)
   }
 
   useEffect(() => {
@@ -330,6 +340,43 @@ function RegisterOrder() {
 
       <div className="row">
         <button onClick={defineVoidWorksLine} className="btn btn-primary btn-lg"><h3>+ Agregar Trabajo</h3></button>
+      </div>
+    </div>
+
+    <br/>
+    <hr/>
+    <hr/>
+    <br/>
+
+    <div>
+      <h1 className="text-center">Repuestos</h1>
+
+      {/* <div className="row">
+        <button className="btn btn-warning btn-lg" onClick={workMapTrial}>probar mapa de Trabajos</button>
+      </div> */}
+      <br/>
+      <br/>
+
+      <div className="row">
+        <div className="col"> <h5 className="font-weight-bold">Nombre del repuesto </h5> </div>
+        <div className="col"> <h5 className="font-weight-bold">Medida del repuesto</h5> </div>
+      </div>
+      <br />
+
+      {replacements.map((replacement, i) => {
+        // console.log(i)
+        return (
+          <div>
+            <ReplacementFE idx={i} replacement={replacement} updater={updateReplacement}></ReplacementFE>
+            <br />
+          </div>
+        )
+      })}
+
+
+
+      <div className="row">
+        <button onClick={defineVoidReplacementLine} className="btn btn-primary btn-lg"><h3>+ Agregar Repuesto</h3></button>
       </div>
     </div>
 

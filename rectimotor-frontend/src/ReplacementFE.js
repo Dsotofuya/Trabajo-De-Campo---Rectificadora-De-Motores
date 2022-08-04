@@ -14,19 +14,13 @@ const ReplacementFE = (props) => {
                         
                         <label className="form-check-label" htmlFor="flexRadioDefault1">
                         <input onChange={({ target: { value } }) =>{
-                            props.updater(props.idx, value, props.replacement.priceJob, props.replacement.isActive)
-                            }} type="text" defaultValue={props.Job.nameJob} placeholder="nombre del repuesto"/>
+                            props.updater(props.idx, value, props.replacement.measure, props.replacement.isActive)
+                            }} type="text" defaultValue={props.replacement.nameRep} placeholder="nombre del repuesto"/>
                         </label>
                     </div>
                     <div className='col-sm'>
                         <div className='row'>
-                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.replacement.nameJob, value, props.replacement.isActive)} type="number" defaultValue={props.replacement.priceJob} placeholder="medida del repuesto"/>
-                        </div>
-                    </div>
-
-                    <div className='col-sm'>
-                        <div className='row'>
-                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.replacement.nameJob, value, props.replacement.isActive)} type="number" defaultValue={props.replacement.priceJob} placeholder="medida del repuesto"/>
+                                <input onChange={({ target: { value } }) => props.updater(props.idx, props.replacement.nameRep, value, props.replacement.isActive)} type="number" defaultValue={props.replacement.priceJob} placeholder="medida del repuesto"/>
                         </div>
                     </div>
                 </div>
