@@ -10,3 +10,16 @@
     padding: 1em;
     /* margin-left: 20%; */
 }
+
+.boton-visible{
+    border-radius: 25%;
+    background-color: white;
+    margin: 3%;
+    padding: 1em;
+    visibility: visible;
+}
+
+.boton-hidden{
+   
+    visibility: hidden;
+}

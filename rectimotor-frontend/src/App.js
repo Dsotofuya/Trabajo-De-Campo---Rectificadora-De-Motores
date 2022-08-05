@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import Login from './componentes/Login';
+import RegisterUser from './componentes/RegisterUser';
 import CompShowOrders from './CompShowOrders';
 import CompShowReport from './CompShowReport.js';
 import WorkshopModal from './componentes/WorkshopModal.js';
@@ -8,7 +9,6 @@ import PersonModal from './componentes/PersonModal.js';
 import Menu from './componentes/Menu.js';
 import RegisterOrder from './RegisterOrder';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import NavBar from './componentes/NavBar';
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
       <div className='app'>
       <Routes>
         <Route path='/login' element={<Login />}/>
+        <Route path='/registrar' element={<RegisterUser />}/>
         <Route path='/menu' element={<Menu />}/>
         <Route path='/menu/agregar' element={<RegisterOrder />}/>
         <Route path='/menu/buscar' element={<CompShowOrders />}/>

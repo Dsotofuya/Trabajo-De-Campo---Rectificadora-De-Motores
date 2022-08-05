@@ -1,33 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import sweetAlert from 'sweetalert';
 
-function Login() {
+function RegisterUser() {
     const [nickName, setNickname] = useState('');
     const [password, setPass] = useState('');
-    const [user, setUser] = useState('');
-
     const URI = 'http://localhost:3412/users/'
     const navigate = useNavigate()
 
-    console.log(nickName)
-    fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
+    const user = JSON.parse(localStorage.getItem('Logged user'));
     
-    function searchUser () {
-        if(user != '' && user[0].CONTRASENIA_USUARIO == password){
-            localStorage.setItem('User name', nickName)
-            localStorage.setItem('Logged user', JSON.stringify(user))
-            navigate('/menu')
-            
-        }else if(user == '' || user[0].CONTRASENIA_USUARIO != password){
-          sweetAlert('Contraseña o usuario incorrectos');
+    useEffect(() => {
+        if(user[0].TIPO_USUARIO != 'Administrador'){
+          navigate('/menu')
         }
+    }, [])
+    const addUser = () => {
+       
+        //passwordEncripted = bcrypt.;
+        const requestOption = {
+            method: "POST", 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                NOMBRE_USUARIO: nickName, 
+                CONTRASENIA_USUARIO: password, 
+                TIPO_USUARIO: 'Trabajador'
+            }),
+        };
+        sweetAlert('Usuario registrado');
+        navigate('/menu')
+        return fetch(URI, requestOption);
     }
 
     return (
         <div style={styles.wrapper}>
             <div style={styles.window}>
-                <h2 className="text-center">Iniciar Sesion</h2>
+                <h2 className="text-center">Registrar usuario</h2>
                 <br />
                 <br />
                 <div className="row">
@@ -62,12 +70,12 @@ function Login() {
 
                 <br />
 
-                <div className="col text-center" onClick={searchUser}>
+                <div className="col text-center" onClick={addUser}>
                     <button 
                     style={styles.acceptBtn} 
                     className="btn btn-info btn-center"
                     
-                    ><h3 className="text-decoration-none">Ingresar</h3></button>
+                    ><h3 className="text-decoration-none">Registrar</h3></button>
                     
                 </div>
                 
@@ -121,4 +129,4 @@ const styles = {
     }
 }
 
-export default Login;
+export default RegisterUser;
