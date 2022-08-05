@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import NavBar from './componentes/NavBar';
-import './estilos/reporte.css';
+import NavBar from '../componentes/NavBar';
+import '../estilos/reporte.css';
 
 
-const CompShowOrders = () => {
+function SearchUpdate (){
     // Getting the data from de database and setting the variable to render
     const URI = 'http://localhost:3412/orders/'
     const [orders, setOrders] = useState([])
     const params = useParams()
     const navigate = useNavigate()
     useEffect(() => {
-        fetch(URI + params.id).then((res) => res.json()).then((data) => { setOrders(data) })
+        fetch(URI + params.id).then((res) => res.json()).then((data) => {setOrders(data)})
     }, [])
     // -------------------------------------------------------------------
     console.log(orders)
@@ -20,33 +20,21 @@ const CompShowOrders = () => {
 
     const validation = true;
 
-    function formatDate(fecha){
-        console.log(fecha)
-        let fechaFormat = '';
-
-        if(fecha!=null){
-            let a = new Date(String(fecha).substring(0,10))
-            fechaFormat = a.getDay() +'/'+ a.getMonth() +'/'+a.getFullYear();
-        }
-        
-        return fechaFormat
-    }
 
     // Returning the component 
     return (       
-       <>
-       
+       <>       
         <div className="App ">
         <NavBar />
             <div>
                 <div className='contenedor-principal'>
 
-                    <h1 className='d-flex justify-content-center'>Consulte el estado de su motor</h1>
+                    <h1 className='d-flex justify-content-center'>Busqueda de motor</h1>
                     <div className='d-flex justify-content-center'>
                         {/* Input de la cedula u orden */}
                         <form onSubmit={() => {
-                            navigate(`/orders/${document.getElementById('cc').value}`)
-                            const val = document.getElementById('cc').value;
+                            navigate(`/orders/get/${document.getElementById('orderID').value}`)
+                            const val = document.getElementById('orderID').value
                             if (validateInput.test(val) != true) {
                                 alert('Entrada incorrecta')
                                 validation = false
@@ -86,9 +74,7 @@ const CompShowOrders = () => {
                                                 <td>{order.id_orden}</td>
                                                 <td>{order.cc_persona}</td>
                                                 <td>{order.nombre_motor}</td>
-                                                <td>{order.placa}</td>
                                                 <td>{order.fecha_recibido}</td>
-                                                <td>{order.fecha_entrega}</td>
                                                 <td>{order.estado_orden}</td>
                                                 </tr>
                                             }
@@ -106,4 +92,4 @@ const CompShowOrders = () => {
     )
 }
 
-export default CompShowOrders;
+export default SearchUpdate;
