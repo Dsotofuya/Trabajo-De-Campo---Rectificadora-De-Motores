@@ -17,9 +17,11 @@ function RegisterOrder() {
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
   const URIWorks = "http://localhost:3412/works/"
+  const URIDetails = "http://localhost:3412/DetOrd/"
   const URIParts = "http://localhost:3412/parts/"
 
   const [name, setName] = useState("");
+  const [IDOrder, setIDOrder] = useState("");
   const [document, setDocument] = useState("");
   const [phone, setPhone] = useState("");
   const [workshopName, setWorkshop] = useState("");
@@ -42,6 +44,12 @@ function RegisterOrder() {
     fetch(URIAllWorkshops).then((res) => res.json()).then((data) => { setWorkshops(data) })
   }
 
+  function sendAll(){
+    addOrderBase()
+    sendTheWorksToDB(IDOrder)
+    sendThePartsToDB(IDOrder)
+  }
+
   //funcion para enviar trabajos a DB
   function sendTheWorksToDB(idOrder){
     works.map((work)=>{
@@ -53,11 +61,10 @@ function RegisterOrder() {
           body: JSON.stringify({
             ID_ORDEN : idOrder,
             ID_TRABAJO : work.ID_TRABAJO,
-            NOMBRE_TRABAJO : work.NOMBRE_TRABAJO,
             VALOR_TRABAJO : work.priceJob
           })
         }
-        fetch(URIWorks, requestOption)
+        fetch(URIDetails, requestOption)
       }
     })
   }
@@ -74,14 +81,13 @@ function RegisterOrder() {
           body: JSON.stringify({
             ID_ORDEN : idOrder,
             ID_PARTE : part.ID_PARTE,
-            NOMBRE_PARTE : part.NOMBRE_PARTE,
             CANTIDAD : part.quantity,
             //no sé como meter lo de medida inicial y final, dejo una medida comentada
-            VALOR_MEDIDA : part.initialMed,
+            // VALOR_MEDIDA : part.initialMed,
             // VALOR_MEDIDA : part.finalMed
           })
         }
-        fetch(URIParts, requestOption)
+        fetch(URIDetails, requestOption)
       }
     })
   }
@@ -116,9 +122,10 @@ function RegisterOrder() {
   }
 
   function partMapTrial() {
-    parts.map((part) => {
-      console.log("nombre: " + part.ID_PARTE + "; cantidad: " + part.NOMBRE_PARTE + "; iMed: " + part.initialMed+ "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
-    })
+    console.log(IDOrder)
+    // parts.map((part) => {
+    //   console.log("nombre: " + part.ID_PARTE + "; cantidad: " + part.NOMBRE_PARTE + "; iMed: " + part.initialMed+ "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+    // })
   }
 
   function updateWork(index, name, price, checked){
@@ -151,6 +158,8 @@ function RegisterOrder() {
     getAllParts();
     getAllWorkshops();
     getAllWorks();
+    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN) })
+
 
     /*defineWorksArray("Encamisar Bloque", 15000, false)
     defineWorksArray("Ensamblar pistones", 120000, false)
@@ -165,15 +174,16 @@ function RegisterOrder() {
 
     /* se retorna la id en base al nombre del motor en el campo */
     setPhone(engineId[0].ID_MOTOR)
+    // console.log(workshopID[0].ID_TALLER)
     const idMotor = engineId[0].ID_MOTOR
-    const idWorkshop = workshopID[0].ID_TALLER
-    console.log(idMotor + ', ' + + ', ' + document)
+    const idWorkshop = workshopID.value
+    console.log(idMotor + ', ' + idWorkshop+ ', ' + document)
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ID_MOTOR: idMotor,
-        ID_TALLER: idWorkshop,
+        ID_TALLER: "208",
         CC_PERSONA: document,
         ESTADO_ORDEN: "En Espera"
       }),
@@ -189,6 +199,11 @@ function RegisterOrder() {
     setActiveWorkshop((isActive) => !isActive)
   }
 
+  const handleChange=(event)=> {
+    setWorkshopId({value: event.target.value});
+    console.log(workshopID.value)
+  }
+
   return (
     <>
     
@@ -202,9 +217,9 @@ function RegisterOrder() {
         <label>Taller:</label>
       </div>
       <div className="col-md-3">
-        <select className="form-select form-select-sm">
+        <select className="form-select form-select-sm" onChange={handleChange}>
           {workshops.map((wShops) =>
-            <option key={wShops.array}> {wShops.NOMBRE_TALLER} </option>
+            <option value={wShops.ID_TALLER}> {wShops.NOMBRE_TALLER} </option>
           )
           }
 
@@ -414,7 +429,7 @@ function RegisterOrder() {
     <br />
     {/* <Link to='/menu' className="text-decoration-none"> */}
     <div className="row">
-      <button className="btn btn-success" onClick={addOrderBase}>
+      <button className="btn btn-success" onClick={sendAll}>
         <h2>Confirmar</h2>
       </button>
     </div>

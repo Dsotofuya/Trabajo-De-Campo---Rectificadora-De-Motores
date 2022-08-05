@@ -202,6 +202,17 @@ export const getOrderByCC = async (req, res) => {
     }
 }
 
+export const getOrderById = async (req, res) => {
+    try {
+        const order = await db.query(
+            `SELECT * FROM ORDENES WHERE ID_ORDEN = ${req.params.id_orden};`
+        );
+        res.json(order[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
 
 export const getReportsDetailsById = async (req, res) => {
     try {
