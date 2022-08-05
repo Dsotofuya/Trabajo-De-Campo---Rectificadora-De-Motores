@@ -225,6 +225,17 @@ export const getReportsDetailsById = async (req, res) => {
     }
 }
 
+export const getReportsDetailsByOrderID = async (req, res) => {
+    try {
+        const order = await db.query(
+            `Select p.CC_PERSONA, p.NOMBRES_APELLIDOS, p.TELEFONO_PERSONA, o.ID_ORDEN, t.NOMBRE_TRABAJO, dor.VALOR_TRABAJO, w.NOMBRE_TALLER From DETALLES_ORDEN dor, TRABAJOS t, ORDENES o, PERSONAS p, TALLERES w. WHERE dor.ID_TRABAJO = t.ID_TRABAJO AND dor.ID_ORDEN = o.ID_ORDEN AND o.ID_TALLER = w.ID_TALLER and o.CC_PERSONA = p.CC_PERSONA AND dor.ID_ORDEN = ${req.params.id_orden};`
+        );
+        res.json(order)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
 
 //Crear Una Orden 
 export const createOrder = async (req, res) => {

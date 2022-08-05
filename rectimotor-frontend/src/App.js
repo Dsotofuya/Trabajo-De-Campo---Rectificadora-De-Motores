@@ -25,7 +25,6 @@ function App() {
         <Route path='/menu' element={<Menu />}/>
         <Route path='/menu/agregar' element={<RegisterOrder />}/>
         <Route path='/menu/buscar' element={<CompShowOrders />}/>
-        <Route path='/menu/Busqueda_Actualizar' element={<CompShowOrders />}/>
         <Route path='/menu/Busqueda_Actualizar' element={<SearchUpdate />}/>
         <Route path='/orders/:id' element={<CompShowOrders />} />
         <Route path='/menu/actualizar' element={<UpdateOrder />}/>

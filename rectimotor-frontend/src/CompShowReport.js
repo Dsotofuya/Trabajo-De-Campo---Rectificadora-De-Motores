@@ -67,7 +67,6 @@ const CompShowReports = () => {
                                 </table>
                                 }
                             })
-                
                     }
                            
                             <h1>Trabajos</h1>

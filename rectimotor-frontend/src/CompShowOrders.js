@@ -86,9 +86,7 @@ const CompShowOrders = () => {
                                                 <td>{order.id_orden}</td>
                                                 <td>{order.cc_persona}</td>
                                                 <td>{order.nombre_motor}</td>
-                                                <td>{order.placa}</td>
                                                 <td>{order.fecha_recibido}</td>
-                                                <td>{order.fecha_entrega}</td>
                                                 <td>{order.estado_orden}</td>
                                                 </tr>
                                             }

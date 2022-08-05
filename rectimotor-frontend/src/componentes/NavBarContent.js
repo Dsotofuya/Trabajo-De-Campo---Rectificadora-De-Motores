@@ -20,5 +20,10 @@ export const NavBarContent = [
         title: 'Actualizar',
         path: '/menu/actualizar',
         cName: 'nav-text'
+    },
+    {
+        title: 'Buscar para actualizar',
+        path: '/menu/Busqueda_Actualizar',
+        cName: 'nav-text'
     }
 ]
