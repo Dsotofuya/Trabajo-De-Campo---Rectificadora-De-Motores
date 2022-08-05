@@ -30,12 +30,15 @@ function Menu(){
     return condition;
   }
 
-    /**<div className='usuario'>
-        <h3>{user[0].TIPO_USUARIO}: {userName}</h3>
-      </div> */
     return(
     <div className="menu">
-      
+      <div className='usuario'>
+        <h3>{user[0].TIPO_USUARIO}: {userName}</h3>
+        <button className='rounded cerrar-sesion' onClick={()=>{
+          localStorage.clear()
+          navigate('/login')
+        }}>Cerrar sesión</button>
+      </div>
       <Link to='/menu/agregar'><MenuButton nombre='Registrar orden de ingreso' show={true}/></Link>
       <Link to='/menu/buscar'> <MenuButton nombre='Buscar orden de registro' show={true}/></Link>
       <Link to='/menu/actualizar'><MenuButton nombre='Actualizar orden de registro' show={true}/></Link>
