@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {Link} from 'react-router-dom';
 import bars from '../imagenes/bars.png';
 import close from '../imagenes/close.png';
@@ -8,6 +8,16 @@ import '../estilos/navBar.css'
 const NavBar = () => {
     const [sideBar, setSidebar] = useState(false);
     const showSideBar = () => setSidebar(!sideBar)
+
+    let user = '';
+    const setUser= () => {
+        user = JSON.parse(localStorage.getItem('Logged user'))
+        console.log(user)
+        return user;
+    }
+
+    let userName =localStorage.getItem('User name');
+    setUser()
 
     return(
     <>
@@ -23,6 +33,12 @@ const NavBar = () => {
                     <img className="navIcon" src={close}/>
                 </Link>
             </li>
+            
+            <li className="nav-text">
+                <span>{user[0].TIPO_USUARIO}</span>
+            </li>
+
+            <li className="nav-text">{userName}</li>
             {NavBarContent.map((item, index) => {
                 return(
                     <li key={index} className={item.cName}>
@@ -32,6 +48,14 @@ const NavBar = () => {
                     </li>
                 )
             })}
+            <li className="nav-text">
+                <Link to={'/login'} onClick= {console.log('0_0')}>
+                    <span>Cerrar sesión</span>
+                   
+                </Link>
+
+                
+            </li>
         </ul>
     </nav>
     </>

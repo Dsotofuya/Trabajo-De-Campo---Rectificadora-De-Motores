@@ -12,18 +12,23 @@ function Login() {
     const URI = 'http://localhost:3412/users/'
     const params = useParams()
     const navigate = useNavigate()
-   
-   console.log(user)
+
+    console.log(user)
     
-    function searchUser (){
+    const searchUser = () => {
+        
         fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
+        
         if(user != '' && user[0].CONTRASENIA_USUARIO == password){
+            localStorage.setItem('User name', nickName)
+            localStorage.setItem('Logged user', JSON.stringify(user))
             navigate('/menu')
             
         }else{
            alert('Contraseña o usuario incorrectos')
         }
-           
+        
+        
     }
 
     return (
