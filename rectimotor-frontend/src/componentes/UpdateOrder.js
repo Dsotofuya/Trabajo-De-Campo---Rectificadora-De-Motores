@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import './ROrder.css';
-import PartFE from "./PartFE";
-import JobFE from "./JobFE";
+import '../ROrder.css';
+import PartFE from "../PartFE";
+import JobFE from "../JobFE";
 import { Link } from 'react-router-dom';
-import WorkshopModal from "./componentes/WorkshopModal";
-import PersonModal from "./componentes/PersonModal";
-import Modal from "./componentes/Modal";
-import NavBar from "./componentes/NavBar";
-import ReplacementFE from "./ReplacementFE";
+import WorkshopModal from "../componentes/WorkshopModal";
+import PersonModal from "../componentes/PersonModal";
+import Modal from "../componentes/Modal";
+import NavBar from "../componentes/NavBar";
+import ReplacementFE from "../ReplacementFE";
 
 function UpdateOrder(props) {
 
@@ -90,15 +90,18 @@ function UpdateOrder(props) {
 
     //funciones get, revisar la uri para autocargar los componentes
     function getAllParts() {
-        fetch(URIParts+props.Order.ID_ORDEN).then((res) => res.json()).then((data) => { setParts(data) })
+        // fetch(URIParts+props.Order.ID_ORDEN).then((res) => res.json()).then((data) => { setParts(data) })
+        fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
     }
 
     function getAllWorks() {
-        fetch(URIWorks+props.Order.ID_ORDEN).then((res) => res.json()).then((data) => { setWorks(data) })
+        fetch(URIWorks).then((res) => res.json()).then((data) => { setWorks(data) })
+        // fetch(URIWorks+props.Order.ID_ORDEN).then((res) => res.json()).then((data) => { setWorks(data) })
     }
 
     function getAllReplacements() {
-        fetch(URIReps+props.Order.ID_ORDEN).then((res) => res.json()).then((data) => { setReplacements(data) })
+        // fetch(URIReps+props.Order.ID_ORDEN).then((res) => res.json()).then((data) => { setReplacements(data) })
+        fetch(URIReps).then((res) => res.json()).then((data) => { setReplacements(data) })
     }
 
     function defineVoidLine() {
@@ -202,7 +205,7 @@ function UpdateOrder(props) {
 
             <div style={styles.window}>
                 <NavBar />
-                <h2 className="text-center"> Registro de orden de Ingreso  </h2>
+                <h2 className="text-center"> Actualizacion de orden de Ingreso  </h2>
                 <div className="container-xl w-100 p-3" >
 
                     <div className="row">
@@ -239,7 +242,8 @@ function UpdateOrder(props) {
                             <label>Responsable:</label>
                         </div>
                         <div className="col-md-3">
-                            <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} defaultValue={props.persona.NOMBRES_APELLIDOS}/>
+                            {/* <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} defaultValue={props.persona.NOMBRES_APELLIDOS}/> */}
+                            <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} />
                         </div>
                         <div className="col-md-2">
                             <button className="btn btn-success" onClick={togglePersonModal}>agregar</button>
@@ -261,7 +265,8 @@ function UpdateOrder(props) {
                             <label>Cedula:</label>
                         </div>
                         <div className="col-md-5">
-                            <input onChange={({ target: { value } }) => setDocument(value)} type="text" placeholder="Cedula del responsable" value={document} defaultValue={props.persona.CC_PERSONA}/>
+                            {/* <input onChange={({ target: { value } }) => setDocument(value)} type="text" placeholder="Cedula del responsable" value={document} defaultValue={props.persona.CC_PERSONA}/> */}
+                            <input onChange={({ target: { value } }) => setDocument(value)} type="text" placeholder="Cedula del responsable" value={document} />
                         </div>
 
 
@@ -270,7 +275,8 @@ function UpdateOrder(props) {
                             </label>
                         </div>
                         <div className="col-md-2">
-                            <input onChange={({ target: { value } }) => setPhone(value)} type="text" placeholder="Telefono del responsable" value={phone} defaultValue={props.persona.TELEFONO_PERSONA}/>
+                            {/* <input onChange={({ target: { value } }) => setPhone(value)} type="text" placeholder="Telefono del responsable" value={phone} defaultValue={props.persona.TELEFONO_PERSONA}/> */}
+                            <input onChange={({ target: { value } }) => setPhone(value)} type="text" placeholder="Telefono del responsable" value={phone} />
                         </div>
 
                     </div>
