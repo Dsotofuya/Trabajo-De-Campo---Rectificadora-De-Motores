@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import sweetAlert from 'sweetalert';
+import bcryptjs from 'bcryptjs';
 
 function RegisterUser() {
     const [nickName, setNickname] = useState('');
@@ -10,20 +11,21 @@ function RegisterUser() {
 
     const user = JSON.parse(localStorage.getItem('Logged user'));
     
-    useEffect(() => {
+   useEffect(() => {
         if(user[0].TIPO_USUARIO != 'Administrador'){
           navigate('/menu')
         }
     }, [])
     const addUser = () => {
        
-        //passwordEncripted = bcrypt.;
+        let passwordEncripted = bcryptjs.hashSync(password, 8);
+        console.log(passwordEncripted)
         const requestOption = {
             method: "POST", 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 NOMBRE_USUARIO: nickName, 
-                CONTRASENIA_USUARIO: password, 
+                CONTRASENIA_USUARIO: passwordEncripted, 
                 TIPO_USUARIO: 'Trabajador'
             }),
         };

@@ -46,4 +46,5 @@
   flex-direction: row;
   align-items: flex-start;
   align-content: flex-start;
+  margin: 10px;
 }

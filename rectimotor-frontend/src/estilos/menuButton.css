@@ -20,6 +20,13 @@
 }
 
 .boton-hidden{
-   
     visibility: hidden;
+}
+
+
+.cerrar-sesion{
+    border-radius: 25%;
+    background-color: white;
+    margin: 3%;
+    padding: 1em
 }

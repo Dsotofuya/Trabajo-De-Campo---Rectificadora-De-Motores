@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sweetAlert from 'sweetalert';
+import bcryptjs from 'bcryptjs';
 
 function Login() {
     const [nickName, setNickname] = useState('');
@@ -14,14 +15,18 @@ function Login() {
     fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
     
     function searchUser () {
-        if(user != '' && user[0].CONTRASENIA_USUARIO == password){
-            localStorage.setItem('User name', nickName)
-            localStorage.setItem('Logged user', JSON.stringify(user))
-            navigate('/menu')
-            
-        }else if(user == '' || user[0].CONTRASENIA_USUARIO != password){
-          sweetAlert('Contraseña o usuario incorrectos');
-        }
+        /**
+         * */
+         const hashSaved = user[0].CONTRASENIA_USUARIO;
+         const compare = bcryptjs.compareSync(password, hashSaved)
+         if(user != '' && compare==true){
+             localStorage.setItem('User name', nickName)
+             localStorage.setItem('Logged user', JSON.stringify(user))
+             navigate('/menu')
+             
+         }else if(user == '' || compare==false){
+           sweetAlert('Contraseña o usuario incorrectos');
+         } 
     }
 
     return (
