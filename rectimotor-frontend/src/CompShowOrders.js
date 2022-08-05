@@ -20,6 +20,17 @@ const CompShowOrders = () => {
 
     const validation = true;
 
+    function formatDate(fecha){
+        console.log(fecha)
+        let fechaFormat = '';
+
+        if(fecha!=null){
+            let a = new Date(String(fecha).substring(0,10))
+            fechaFormat = a.getDay() +'/'+ a.getMonth() +'/'+a.getFullYear();
+        }
+        
+        return fechaFormat
+    }
 
     // Returning the component 
     return (       
@@ -75,7 +86,9 @@ const CompShowOrders = () => {
                                                 <td>{order.id_orden}</td>
                                                 <td>{order.cc_persona}</td>
                                                 <td>{order.nombre_motor}</td>
+                                                <td>{order.placa}</td>
                                                 <td>{order.fecha_recibido}</td>
+                                                <td>{order.fecha_entrega}</td>
                                                 <td>{order.estado_orden}</td>
                                                 </tr>
                                             }
