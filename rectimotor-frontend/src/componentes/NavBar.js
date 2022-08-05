@@ -9,16 +9,9 @@ const NavBar = () => {
     const [sideBar, setSidebar] = useState(false);
     const showSideBar = () => setSidebar(!sideBar)
 
-    let user = '';
-    const setUser= () => {
-        user = JSON.parse(localStorage.getItem('Logged user'))
-        console.log(user)
-        return user;
-    }
-
+    let user = JSON.parse(localStorage.getItem('Logged user'));
     let userName =localStorage.getItem('User name');
-    setUser()
-
+    
     return(
     <>
     <div className="navbar">
@@ -49,8 +42,10 @@ const NavBar = () => {
                 )
             })}
             <li className="nav-text">
-                <Link to={'/login'} onClick= {console.log('0_0')}>
-                    <span>Cerrar sesión</span>
+                <Link to={'/login'}>
+                    <span onClick={() => {
+                        localStorage.clear()
+                    }}>Cerrar sesión</span>
                    
                 </Link>
 

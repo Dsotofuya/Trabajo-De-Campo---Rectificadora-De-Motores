@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import MenuButton from "./MenuButton";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import sweetAlert from 'sweetalert';
 
 function Login() {
     const [nickName, setNickname] = useState('');
@@ -10,25 +8,22 @@ function Login() {
     const [user, setUser] = useState('');
 
     const URI = 'http://localhost:3412/users/'
-    const params = useParams()
     const navigate = useNavigate()
 
-    console.log(user)
-    
-    const searchUser = () => {
-        
-        fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
-        
+    console.log(nickName)
+    fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
+    const autentification = 'Contraseña o usuario incorrectos';
+
+    function searchUser () {
+        console.log(user)
         if(user != '' && user[0].CONTRASENIA_USUARIO == password){
             localStorage.setItem('User name', nickName)
             localStorage.setItem('Logged user', JSON.stringify(user))
             navigate('/menu')
             
-        }else{
-           alert('Contraseña o usuario incorrectos')
+        }else if(user == '' || user[0].CONTRASENIA_USUARIO != password){
+          sweetAlert('Contraseña o usuario incorrectos');
         }
-        
-        
     }
 
     return (
@@ -45,10 +40,8 @@ function Login() {
 
                     <div className="col">
                         <input
-                            onChange={({ target: { value } }) => {
-                                setNickname(value)
-                                }}
-                            type="text" placeholder="Nombre de usuario" />
+                        onChange={({ target: { value } }) => {setNickname(value)}}
+                        type="text" placeholder="Nombre de usuario"/>
                     </div>
 
                 </div>
@@ -64,21 +57,24 @@ function Login() {
                     <div className="col">
                         <input
                             onChange={({ target: { value } }) => setPass(value)}
-                           type="password" placeholder="Ingrese su contraseña" />
+                           type="password" placeholder="Ingrese su contraseña"/>
                     </div>
 
                 </div>
 
                 <br />
 
-                <div className="col text-center">
+                <div className="col text-center" onClick={searchUser}>
                     <button 
                     style={styles.acceptBtn} 
                     className="btn btn-info btn-center"
-                    onClick={searchUser}
+                    
                     ><h3 className="text-decoration-none">Ingresar</h3></button>
+                    
                 </div>
+                
                     </div>
+                    
                     <div style={styles.background}/>    
         </div>
     );
