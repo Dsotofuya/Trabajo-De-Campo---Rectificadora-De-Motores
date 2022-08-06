@@ -14,6 +14,7 @@ function RegisterOrder() {
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
   const URI = "http://localhost:3412/orders/";
   const URI2 = "http://localhost:3412/engines/name/";
+  const URIPersons = "http://localhost:3412/persons";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
   const URIWorks = "http://localhost:3412/works/"
@@ -39,6 +40,15 @@ function RegisterOrder() {
   // constantes de talleres
   const [workshopID, setWorkshopId] = useState("");
   const [workshops, setWorkshops] = useState([])
+
+  const autoSetUsser=(value)=>{
+    setDocument(value)
+    fetch(URIPersons+"/"+value).then((res) => res.json()).then((data) => { 
+      setName(data[0].NOMBRES_APELLIDOS) 
+      setPhone(data[0].TELEFONO_PERSONA) 
+    })
+  }
+
 
   function getAllWorkshops() {
     fetch(URIAllWorkshops).then((res) => res.json()).then((data) => { setWorkshops(data) })
@@ -249,7 +259,7 @@ function RegisterOrder() {
               <label>Responsable:</label>
             </div>
             <div className="col-md-3">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} />
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} defaultValue={name}/>
             </div>
             <div className="col-md-2">
               <button className="btn btn-success" onClick={togglePersonModal}>agregar</button>
@@ -260,7 +270,7 @@ function RegisterOrder() {
               <label>Ingreso:</label>
             </div>
             <div className="col-md-2">
-              <input type="date" placeholder="Fecha de ingreso" readOnly="readOnly" id="current" />
+              <input type="date" placeholder="Fecha de ingreso" id="current" />
             </div>
           </div>
           <br />
@@ -271,7 +281,7 @@ function RegisterOrder() {
               <label>Cedula:</label>
             </div>
             <div className="col-md-5">
-              <input onChange={({ target: { value } }) => setDocument(value)} type="text" placeholder="Cedula del responsable" value={document} />
+              <input onChange={({ target: { value } }) => autoSetUsser(value)} type="text" placeholder="Cedula del responsable" value={document} />
             </div>
 
 
