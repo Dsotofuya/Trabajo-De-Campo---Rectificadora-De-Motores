@@ -44,8 +44,10 @@ function RegisterOrder() {
   function autoSetUsser(value) {
     setDocument(value)
     fetch(URIPersons + "/" + value).then((res) => res.json()).then((data) => {
-      setName(data[0].NOMBRES_APELLIDOS)
-      setPhone(data[0].TELEFONO_PERSONA)
+      if (data[0] != null) {
+        setName(data[0].NOMBRES_APELLIDOS)
+        setPhone(data[0].TELEFONO_PERSONA)
+      }
     })
   }
 
@@ -56,10 +58,12 @@ function RegisterOrder() {
 
   function autoGetVehicleID(value) {
     setEngineName(value)
-    fetch(URI2 + value).then((res) => res.json()).then((data) => {
-      let temp = data[0].ID_MOTOR
-      setEngineId(temp)
-      console.log(temp)
+    fetch(URI2 + value).then(async (res) => (await res.json())).then((data) => {
+      let temp = data[0]
+      if (temp != null) {
+        let num = temp.ID_MOTOR
+        setEngineId(num)
+      }
     })
 
   }
@@ -213,7 +217,7 @@ function RegisterOrder() {
   const handleChange = (event) => {
     let temp = event.target.value
     setWorkshopId(temp);
-    console.log(workshopID)
+    console.log(temp)
   }
 
   useEffect(() => {
@@ -226,14 +230,14 @@ function RegisterOrder() {
   return (
     <>
 
-      <div style={styles.window}>
+      <div style={styles.window} className={"border"}>
         <NavBar />
 
         <div className="row">
-          <div className="col-md-10">
+          <div className="col-md-9">
             <h2 className="text-center"> Registro de orden de Ingreso  </h2>
           </div>
-          <div className="col-md-1 border border border-info">
+          <div className="col-md-3 border border border-info">
             <h1 className="text-center text-info">#{IDOrder}</h1>
           </div>
         </div>
@@ -247,6 +251,7 @@ function RegisterOrder() {
             </div>
             <div className="col-md-3">
               <select className="form-select form-select-sm" onChange={handleChange} >
+                <option value={0}>  </option>
                 {workshops.map((wShops) =>
                   <option value={wShops.ID_TALLER}> {wShops.NOMBRE_TALLER} </option>
                 )
@@ -491,10 +496,11 @@ const styles = {
     background: '#fff',
     borderRadius: 5,
     border: '2px solid #d0d0d0',
-    padding: 15,
-    boxShadow: '2px 2px 10px rgba(0,0,0,0,3)',
+    padding: 20,
+    boxShadow: '2px 2px 20px rgba(0,0,0,0,3)',
     zIndex: 10,
-    minWidth: 320
+    Width: "200hv",
+    minWidth: 400
   },
 }
 
