@@ -7,95 +7,97 @@ function WorkshopModal(props) {
     const [workShopName, setworkShopName] = useState('');
     const [OwnerName, setOwnerName] = useState('');
     const [number, setNumber] = useState('');
-    
+
     const URI = "http://localhost:3412/workshops/";
-    
+
     const addWorkShop = () => {
-        
+
         console.log(workShopName + ', ' + OwnerName + ', ' + number)
         const requestOption = {
-            method: "POST", 
+            method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                NOMBRE_TALLER: workShopName, 
-                NOMBRE_PROPIETARIO: OwnerName, 
+                NOMBRE_TALLER: workShopName,
+                NOMBRE_PROPIETARIO: OwnerName,
                 TELEFONO_TALLER: number
             }),
         };
-        
+
         console.log(requestOption.body)
         props.workshopName(workShopName);
         props.toggle();
+        props.getWshops();
         return fetch(URI, requestOption);
     }
 
     return (
         <div className="container">
             <h2 className="text-center">Registro de nuevo taller</h2>
-            <br/>
+            <br />
 
-                <div className="container">
+            <div className="container">
 
-                    <div className="row">
+                <div className="row">
 
-                        <div className="col">
-                            <label>Nombre del taller: </label>
-                        </div>
-
-                        <div className="col">
-                            <input
-                             onChange={({ target: { value } }) => setworkShopName(value)}  
-                             type="text" placeholder="Taller" />
-                        </div>
-
+                    <div className="col">
+                        <label>Nombre del taller: </label>
                     </div>
 
-                    <div className="row">
-
-                        <div className="col">
-                            <label>Nombre del propietario: </label>
-                        </div>
-
-                        <div className="col">
-                            <input
-                             onChange={({ target: { value } }) => setOwnerName(value)} 
-                             type="text" placeholder="Propietario" />
-                        </div>
-
+                    <div className="col">
+                        <input
+                            onChange={({ target: { value } }) => setworkShopName(value)}
+                            type="text" placeholder="Taller" />
                     </div>
-
-                    <div className="row">
-                        <div className="col">
-                            <label>Teléfono</label>
-                        </div>
-
-                        <div className="col">
-                            <input 
-                            onChange={({ target: { value } }) => setNumber(value)}
-                            type="text" placeholder="teléfono" />
-                        </div>
-                    </div>
-
-
-                    <br/>
-
-                    {/* <Link to='/menu' className="text-decoration-none">*/}
-                        <div className="row">
-                            <button className="btn btn-success" onClick={addWorkShop}>
-                                <h3>Confirmar</h3>
-                            </button>
-                        </div>
-                        <br/>
-                    {/*</Link> */}
-                    {/* <Link to='/menu' className="text-decoration-none"> */}
-                        <div className="row" onClick={props.toggle}>
-                            <button className="btn btn-danger">
-                                <h3 className="text-decoration-none">Descartar</h3>
-                            </button>
-                        </div>
-                    {/* </Link> */}
 
                 </div>
+
+                <div className="row">
+
+                    <div className="col">
+                        <label>Nombre del propietario: </label>
+                    </div>
+
+                    <div className="col">
+                        <input
+                            onChange={({ target: { value } }) => setOwnerName(value)}
+                            type="text" placeholder="Propietario" />
+                    </div>
+
+                </div>
+
+                <div className="row">
+                    <div className="col">
+                        <label>Teléfono</label>
+                    </div>
+
+                    <div className="col">
+                        <input
+                            onChange={({ target: { value } }) => setNumber(value)}
+                            type="text" placeholder="teléfono" />
+                    </div>
+                </div>
+
+
+                <br />
+
+
+                <div className="row">
+                    <Link to='/menu/agregar' className="text-decoration-none">
+                        <button className="btn btn-success" onClick={addWorkShop}>
+                            <h3>Confirmar</h3>
+                        </button>
+                    </Link>
+                </div>
+                <br />
+                {/* <Link to='/menu' className="text-decoration-none"> */}
+                <div className="row" onClick={props.toggle}>
+                    <button className="btn btn-danger">
+                        <h3 className="text-decoration-none">Descartar</h3>
+                    </button>
+                </div>
+                {/* </Link> */}
+
+            </div>
 
         </div>
     );

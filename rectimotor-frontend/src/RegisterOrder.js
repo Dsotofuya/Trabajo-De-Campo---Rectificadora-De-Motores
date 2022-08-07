@@ -41,17 +41,27 @@ function RegisterOrder() {
   const [workshopID, setWorkshopId] = useState("");
   const [workshops, setWorkshops] = useState([])
 
-  const autoSetUsser=(value)=>{
+  function autoSetUsser(value) {
     setDocument(value)
-    fetch(URIPersons+"/"+value).then((res) => res.json()).then((data) => { 
-      setName(data[0].NOMBRES_APELLIDOS) 
-      setPhone(data[0].TELEFONO_PERSONA) 
+    fetch(URIPersons + "/" + value).then((res) => res.json()).then((data) => {
+      setName(data[0].NOMBRES_APELLIDOS)
+      setPhone(data[0].TELEFONO_PERSONA)
     })
   }
 
 
-  function getAllWorkshops() {
-    fetch(URIAllWorkshops).then((res) => res.json()).then((data) => { setWorkshops(data) })
+  const getAllWorkshops = () => {
+    fetch(URIAllWorkshops).then(async (res) => setWorkshops(await res.json()))
+  }
+
+  function autoGetVehicleID(value) {
+    setEngineName(value)
+    fetch(URI2 + value).then((res) => res.json()).then((data) => {
+      let temp = data[0].ID_MOTOR
+      setEngineId(temp)
+      console.log(temp)
+    })
+
   }
 
   function sendAll() {
@@ -86,7 +96,7 @@ function RegisterOrder() {
   function sendThePartsToDB(idOrder) {
     parts.map((part) => {
       //falta verificacion si no tiene id de partes
-      if (part.isChecked || part.quantity>0) {
+      if (part.isChecked || part.quantity > 0) {
         const requestOption = {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
@@ -136,10 +146,12 @@ function RegisterOrder() {
 
   function partMapTrial() {
     console.log(IDOrder)
-    parts.map((part) => {
-      if (part.isChecked)
-        console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
-    })
+    console.log(workshopID)
+
+    // parts.map((part) => {
+    //   if (part.isChecked)
+    //     console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+    // })
   }
 
   function updateWork(index, name, price, checked) {
@@ -168,23 +180,8 @@ function RegisterOrder() {
     setReplacements(replacementTemp)
   }
 
-  useEffect(() => {
-    getAllParts();
-    getAllWorkshops();
-    getAllWorks();
-    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN) })
-
-    /*defineWorksArray("Encamisar Bloque", 15000, false)
-    defineWorksArray("Ensamblar pistones", 120000, false)
-    defineWorksArray("rectificar cigüeñal", 130000, false)
-    defineWorksArray("Cambiar tapones", 20000, false)*/
-  }, [])
-
-
   const addOrderBase = () => {
-    fetch(URI2 + engineName).then((res) => res.json()).then((data) => { setEngineId(data) })
     fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-
     /* se retorna la id en base al nombre del motor en el campo */
     setPhone(engineId[0].ID_MOTOR)
     // console.log(workshopID[0].ID_TALLER)
@@ -210,19 +207,37 @@ function RegisterOrder() {
 
   const toggleWorkshopModal = () => {
     setActiveWorkshop((isActive) => !isActive)
+    getAllWorkshops()
   }
 
   const handleChange = (event) => {
-    setWorkshopId({ value: event.target.value });
-    console.log(workshopID.value)
+    let temp = event.target.value
+    setWorkshopId(temp);
+    console.log(workshopID)
   }
+
+  useEffect(() => {
+    getAllParts();
+    getAllWorkshops();
+    getAllWorks();
+    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN) })
+  }, [])
 
   return (
     <>
 
       <div style={styles.window}>
         <NavBar />
-        <h2 className="text-center"> Registro de orden de Ingreso  </h2>
+
+        <div className="row">
+          <div className="col-md-10">
+            <h2 className="text-center"> Registro de orden de Ingreso  </h2>
+          </div>
+          <div className="col-md-1 border border border-info">
+            <h1 className="text-center text-info">#{IDOrder}</h1>
+          </div>
+        </div>
+
         <div className="container-xl w-100 p-3" >
 
           <div className="row">
@@ -231,7 +246,7 @@ function RegisterOrder() {
               <label>Taller:</label>
             </div>
             <div className="col-md-3">
-              <select className="form-select form-select-sm" onChange={handleChange}>
+              <select className="form-select form-select-sm" onChange={handleChange} >
                 {workshops.map((wShops) =>
                   <option value={wShops.ID_TALLER}> {wShops.NOMBRE_TALLER} </option>
                 )
@@ -248,7 +263,7 @@ function RegisterOrder() {
               <label>Vehiculo:</label>
             </div>
             <div className="col-md-2">
-              <input onChange={({ target: { value } }) => setEngineName(value)} type="text" placeholder="Nombre del vehiculo" />
+              <input onChange={({ target: { value } }) => autoGetVehicleID(value)} type="text" placeholder="Nombre del vehiculo" />
             </div>
           </div>
           <br />
@@ -259,7 +274,7 @@ function RegisterOrder() {
               <label>Responsable:</label>
             </div>
             <div className="col-md-3">
-              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} defaultValue={name}/>
+              <input onChange={({ target: { value } }) => setName(value)} type="text" placeholder="Nombre del Responsable" value={name} />
             </div>
             <div className="col-md-2">
               <button className="btn btn-success" onClick={togglePersonModal}>agregar</button>
@@ -297,7 +312,7 @@ function RegisterOrder() {
           <hr />
           <div className="row">
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
-              <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop} />
+              <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop} getWshops={getAllWorkshops} />
             </Modal>
             <Modal active={activePersonModal} toggle={togglePersonModal} >
               <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />
