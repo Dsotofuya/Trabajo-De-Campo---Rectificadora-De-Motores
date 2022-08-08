@@ -14,6 +14,7 @@ function RegisterOrder() {
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
   const URI = "http://localhost:3412/orders/";
   const URI2 = "http://localhost:3412/engines/name/";
+  const URIEngines = "http://localhost:3412/engines/";
   const URIPersons = "http://localhost:3412/persons";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
@@ -34,7 +35,7 @@ function RegisterOrder() {
   const [replacements, setReplacements] = useState([]);
 
   //constantes de motores
-  const [engineName, setEngineName] = useState([]);
+  const [engineName, setEngineName] = useState("");
   const [engineId, setEngineId] = useState("");
 
   // constantes de talleres
@@ -65,13 +66,27 @@ function RegisterOrder() {
         setEngineId(num)
       }
     })
-
+    console.log(engineId)
   }
 
   function sendAll() {
-    addOrderBase()
-    sendTheWorksToDB(IDOrder)
-    sendThePartsToDB(IDOrder)
+    if(engineId !=null){
+      addOrderBase()
+      sendTheWorksToDB(IDOrder)
+      sendThePartsToDB(IDOrder)
+    }
+    else{
+      const requestOption = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          NOMBRE_MOTOR: engineName
+        })
+      }
+      fetch(URIEngines, requestOption)
+      autoGetVehicleID(engineName)
+      sendAll()
+    }
   }
 
   //funcion para enviar trabajos a DB
@@ -187,17 +202,17 @@ function RegisterOrder() {
   const addOrderBase = () => {
     fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
     /* se retorna la id en base al nombre del motor en el campo */
-    setPhone(engineId[0].ID_MOTOR)
+    // setPhone(engineId[0].ID_MOTOR)
     // console.log(workshopID[0].ID_TALLER)
-    const idMotor = engineId[0].ID_MOTOR
+    const idMotor = engineId
     const idWorkshop = workshopID.value
     console.log(idMotor + ', ' + idWorkshop + ', ' + document)
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ID_MOTOR: idMotor,
-        ID_TALLER: "208",
+        ID_MOTOR: engineId,
+        ID_TALLER: workshopID,
         CC_PERSONA: document,
         ESTADO_ORDEN: "En Espera"
       }),
