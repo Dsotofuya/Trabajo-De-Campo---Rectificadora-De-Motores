@@ -36,7 +36,7 @@ function RegisterOrder() {
 
   //constantes de motores
   const [engineName, setEngineName] = useState("");
-  const [engineId, setEngineId] = useState("");
+  const [engineId, setEngineId] = useState(0);
 
   // constantes de talleres
   const [workshopID, setWorkshopId] = useState("");
@@ -66,11 +66,11 @@ function RegisterOrder() {
         setEngineId(num)
       }
     })
-    console.log(engineId)
+    console.log(engineName)
   }
 
   function sendAll() {
-    if(engineId !=null){
+    if(engineId > 0){
       addOrderBase()
       sendTheWorksToDB(IDOrder)
       sendThePartsToDB(IDOrder)
@@ -83,7 +83,8 @@ function RegisterOrder() {
           NOMBRE_MOTOR: engineName
         })
       }
-      fetch(URIEngines, requestOption)
+      console.log(engineName)
+      // fetch(URIEngines, requestOption)
       autoGetVehicleID(engineName)
       sendAll()
     }
@@ -205,8 +206,7 @@ function RegisterOrder() {
     // setPhone(engineId[0].ID_MOTOR)
     // console.log(workshopID[0].ID_TALLER)
     const idMotor = engineId
-    const idWorkshop = workshopID.value
-    console.log(idMotor + ', ' + idWorkshop + ', ' + document)
+    const idWorkshop = workshopID
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
@@ -217,6 +217,7 @@ function RegisterOrder() {
         ESTADO_ORDEN: "En Espera"
       }),
     };
+    console.log(idMotor + ', ' + idWorkshop + ', ' + document)
     return fetch(URI, requestOption);
   }
 
@@ -233,13 +234,14 @@ function RegisterOrder() {
     let temp = event.target.value
     setWorkshopId(temp);
     console.log(temp)
+    console.log(workshopID)
   }
 
   useEffect(() => {
     getAllParts();
     getAllWorkshops();
     getAllWorks();
-    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN) })
+    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN+1) })
   }, [])
 
   return (
