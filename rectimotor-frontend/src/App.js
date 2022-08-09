@@ -24,10 +24,11 @@ function App() {
         <Route path='/registrar' element={<RegisterUser />}/>
         <Route path='/menu' element={<Menu />}/>
         <Route path='/menu/agregar' element={<RegisterOrder />}/>
-        <Route path='/menu/buscar' element={<CompShowOrders />}/>
+        {<Route path='/menu/buscar' element={<CompShowOrders />}/>}
         <Route path='/menu/Busqueda_Actualizar' element={<SearchUpdate />}/>
         <Route path='/orders/:id' element={<CompShowOrders />} />
-        <Route path='/menu/actualizar' element={<UpdateOrder />}/>
+        {/**<Route path='/menu/actualizar' element={<UpdateOrder />}/> */}
+        <Route path='/menu/actualizar' element={<SearchUpdate />}/>
         <Route path='/orders/details/:id_order' element={<CompShowReport />} />
         {/* esto es de prueba */}
         <Route path='/orders/workshopModal' element={<WorkshopModal />} />

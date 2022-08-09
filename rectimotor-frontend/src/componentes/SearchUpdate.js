@@ -1,96 +1,143 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import NavBar from '../componentes/NavBar';
 import '../estilos/reporte.css';
 
 
 function SearchUpdate() {
-    // Getting the data from de database and setting the variable to render
-    const URI = 'http://localhost:3412/orders/'
-    const [orders, setOrders] = useState([])
+
+    const ordersArray = [];
+    const [input, setInput] = useState('')
+    const [orders, setOrders] = useState('')
     const params = useParams()
     const navigate = useNavigate()
-    useEffect(() => {
-        fetch(URI + params.id).then((res) => res.json()).then((data) => { setOrders(data) })
+
+    const [workShops, setWorkShops] = useState('');
+    const [vehicles, setVehicles] = useState('');
+    const [AllOrders, setAllORders] = useState('');
+
+    const workShopsURI = 'http://localhost:3412/workshops/';
+    const vehiclesURI = 'http://localhost:3412/engines/';
+    const ordesURI = 'http://localhost:3412/orders/';
+
+    fetch(ordesURI).then((res) => res.json()).then((data) => { setAllORders(data) })
+
+    useEffect( () => {
+        //fetch(ordesURI + params.id).then((res) => res.json()).then((data) => { setOrders(data) })
+        fetch(workShopsURI).then((res) => res.json()).then((data) => {setWorkShops(data)})
+        fetch(vehiclesURI).then((res) => res.json()).then((data) => {setVehicles(data)})
+        fetch(ordesURI).then((res) => res.json()).then((data) => {setAllORders(data)})
     }, [])
-    // -------------------------------------------------------------------
-    console.log(orders)
-    const validateInput = new RegExp('^[0-9]{0,10}$');
 
-    const validation = true;
+    function compareWorkShop(){
+        let workShopID = '';
+        for(let i = 0; i < workShops.length; i++){
+            if(input == workShops[i].NOMBRE_TALLER){
+                workShopID = workShops[i].ID_TALLER;
+                break;
+            }
+        }
+        return workShopID;
+    }
 
+    function compareVehicle(){
+        let vehicleID = '';
+        for(let i = 0; i < vehicles.length; i++){
+            if(input == vehicles[i].NOMBRE_MOTOR){
+                vehicleID = vehicles[i].ID_MOTOR;
+                break;
+            }
+        }
+        return vehicleID;
+    }
 
-    // Returning the component 
-    return (
-        <>
-            <div className="App ">
-                <NavBar />
-                <div>
-                    <div className='contenedor-principal'>
+    function formatDate(fecha){
+        let fechaFormat = '';
 
-                        <h1 className='d-flex justify-content-center'>Busqueda de Orden</h1>
-                        <div className='d-flex justify-content-center'>
-                            {/* Input de la cedula u orden */}
-                            <form onSubmit={() => {
-                                navigate(`/orders/get/${document.getElementById('orderID').value}`)
-                                const val = document.getElementById('orderID').value
-                                if (validateInput.test(val) != true) {
-                                    alert('Entrada incorrecta')
-                                    validation = false
+        if(fecha!=null){
+            let a = new Date(String(fecha).substring(0,10))
+            fechaFormat = a.getDay() +'/'+ a.getMonth() +'/'+a.getFullYear();
+        }
+        
+        return fechaFormat
+    }
+
+    function vehicleName(id){
+        let vehicleName = '';
+        for(let i = 0; i < vehicles.length; i++){
+            if(id == vehicles[i].ID_MOTOR){
+                vehicleName = vehicles[i].NOMBRE_MOTOR;
+                break;
+            }
+        }
+        return vehicleName;
+    }
+
+    return(
+        <div className="App">
+        <NavBar />
+            <div>
+                <div className='contenedor-principal'>
+
+                    <h1 className='d-flex justify-content-center'>Actualizar órden</h1>
+                    <div className='d-flex justify-content-center'>
+                        {/* Input de la Nombre de taller, nombre de vehículo/motor o número de orden */}
+                
+                        <div>
+                            <input onChange={({ target: { value } }) => {setInput(value)}}
+                            type="text" placeholder="Nombre de usuario"></input>
+
+                            <button className='buton' onClick={() => {
+                            
+                            
+                              (AllOrders || []).map(
+                                (order, i) =>{
+                                    if(compareWorkShop() == order.ID_TALLER ||compareVehicle() == order.ID_MOTOR || input == order.ID_ORDEN){
+                                        ordersArray.push(order)
+                                    }
                                 }
-                            }}>
-                                <input
-                                    id="orderID"
-                                    className='input'
-                                    type='text'
-                                    name='search'
-                                    autoComplete='off'
-                                ></input>
-                                <button className='buton' variant='primary' type='submit'>Buscar</button>
-                            </form>
+                            )
+                            setOrders(ordersArray)
+                            
+                            }}>Buscar</button>
                         </div>
+                    </div>
 
-                        <div className='container'>
-                            <div className='row'>
-                                <div className='col'>
-                                    <table className='table'>
-                                        <thead className='table-primary'>
-                                            <tr>
-                                                <th> id de la orden </th>
-                                                <th> Taller </th>
-                                                <th> nombre motor </th>
-                                                <th> fecha de recibido </th>
-                                                <th> estado de la orden </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                //Se verifica si el array existe antes de renderizar las targetas
-                                                (orders[0] || []).map((order, i) => {
-                                                    if (validation) {
-
-                                                        return <tr className='orderRow' key={i} onClick={() => navigate(`/orders/details/${order.id_orden}`)}>
-                                                            <td>{order.id_orden}</td>
-                                                            <td>{order.nombre_taller}</td>
-                                                            {/* <td>{order.cc_persona}</td> */}
-                                                            <td>{order.nombre_motor}</td>
-                                                            <td>{order.fecha_recibido}</td>
-                                                            <td>{order.estado_orden}</td>
-                                                        </tr>
-                                                    }
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
+                    <div className='container'>
+                        <div className='row'>
+                            <div className='col'>
+                                <table className='table'>
+                                    <thead className='table-primary'>
+                                        <tr>
+                                            <th> id de la orden </th>
+                                            <th> Cédula </th>
+                                            <th> nombre motor </th>
+                                            <th> fecha de recibido </th>
+                                            <th> estado de la orden </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            //Se verifica si el array existe antes de renderizar las targetas
+                                            (orders|| []).map((order, i) => {
+                                                return <tr className='orderRow' key={i} onClick={() => navigate(`/orders/details/${order.ID_ORDEN}`)}>
+                                                <td>{order.ID_ORDEN}</td>
+                                                <td>{order.CC_PERSONA}</td>
+                                                <td>{vehicleName(order.ID_MOTOR)}</td>
+                                                <td>{formatDate(order.FECHA_RECIBIDO)}</td>
+                                                <td>{order.ESTADO_ORDEM}</td>
+                                                </tr>
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </>
-    )
+        </div>
+    );
 }
 
 export default SearchUpdate;
