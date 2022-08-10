@@ -17,6 +17,7 @@ function RegisterOrder() {
   const URIEngines = "http://localhost:3412/engines/";
   const URIEnginesCount = "http://localhost:3412/engines/count/";
   const URIPersons = "http://localhost:3412/persons";
+  const URIMeasures = "http://localhost:3412/measures/";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
   const URIWorks = "http://localhost:3412/works/"
@@ -197,6 +198,34 @@ function RegisterOrder() {
     console.log(idOrder + ', ' + ID_PARTE + ', ' + quantity)
   }
 
+  //funcion que envio medidas a la base de datos
+  function uploadMeasure(ID_PARTE, measureValue){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_PARTE: ID_PARTE,
+        VALOR_MEDIDA: measureValue
+      })
+    }
+    fetch(URIMeasures, requestOption)
+    console.log("Medida agregada: "+ID_PARTE+', '+measureValue)
+  }
+
+  //funcion que envio medidas a la base de datos
+  function uploadHistoric(ID_PARTE, measureValue){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_PARTE: ID_PARTE,
+        VALOR_MEDIDA: measureValue
+      })
+    }
+    fetch(URIMeasures, requestOption)
+    console.log("Medida agregada: "+ID_PARTE+', '+measureValue)
+  }
+
   function getAllParts() {
     fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
   }
@@ -227,13 +256,13 @@ function RegisterOrder() {
   }
 
   function partMapTrial() {
-    console.log(IDOrder)
-    console.log(engineId)
+    // console.log(IDOrder)
+    // console.log(engineId)
 
-    // parts.map((part) => {
-    //   if (part.isChecked)
-    //     console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
-    // })
+    parts.map((part) => {
+      if (part.isChecked||part.quantity>0)
+        console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+    })
   }
 
   function updateWork(index, name, price, checked) {
@@ -426,7 +455,7 @@ function RegisterOrder() {
           <h1 className="text-center">Partes</h1>
 
           <div className="row">
-            <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar mapa de Trabajos</button>
+            <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar</button>
           </div>
 
           <div>
@@ -461,9 +490,9 @@ function RegisterOrder() {
           <div>
             <h1 className="text-center">Trabajos</h1>
 
-            <div className="row">
+            {/* <div className="row">
               <button className="btn btn-warning btn-lg" onClick={workMapTrial}>probar mapa de Trabajos</button>
-            </div>
+            </div> */}
 
             <div className="row">
               <div className="col"> <h5 className="font-weight-bold">Nombre de trabajo </h5> </div>
