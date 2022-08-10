@@ -190,6 +190,19 @@ export const getOrderId = async (req, res) => {
     }
 }
 
+
+//Obtener id actual de la tabla de motores
+export const getCurrentIdEngine = async (req, res) => {
+    try {
+        const order = await db.query(
+            `SELECT (AUTO_INCREMENT-1) AS ID_MOTOR FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dsotofuya_trabajodecampo_rectimotor' AND TABLE_NAME = 'MOTORES';`
+        );
+        res.json(order[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
 // Buscar orden por número de orden
 export const getOrderByCC = async (req, res) => {
     try {
