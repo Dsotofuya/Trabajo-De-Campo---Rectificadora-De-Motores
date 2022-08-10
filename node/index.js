@@ -44,7 +44,7 @@ const client = new Client()
 client.initialize()
 
 client.on('qr', qr => {
-    qrcode.generate(qr, { small: true })
+    qrcode.generate(qr, {small: true})
 })
 
 client.on('ready', () => {
@@ -54,7 +54,7 @@ client.on('ready', () => {
 app.post('/sendmessage', async (req, res, next) => {
     try {
         const { number, message } = req.body; // Get the body
-        const msg = await client.sendMessage(`${number}@c.us`, message); // Send the message
+        const msg = await client.sendMessage(`57${number}@c.us`, message); // Send the message
         res.send({ msg }); // Send the response
     } catch (error) {
       next(error)
