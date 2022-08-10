@@ -1,8 +1,9 @@
 import express from 'express';
-import { getAllDetails, getAllDetailsParts, getAllDetailsReplacements, getAllDetailsWorks, updateDetOrd, createDetOrd} from '../controllers/RectimotorController.js';
+import { getAllDetails, getAllDetailsParts, getAllDetailsReplacements, getAllDetailsWorks, updateDetOrd, createDetOrd, getDetOrdId} from '../controllers/RectimotorController.js';
 const router = express.Router();
 
 //router.get('/:id_ord', getAllDetails)
+router.get('/count/', getDetOrdId)
 router.get('/parts/:id_ord', getAllDetailsParts)
 router.get('/replacements/:id_ord', getAllDetailsReplacements)
 router.get('/works/:id_ord', getAllDetailsWorks)
