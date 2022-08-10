@@ -28,6 +28,7 @@ function RegisterOrder() {
   const [document, setDocument] = useState("");
   const [phone, setPhone] = useState("");
   const [workshopName, setWorkshop] = useState("");
+  const [orderDate, setOrderDate] = useState(new Date())
   // const [vehicle, setVehicle] = useState(false);
 
   //listas de partes, trabajos y repuestos
@@ -252,7 +253,8 @@ function RegisterOrder() {
         ID_MOTOR: engineId,
         ID_TALLER: workshopID,
         CC_PERSONA: document,
-        ESTADO_ORDEN: "En Espera"
+        ESTADO_ORDEN: "En Espera",
+        FECHA_RECIBIDO: orderDate
       }),
     };
     console.log(idMotor + ', ' + idWorkshop + ', ' + document)
@@ -272,7 +274,8 @@ function RegisterOrder() {
         ID_MOTOR: num,
         ID_TALLER: workshopID,
         CC_PERSONA: document,
-        ESTADO_ORDEN: "En Espera"
+        ESTADO_ORDEN: "En Espera",
+        FECHA_RECIBIDO: orderDate
       }),
     };
     console.log(num + ', ' + idWorkshop + ', ' + document)
@@ -367,7 +370,10 @@ function RegisterOrder() {
               <label>Ingreso:</label>
             </div>
             <div className="col-md-2">
-              <input type="date" placeholder="Fecha de ingreso" id="current" />
+              <input type="date" placeholder="Fecha de ingreso" id="current" onChange={({ target: { value } }) =>{
+                setOrderDate(value)
+                console.log(value)
+                }}/>
             </div>
           </div>
           <br />
@@ -516,22 +522,22 @@ function RegisterOrder() {
           <div className="row">
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox1">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox1" value="option1" name="option"/>
                 Reparado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox2">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox2" value="option2" name="option"/>
                 Pagado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox3">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox3" value="option3" name="option"/>
                 Enviado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox4">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox4" value="option4" name="option"/>
                 Pendiente de repuestos</label>
             </div>
           </div>
