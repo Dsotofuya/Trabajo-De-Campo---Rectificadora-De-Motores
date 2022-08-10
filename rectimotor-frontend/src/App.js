@@ -30,6 +30,7 @@ function App() {
         {/**<Route path='/menu/actualizar' element={<UpdateOrder />}/> */}
         <Route path='/menu/actualizar' element={<SearchUpdate />}/>
         <Route path='/orders/details/:id_order' element={<CompShowReport />} />
+        <Route path='/orders/get/:id_order' element={<UpdateOrder />} />
         {/* esto es de prueba */}
         <Route path='/orders/workshopModal' element={<WorkshopModal />} />
         <Route path='/orders/personModal' element={<PersonModal />} />

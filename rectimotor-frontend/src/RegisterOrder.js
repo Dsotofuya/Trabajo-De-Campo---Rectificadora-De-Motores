@@ -67,6 +67,7 @@ function RegisterOrder() {
       }
     })
     console.log(engineName)
+    console.log(engineId)
   }
 
   function sendAll() {
@@ -84,9 +85,12 @@ function RegisterOrder() {
         })
       }
       console.log(engineName)
-      // fetch(URIEngines, requestOption)
-      autoGetVehicleID(engineName)
-      sendAll()
+      fetch(URIEngines, requestOption)
+      // autoGetVehicleID(engineName)
+      // ingresar método de asignar ultimo vehicleId acá
+      addOrderBase()
+      sendTheWorksToDB(IDOrder)
+      sendThePartsToDB(IDOrder)
     }
   }
 
@@ -107,7 +111,6 @@ function RegisterOrder() {
         fetch(URIDetails, requestOption)
         console.log(idOrder + ', ' + work.ID_TRABAJO + ', ' + work.priceJob)
       }
-
     })
   }
 
@@ -201,7 +204,7 @@ function RegisterOrder() {
   }
 
   const addOrderBase = () => {
-    fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
+    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
     /* se retorna la id en base al nombre del motor en el campo */
     // setPhone(engineId[0].ID_MOTOR)
     // console.log(workshopID[0].ID_TALLER)
@@ -247,7 +250,7 @@ function RegisterOrder() {
   return (
     <>
 
-      <div style={styles.window} className={"border"}>
+      <div style={styles.window} className={"border"} onClick={useEffect}>
         <NavBar />
 
         <div className="row">

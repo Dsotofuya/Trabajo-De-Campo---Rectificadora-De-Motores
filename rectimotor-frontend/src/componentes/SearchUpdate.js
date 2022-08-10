@@ -120,7 +120,7 @@ function SearchUpdate() {
                                         {
                                             //Se verifica si el array existe antes de renderizar las targetas
                                             (orders|| []).map((order, i) => {
-                                                return <tr className='orderRow' key={i} onClick={() => navigate(`/orders/details/${order.ID_ORDEN}`)}>
+                                                return <tr className='orderRow' key={i} onClick={() => navigate(`/orders/get/${order.ID_ORDEN}`)}>
                                                 <td>{order.ID_ORDEN}</td>
                                                 <td>{order.CC_PERSONA}</td>
                                                 <td>{vehicleName(order.ID_MOTOR)}</td>

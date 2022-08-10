@@ -82,11 +82,11 @@ function WorkshopModal(props) {
 
 
                 <div className="row">
-                    <Link to='/menu/agregar' className="text-decoration-none">
+                    {/* <Link to='/menu/agregar' className="text-decoration-none"> */}
                         <button className="btn btn-success" onClick={addWorkShop}>
                             <h3>Confirmar</h3>
                         </button>
-                    </Link>
+                    {/* </Link> */}
                 </div>
                 <br />
                 {/* <Link to='/menu' className="text-decoration-none"> */}
