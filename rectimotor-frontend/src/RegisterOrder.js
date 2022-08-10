@@ -27,7 +27,7 @@ function RegisterOrder() {
   const [IDOrder, setIDOrder] = useState("");
   const [document, setDocument] = useState("");
   const [phone, setPhone] = useState("");
-  const [workshopName, setWorkshop] = useState("");
+  // const [workshopName, setWorkshop] = useState("");
   const [orderDate, setOrderDate] = useState(new Date())
   // const [vehicle, setVehicle] = useState(false);
 
@@ -35,6 +35,7 @@ function RegisterOrder() {
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
   const [replacements, setReplacements] = useState([]);
+  const [lastPartId, setLastPartId] = useState("")
 
   //constantes de motores
   const [engineName, setEngineName] = useState("");
@@ -144,34 +145,56 @@ function RegisterOrder() {
     parts.map((part) => {
       if (part.isChecked || part.quantity > 0) {
         if (part.ID_PARTE > 0) {
-          const requestOption = {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              ID_ORDEN: idOrder,
-              ID_PARTE: part.ID_PARTE,
-              CANTIDAD: part.quantity,
-              //no sé como meter lo de medida inicial y final, dejo una medida comentada
-              // VALOR_MEDIDA : part.initialMed,
-              // VALOR_MEDIDA : part.finalMed
-            })
-          }
-          fetch(URIDetails, requestOption)
-          console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+          uploadDetailPart(idOrder, part.ID_PARTE, part.quantity)
         }
         else {
-          const requestOption = {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              NOMBRE_PARTE: part.name
-            })
-          }
-          fetch(URIDetails, requestOption)
-          console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+          uploadNewPart(part.name)
+          getPartIdByName(part.name)
+          uploadDetailPart(idOrder, lastPartId, part.quantity)
         }
       }
     })
+  }
+
+  function getPartIdByName(name){
+    fetch(URIParts+"name/"+name).then((res) => res.json()).then((data) => {
+      let temp = data
+      console.log("temp: "+temp)
+      let num = temp.ID_PARTE
+      console.log("temp: "+num)
+
+      setLastPartId(num)
+    })
+  }
+
+  function uploadNewPart(name){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        NOMBRE_PARTE: name
+      })
+    }
+    fetch(URIParts, requestOption)
+    console.log(name)
+  }
+
+  //funcion para subir detalles de parte a db
+  function uploadDetailPart(idOrder, ID_PARTE, quantity){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: idOrder,
+        ID_PARTE: ID_PARTE,
+        CANTIDAD: quantity,
+        // no sé como meter lo de medida inicial y final, dejo una medida comentada
+        // VALOR_MEDIDA : part.initialMed,
+        // VALOR_MEDIDA : part.finalMed
+      })
+    }
+    fetch(URIDetails, requestOption)
+    console.log(idOrder + ', ' + ID_PARTE + ', ' + quantity)
   }
 
   function getAllParts() {
@@ -240,10 +263,6 @@ function RegisterOrder() {
   }
 
   const addOrderBase = () => {
-    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-    /* se retorna la id en base al nombre del motor en el campo */
-    // setPhone(engineId[0].ID_MOTOR)
-    // console.log(workshopID[0].ID_TALLER)
     const idMotor = engineId
     const idWorkshop = workshopID
     const requestOption = {
@@ -262,10 +281,6 @@ function RegisterOrder() {
   }
 
   const addOrderBaseAlter = (num) => {
-    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-    /* se retorna la id en base al nombre del motor en el campo */
-    // setPhone(engineId[0].ID_MOTOR)
-    // console.log(workshopID[0].ID_TALLER)
     const idWorkshop = workshopID
     const requestOption = {
       method: "POST",
@@ -400,7 +415,7 @@ function RegisterOrder() {
           <hr />
           <div className="row">
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
-              <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop} getWshops={getAllWorkshops} />
+              <WorkshopModal toggle={toggleWorkshopModal} getWshops={getAllWorkshops} />
             </Modal>
             <Modal active={activePersonModal} toggle={togglePersonModal} >
               <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />

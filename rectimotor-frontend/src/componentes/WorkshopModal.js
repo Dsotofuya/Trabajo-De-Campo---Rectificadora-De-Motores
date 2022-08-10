@@ -24,7 +24,6 @@ function WorkshopModal(props) {
         };
 
         console.log(requestOption.body)
-        props.workshopName(workShopName);
         props.toggle();
         props.getWshops();
         return fetch(URI, requestOption);
