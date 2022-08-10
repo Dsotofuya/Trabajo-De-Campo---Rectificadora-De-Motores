@@ -15,6 +15,7 @@ function RegisterOrder() {
   const URI = "http://localhost:3412/orders/";
   const URI2 = "http://localhost:3412/engines/name/";
   const URIEngines = "http://localhost:3412/engines/";
+  const URIEnginesCount = "http://localhost:3412/engines/count/";
   const URIPersons = "http://localhost:3412/persons";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
@@ -26,17 +27,20 @@ function RegisterOrder() {
   const [IDOrder, setIDOrder] = useState("");
   const [document, setDocument] = useState("");
   const [phone, setPhone] = useState("");
-  const [workshopName, setWorkshop] = useState("");
+  // const [workshopName, setWorkshop] = useState("");
+  const [orderDate, setOrderDate] = useState(new Date())
   // const [vehicle, setVehicle] = useState(false);
 
   //listas de partes, trabajos y repuestos
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
   const [replacements, setReplacements] = useState([]);
+  const [lastPartId, setLastPartId] = useState("")
 
   //constantes de motores
   const [engineName, setEngineName] = useState("");
-  const [engineId, setEngineId] = useState(0);
+  const [engineId, setEngineId] = useState("");
+  const [engineCount, setEngineCount] = useState("");
 
   // constantes de talleres
   const [workshopID, setWorkshopId] = useState("");
@@ -70,28 +74,49 @@ function RegisterOrder() {
     console.log(engineId)
   }
 
+  function getCount() {
+    fetch(URIEnginesCount).then((res) => res.json()).then((data) => {
+      let temp = data[0]
+      let num = temp.ID_MOTOR + 1
+      setEngineCount(num)
+    })
+  }
+
   function sendAll() {
-    if(engineId > 0){
-      addOrderBase()
-      sendTheWorksToDB(IDOrder)
-      sendThePartsToDB(IDOrder)
+    console.log(engineId)
+    console.log(engineCount)
+    if (engineName == "") {
+      //aca va la notificacion de error
+      console.log("falta el motor")
     }
-    else{
-      const requestOption = {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          NOMBRE_MOTOR: engineName
-        })
+    else {
+
+      if (engineId > 0) {
+        addOrderBase()
+        sendTheWorksToDB(IDOrder)
+        sendThePartsToDB(IDOrder)
       }
-      console.log(engineName)
-      fetch(URIEngines, requestOption)
-      // autoGetVehicleID(engineName)
-      // ingresar método de asignar ultimo vehicleId acá
-      addOrderBase()
-      sendTheWorksToDB(IDOrder)
-      sendThePartsToDB(IDOrder)
+      else {
+        sendVehicle()
+        addOrderBaseAlter(engineCount)
+        sendTheWorksToDB(IDOrder)
+        sendThePartsToDB(IDOrder)
+        setEngineId(engineCount)
+
+      }
     }
+  }
+
+  function sendVehicle() {
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        NOMBRE_MOTOR: engineName
+      })
+    }
+    fetch(URIEngines, requestOption)
+    console.log(engineName)
   }
 
   //funcion para enviar trabajos a DB
@@ -118,24 +143,58 @@ function RegisterOrder() {
   //funcion para enviar partes a DB
   function sendThePartsToDB(idOrder) {
     parts.map((part) => {
-      //falta verificacion si no tiene id de partes
       if (part.isChecked || part.quantity > 0) {
-        const requestOption = {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ID_ORDEN: idOrder,
-            ID_PARTE: part.ID_PARTE,
-            CANTIDAD: part.quantity,
-            //no sé como meter lo de medida inicial y final, dejo una medida comentada
-            // VALOR_MEDIDA : part.initialMed,
-            // VALOR_MEDIDA : part.finalMed
-          })
+        if (part.ID_PARTE > 0) {
+          uploadDetailPart(idOrder, part.ID_PARTE, part.quantity)
         }
-        fetch(URIDetails, requestOption)
-        console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+        else {
+          uploadNewPart(part.name)
+          getPartIdByName(part.name)
+          uploadDetailPart(idOrder, lastPartId, part.quantity)
+        }
       }
     })
+  }
+
+  function getPartIdByName(name){
+    fetch(URIParts+"name/"+name).then((res) => res.json()).then((data) => {
+      let temp = data
+      console.log("temp: "+temp)
+      let num = temp.ID_PARTE
+      console.log("temp: "+num)
+
+      setLastPartId(num)
+    })
+  }
+
+  function uploadNewPart(name){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        NOMBRE_PARTE: name
+      })
+    }
+    fetch(URIParts, requestOption)
+    console.log(name)
+  }
+
+  //funcion para subir detalles de parte a db
+  function uploadDetailPart(idOrder, ID_PARTE, quantity){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: idOrder,
+        ID_PARTE: ID_PARTE,
+        CANTIDAD: quantity,
+        // no sé como meter lo de medida inicial y final, dejo una medida comentada
+        // VALOR_MEDIDA : part.initialMed,
+        // VALOR_MEDIDA : part.finalMed
+      })
+    }
+    fetch(URIDetails, requestOption)
+    console.log(idOrder + ', ' + ID_PARTE + ', ' + quantity)
   }
 
   function getAllParts() {
@@ -169,7 +228,7 @@ function RegisterOrder() {
 
   function partMapTrial() {
     console.log(IDOrder)
-    console.log(workshopID)
+    console.log(engineId)
 
     // parts.map((part) => {
     //   if (part.isChecked)
@@ -204,10 +263,6 @@ function RegisterOrder() {
   }
 
   const addOrderBase = () => {
-    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-    /* se retorna la id en base al nombre del motor en el campo */
-    // setPhone(engineId[0].ID_MOTOR)
-    // console.log(workshopID[0].ID_TALLER)
     const idMotor = engineId
     const idWorkshop = workshopID
     const requestOption = {
@@ -217,10 +272,28 @@ function RegisterOrder() {
         ID_MOTOR: engineId,
         ID_TALLER: workshopID,
         CC_PERSONA: document,
-        ESTADO_ORDEN: "En Espera"
+        ESTADO_ORDEN: "En Espera",
+        FECHA_RECIBIDO: orderDate
       }),
     };
     console.log(idMotor + ', ' + idWorkshop + ', ' + document)
+    return fetch(URI, requestOption);
+  }
+
+  const addOrderBaseAlter = (num) => {
+    const idWorkshop = workshopID
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_MOTOR: num,
+        ID_TALLER: workshopID,
+        CC_PERSONA: document,
+        ESTADO_ORDEN: "En Espera",
+        FECHA_RECIBIDO: orderDate
+      }),
+    };
+    console.log(num + ', ' + idWorkshop + ', ' + document)
     return fetch(URI, requestOption);
   }
 
@@ -230,10 +303,11 @@ function RegisterOrder() {
 
   const toggleWorkshopModal = () => {
     setActiveWorkshop((isActive) => !isActive)
-    getAllWorkshops()
+    // getAllWorkshops()
   }
 
   const handleChange = (event) => {
+    getAllWorkshops()
     let temp = event.target.value
     setWorkshopId(temp);
     console.log(temp)
@@ -241,16 +315,17 @@ function RegisterOrder() {
   }
 
   useEffect(() => {
-    getAllParts();
-    getAllWorkshops();
-    getAllWorks();
-    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN+1) })
+    getCount()
+    getAllParts()
+    getAllWorkshops()
+    getAllWorks()
+    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN + 1) })
   }, [])
 
   return (
     <>
 
-      <div style={styles.window} className={"border"} onClick={useEffect}>
+      <div style={styles.window} className={"border"} >
         <NavBar />
 
         <div className="row">
@@ -266,7 +341,7 @@ function RegisterOrder() {
 
           <div className="row">
 
-            <div className="col-md-2">
+            <div className="col-md-2" >
               <label>Taller:</label>
             </div>
             <div className="col-md-3">
@@ -310,7 +385,10 @@ function RegisterOrder() {
               <label>Ingreso:</label>
             </div>
             <div className="col-md-2">
-              <input type="date" placeholder="Fecha de ingreso" id="current" />
+              <input type="date" placeholder="Fecha de ingreso" id="current" onChange={({ target: { value } }) =>{
+                setOrderDate(value)
+                console.log(value)
+                }}/>
             </div>
           </div>
           <br />
@@ -337,7 +415,7 @@ function RegisterOrder() {
           <hr />
           <div className="row">
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
-              <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop} getWshops={getAllWorkshops} />
+              <WorkshopModal toggle={toggleWorkshopModal} getWshops={getAllWorkshops} />
             </Modal>
             <Modal active={activePersonModal} toggle={togglePersonModal} >
               <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />
@@ -459,22 +537,22 @@ function RegisterOrder() {
           <div className="row">
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox1">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox1" value="option1" name="option"/>
                 Reparado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox2">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox2" value="option2" name="option"/>
                 Pagado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox3">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox3" value="option3" name="option"/>
                 Enviado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox4">
-                <input className="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" />
+                <input className="form-check-input" type="radio" id="inlineCheckbox4" value="option4" name="option"/>
                 Pendiente de repuestos</label>
             </div>
           </div>
