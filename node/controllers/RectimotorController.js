@@ -207,7 +207,7 @@ export const getCurrentIdEngine = async (req, res) => {
 export const getOrderByCC = async (req, res) => {
     try {
         const order = await db.query(
-            `SELECT o.id_orden, m.nombre_motor, o.id_taller, o.cc_persona, o.fecha_recibido, o.fecha_entrega, o.estado_orden FROM ORDENES o, MOTORES m WHERE m.ID_MOTOR = o.ID_MOTOR AND o.CC_PERSONA = ${req.params.cc_persona};`
+            `SELECT o.id_orden, m.nombre_motor, o.id_taller, o.cc_persona, o.fecha_recibido, o.fecha_entrega, o.estado_orden FROM ORDENES o, MOTORES m WHERE m.ID_MOTOR = o.ID_MOTOR AND o.CC_PERSONA = ${req.params.cc_persona} ORDER BY o.FECHA_RECIBIDO DESC;`
         );
         res.json(order)
     } catch (error) {
