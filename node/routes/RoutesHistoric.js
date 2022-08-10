@@ -7,4 +7,4 @@ router.get('/:id_orden', getHistoricsIdOrder)
 router.put('/edit/:id_orden', updateHistorics)
 router.post('/', createHistorics)
 
-export default router; 
+export default router;

@@ -15,6 +15,7 @@ function RegisterOrder() {
   const URI = "http://localhost:3412/orders/";
   const URI2 = "http://localhost:3412/engines/name/";
   const URIEngines = "http://localhost:3412/engines/";
+  const URIEnginesCount = "http://localhost:3412/engines/count/";
   const URIPersons = "http://localhost:3412/persons";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
@@ -36,7 +37,8 @@ function RegisterOrder() {
 
   //constantes de motores
   const [engineName, setEngineName] = useState("");
-  const [engineId, setEngineId] = useState(0);
+  const [engineId, setEngineId] = useState("");
+  const [engineCount, setEngineCount] = useState("");
 
   // constantes de talleres
   const [workshopID, setWorkshopId] = useState("");
@@ -70,28 +72,49 @@ function RegisterOrder() {
     console.log(engineId)
   }
 
+  function getCount() {
+    fetch(URIEnginesCount).then((res) => res.json()).then((data) => {
+      let temp = data[0]
+      let num = temp.ID_MOTOR + 1
+      setEngineCount(num)
+    })
+  }
+
   function sendAll() {
-    if(engineId > 0){
-      addOrderBase()
-      sendTheWorksToDB(IDOrder)
-      sendThePartsToDB(IDOrder)
+    console.log(engineId)
+    console.log(engineCount)
+    if (engineName == "") {
+      //aca va la notificacion de error
+      console.log("falta el motor")
     }
-    else{
-      const requestOption = {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          NOMBRE_MOTOR: engineName
-        })
+    else {
+
+      if (engineId > 0) {
+        addOrderBase()
+        sendTheWorksToDB(IDOrder)
+        sendThePartsToDB(IDOrder)
       }
-      console.log(engineName)
-      fetch(URIEngines, requestOption)
-      // autoGetVehicleID(engineName)
-      // ingresar método de asignar ultimo vehicleId acá
-      addOrderBase()
-      sendTheWorksToDB(IDOrder)
-      sendThePartsToDB(IDOrder)
+      else {
+        sendVehicle()
+        addOrderBaseAlter(engineCount)
+        sendTheWorksToDB(IDOrder)
+        sendThePartsToDB(IDOrder)
+        setEngineId(engineCount)
+
+      }
     }
+  }
+
+  function sendVehicle() {
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        NOMBRE_MOTOR: engineName
+      })
+    }
+    fetch(URIEngines, requestOption)
+    console.log(engineName)
   }
 
   //funcion para enviar trabajos a DB
@@ -118,22 +141,34 @@ function RegisterOrder() {
   //funcion para enviar partes a DB
   function sendThePartsToDB(idOrder) {
     parts.map((part) => {
-      //falta verificacion si no tiene id de partes
       if (part.isChecked || part.quantity > 0) {
-        const requestOption = {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ID_ORDEN: idOrder,
-            ID_PARTE: part.ID_PARTE,
-            CANTIDAD: part.quantity,
-            //no sé como meter lo de medida inicial y final, dejo una medida comentada
-            // VALOR_MEDIDA : part.initialMed,
-            // VALOR_MEDIDA : part.finalMed
-          })
+        if (part.ID_PARTE > 0) {
+          const requestOption = {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ID_ORDEN: idOrder,
+              ID_PARTE: part.ID_PARTE,
+              CANTIDAD: part.quantity,
+              //no sé como meter lo de medida inicial y final, dejo una medida comentada
+              // VALOR_MEDIDA : part.initialMed,
+              // VALOR_MEDIDA : part.finalMed
+            })
+          }
+          fetch(URIDetails, requestOption)
+          console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
         }
-        fetch(URIDetails, requestOption)
-        console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+        else {
+          const requestOption = {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              NOMBRE_PARTE: part.name
+            })
+          }
+          fetch(URIDetails, requestOption)
+          console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+        }
       }
     })
   }
@@ -169,7 +204,7 @@ function RegisterOrder() {
 
   function partMapTrial() {
     console.log(IDOrder)
-    console.log(workshopID)
+    console.log(engineId)
 
     // parts.map((part) => {
     //   if (part.isChecked)
@@ -224,16 +259,37 @@ function RegisterOrder() {
     return fetch(URI, requestOption);
   }
 
+  const addOrderBaseAlter = (num) => {
+    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
+    /* se retorna la id en base al nombre del motor en el campo */
+    // setPhone(engineId[0].ID_MOTOR)
+    // console.log(workshopID[0].ID_TALLER)
+    const idWorkshop = workshopID
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_MOTOR: num,
+        ID_TALLER: workshopID,
+        CC_PERSONA: document,
+        ESTADO_ORDEN: "En Espera"
+      }),
+    };
+    console.log(num + ', ' + idWorkshop + ', ' + document)
+    return fetch(URI, requestOption);
+  }
+
   const togglePersonModal = () => {
     setActivePerson(!activePersonModal)
   }
 
   const toggleWorkshopModal = () => {
     setActiveWorkshop((isActive) => !isActive)
-    getAllWorkshops()
+    // getAllWorkshops()
   }
 
   const handleChange = (event) => {
+    getAllWorkshops()
     let temp = event.target.value
     setWorkshopId(temp);
     console.log(temp)
@@ -241,16 +297,17 @@ function RegisterOrder() {
   }
 
   useEffect(() => {
-    getAllParts();
-    getAllWorkshops();
-    getAllWorks();
-    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN+1) })
+    getCount()
+    getAllParts()
+    getAllWorkshops()
+    getAllWorks()
+    fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN + 1) })
   }, [])
 
   return (
     <>
 
-      <div style={styles.window} className={"border"} onClick={useEffect}>
+      <div style={styles.window} className={"border"} >
         <NavBar />
 
         <div className="row">
@@ -266,7 +323,7 @@ function RegisterOrder() {
 
           <div className="row">
 
-            <div className="col-md-2">
+            <div className="col-md-2" >
               <label>Taller:</label>
             </div>
             <div className="col-md-3">
