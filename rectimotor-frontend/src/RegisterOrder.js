@@ -45,6 +45,10 @@ function RegisterOrder() {
   const [workshopID, setWorkshopId] = useState("");
   const [workshops, setWorkshops] = useState([])
 
+  //Datos de sesión de usuadio
+  let user = JSON.parse(localStorage.getItem('Logged user'));
+  let validation = user[0].TIPO_USUARIO == 'Administrador';
+
   function autoSetUsser(value) {
     setDocument(value)
     fetch(URIPersons + "/" + value).then((res) => res.json()).then((data) => {
@@ -460,7 +464,7 @@ function RegisterOrder() {
               // console.log(i)
               return (
                 <div>
-                  <JobFE idx={i} Job={work} updater={updateWork}></JobFE>
+                  <JobFE idx={i} Job={work} updater={updateWork} show={!validation}></JobFE>
                   {/* <JobFE nameJob={work.nameJob} priceJob={work.priceJob} isActive={work.isActive} /> */}
                   <br />
                 </div>
@@ -522,22 +526,22 @@ function RegisterOrder() {
           <div className="row">
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox1">
-                <input className="form-check-input" type="radio" id="inlineCheckbox1" value="option1" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox1" value="option1" name="option" disabled={!validation}/>
                 Reparado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox2">
-                <input className="form-check-input" type="radio" id="inlineCheckbox2" value="option2" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox2" value="option2" name="option"  disabled={!validation}/>
                 Pagado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox3">
-                <input className="form-check-input" type="radio" id="inlineCheckbox3" value="option3" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox3" value="option3" name="option"  disabled={!validation}/>
                 Enviado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox4">
-                <input className="form-check-input" type="radio" id="inlineCheckbox4" value="option4" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox4" value="option4" name="option"  disabled={!validation}/>
                 Pendiente de repuestos</label>
             </div>
           </div>

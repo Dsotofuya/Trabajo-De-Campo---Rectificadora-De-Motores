@@ -1,25 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import NavBar from './componentes/NavBar';
 import './estilos/reporte.css';
+import sweetAlert from 'sweetalert';
 
 
-const CompShowOrders = () => {
+const CompShowOrdersLogged = () => {
     // Getting the data from de database and setting the variable to render
     const URI = 'http://localhost:3412/orders/'
     const [orders, setOrders] = useState([])
     const params = useParams()
     const navigate = useNavigate()
-    useEffect(() => {
+
+    const user = JSON.parse(localStorage.getItem('Logged user'));
+    let userName =localStorage.getItem('User name');
+    console.log(user)
+
+    useEffect(() => {   
         fetch(URI + params.id).then((res) => res.json()).then((data) => { setOrders(data) })
+        if(user == null){
+            sweetAlert('No se ha iniciado sesión, redirigiendo a Log in...')
+            navigate('/')
+        }
+    
+        if(user!= null){
+            sweetAlert('Bienvenido ' + user[0].TIPO_USUARIO + " " + userName)
+        
+        }
     }, [])
+
+
     // -------------------------------------------------------------------
 
     const validateInput = new RegExp('^[0-9]{0,10}$');
     const validation = true;
-
-    const user = JSON.parse(localStorage.getItem('Logged user'));
 
     function formatDate(fecha){
         console.log(fecha)
@@ -33,17 +47,23 @@ const CompShowOrders = () => {
         return fechaFormat
     }
 
-
     // Returning the component 
     return (       
        <>
        
         <div className="App ">
         
-            <div>
-            <button className='rounded cerrar-sesion' onClick={()=>{navigate('/login')}}>Iniciar sesión</button>
-            </div>
+            <NavBar/>
 
+            <div className='menu'>
+                <div className='usuario'>
+                    <h3>{user[0].TIPO_USUARIO}: {userName}</h3>
+                    <button className='rounded cerrar-sesion' onClick={()=>{
+                    localStorage.clear()
+                    navigate('/')
+                    }}>Cerrar sesión</button>
+                </div>
+            </div>
             <div>
                 <div className='contenedor-principal'>
 
@@ -110,4 +130,4 @@ const CompShowOrders = () => {
     )
 }
 
-export default CompShowOrders;
+export default CompShowOrdersLogged;

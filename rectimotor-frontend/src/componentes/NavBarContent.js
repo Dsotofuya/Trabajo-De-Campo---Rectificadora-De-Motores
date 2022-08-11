@@ -1,29 +1,30 @@
 import React from "react";
 
 export const NavBarContent = [
-    {
-        title: 'Inicio',
-        path: '/menu',
-        cName: 'nav-text'
-    },
+    
     {
         title: 'Registrar orden',
-        path: '/menu/agregar',
+        path: '/agregar',
         cName: 'nav-text'
     },
     {
         title: 'Buscar orden',
-        path: '/menu/buscar',
-        cName: 'nav-text'
-    },
-    {
-        title: 'Actualizar',
-        path: '/menu/actualizar',
+        path: '/buscar',
         cName: 'nav-text'
     },
     {
         title: 'Buscar para actualizar',
-        path: '/menu/Busqueda_Actualizar',
+        path: '/Busqueda_Actualizar',
+        cName: 'nav-text'
+    },
+    {
+        title: 'Registrar trabajador',
+        path: '/registrar',
+        cName: 'nav-text'
+    },
+    {
+        title: 'Ver trabajadores',
+        path: '/trabajadores',
         cName: 'nav-text'
     }
 ]
