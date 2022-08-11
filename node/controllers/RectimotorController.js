@@ -699,3 +699,25 @@ export const getAuthuser = async (req, res) => {
         res.json({ message: error.message })
     }
 }
+
+//eliminar usuario 
+export const deleteUser = async (req, res) => {
+    try {
+        await UsuariosModel.destroy({
+            where: { nombre_usuario: req.params.nombre_usuario }
+        })
+        res.json({ message: "Usuario eliminado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+// Obtener todas las cuentas
+export const getAlluser = async (req, res) => {
+    try {
+        const orders = await UsuariosModel.findAll();
+        res.json(orders)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
