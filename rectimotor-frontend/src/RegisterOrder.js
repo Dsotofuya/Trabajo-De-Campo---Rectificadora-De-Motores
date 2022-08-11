@@ -18,6 +18,9 @@ function RegisterOrder() {
   const URIEnginesCount = "http://localhost:3412/engines/count/";
   const URIPersons = "http://localhost:3412/persons";
   const URIMeasures = "http://localhost:3412/measures/";
+  const URIMeasuresName = "http://localhost:3412/measures/name/";
+  const URIHistoric = "http://localhost:3412/historic/";
+  const URIMeasuresCount = "http://localhost:3412/measures/count/";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
   const URIWorks = "http://localhost:3412/works/"
@@ -37,11 +40,15 @@ function RegisterOrder() {
   const [works, setWorks] = useState([]);
   const [replacements, setReplacements] = useState([]);
   const [lastPartId, setLastPartId] = useState("")
+  const [initialMeasureId, setInitialMeasureId] = useState("")
+  const [finalMeasureId, setFinalMeasureId] = useState("")
+  const [currentMeasureId, setCurrentMeasureId] = useState("")
 
   //constantes de motores
   const [engineName, setEngineName] = useState("");
   const [engineId, setEngineId] = useState("");
   const [engineCount, setEngineCount] = useState("");
+  const [currentDetailID, setCurrentDetailID] = useState("");
 
   // constantes de talleres
   const [workshopID, setWorkshopId] = useState("");
@@ -71,11 +78,9 @@ function RegisterOrder() {
         setEngineId(num)
       }
     })
-    console.log(engineName)
-    console.log(engineId)
   }
 
-  function getCount() {
+  function getEngineCount() {
     fetch(URIEnginesCount).then((res) => res.json()).then((data) => {
       let temp = data[0]
       let num = temp.ID_MOTOR + 1
@@ -84,8 +89,8 @@ function RegisterOrder() {
   }
 
   function sendAll() {
-    console.log(engineId)
-    console.log(engineCount)
+    // console.log(engineId)
+    // console.log(engineCount)
     if (engineName == "") {
       //aca va la notificacion de error
       console.log("falta el motor")
@@ -145,8 +150,10 @@ function RegisterOrder() {
   function sendThePartsToDB(idOrder) {
     parts.map((part) => {
       if (part.isChecked || part.quantity > 0) {
-        if (part.ID_PARTE > 0) {
+        if (part.ID_PARTE >= 0) {
           uploadDetailPart(idOrder, part.ID_PARTE, part.quantity)
+          getLastDetailID()
+          uploadMeasures(part.initialMed, part.finalMed, part.currentDetailID, part.ID_PARTE)
         }
         else {
           uploadNewPart(part.name)
@@ -157,18 +164,110 @@ function RegisterOrder() {
     })
   }
 
-  function getPartIdByName(name){
-    fetch(URIParts+"name/"+name).then((res) => res.json()).then((data) => {
+  async function uploadMeasures(initialMed, finalMed, currentDetailID, ID_PARTE) {
+    if (initialMed > 0 && finalMed > 0) {
+      console.log("pasa a la primera")
+      await getInitialMeasureId(initialMed, ID_PARTE)
+      await getFinalMeasureId(finalMed, ID_PARTE)
+      console.log("a"+initialMeasureId)
+      console.log("e"+initialMeasureId)
+      if (initialMeasureId > 0 && finalMeasureId > 0) {
+        uploadHistoric(initialMeasureId, finalMeasureId, currentDetailID)
+      }
+      else{
+        if(initialMeasureId > 0){
+          getCurrentIdMeasureID()
+          uploadMeasure(ID_PARTE, finalMed)
+          uploadHistoric(initialMeasureId, currentMeasureId, currentDetailID)
+        }
+        if(finalMeasureId > 0){
+          getCurrentIdMeasureID()
+          uploadMeasure(ID_PARTE, initialMed)
+          uploadHistoric(currentMeasureId, finalMeasureId, currentDetailID)
+        }
+      }
+    }
+    else {
+      if (initialMed > 0) {
+        getInitialMeasureId(initialMed)
+        if (initialMeasureId > 0) {
+          uploadHistoric(initialMeasureId, "", currentDetailID)
+        } else {
+          uploadMeasure(ID_PARTE, initialMed)
+          getCurrentIdMeasureID()
+          uploadHistoric(currentMeasureId, "", currentDetailID)
+        }
+      }
+      if (finalMed > 0) {
+        if (finalMeasureId > 0) {
+          uploadHistoric("", finalMeasureId, currentDetailID)
+        }
+        else {
+          uploadMeasure(ID_PARTE, finalMed)
+          getCurrentIdMeasureID()
+          uploadHistoric(currentMeasureId, "", currentDetailID)
+        }
+      }
+    }
+  }
+
+  function getCurrentIdMeasureID() {
+    fetch(URIMeasuresCount).then((res) => res.json()).then((data) => {
+      let temp = data[0]
+      console.log("temp: " + temp)
+      let num = temp.ID_MEDIDA
+      console.log("idActual obtenida: " + num)
+      if (num > 0)
+        setCurrentMeasureId(num)
+      else
+        setCurrentMeasureId(0)
+    })
+  }
+
+
+  //funciones para obtener el id de las medidas
+  async function getInitialMeasureId(VALOR_MEDIDA, ID_PARTE) {
+    fetch(URIMeasuresName+ID_PARTE+"&"+VALOR_MEDIDA).then((res) =>
+      res.json()).then((data) => {
+        let temp = data[0]
+        let num = temp.ID_MEDIDA
+        console.log("idmedida obtenida: " + num)
+        if (num > 0)
+          setInitialMeasureId(num)
+        else
+          setInitialMeasureId(0)
+      })
+  }
+
+  async function getFinalMeasureId(VALOR_MEDIDA, ID_PARTE) {
+    fetch(URIMeasuresName+ID_PARTE+"&"+VALOR_MEDIDA).then((res) => res.json()).then((data) => {
+      let temp = data[0]
+      console.log("temp: " + temp)
+      let num = temp.ID_MEDIDA
+      console.log("idmedida obtenida: " + num)
+      if (num > 0)
+        setInitialMeasureId(num)
+      else
+        setInitialMeasureId(0)
+    })
+  }
+
+  function getLastDetailID() {
+    fetch(URIDetails + "count/").then((res) => res.json()).then((data) => { setCurrentDetailID(data) })
+  }
+
+  function getPartIdByName(name) {
+    fetch(URIParts + "name/" + name).then((res) => res.json()).then((data) => {
       let temp = data
-      console.log("temp: "+temp)
+      console.log("temp: " + temp)
       let num = temp.ID_PARTE
-      console.log("temp: "+num)
+      console.log("temp: " + num)
 
       setLastPartId(num)
     })
   }
 
-  function uploadNewPart(name){
+  function uploadNewPart(name) {
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
@@ -181,7 +280,7 @@ function RegisterOrder() {
   }
 
   //funcion para subir detalles de parte a db
-  function uploadDetailPart(idOrder, ID_PARTE, quantity){
+  function uploadDetailPart(idOrder, ID_PARTE, quantity) {
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
@@ -198,8 +297,8 @@ function RegisterOrder() {
     console.log(idOrder + ', ' + ID_PARTE + ', ' + quantity)
   }
 
-  //funcion que envio medidas a la base de datos
-  function uploadMeasure(ID_PARTE, measureValue){
+  //funcion que envia medidas a la base de datos
+  function uploadMeasure(ID_PARTE, measureValue) {
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
@@ -209,21 +308,22 @@ function RegisterOrder() {
       })
     }
     fetch(URIMeasures, requestOption)
-    console.log("Medida agregada: "+ID_PARTE+', '+measureValue)
+    console.log("Medida agregada: " + ID_PARTE + ', ' + measureValue)
   }
 
-  //funcion que envio medidas a la base de datos
-  function uploadHistoric(ID_PARTE, measureValue){
+  //funcion que envia historicos con medidas a la base de datos
+  function uploadHistoric(ID_MEDIDA_INICIAL, ID_MEDIDA_FINAL, ID_DETALLE_ORDEN) {
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ID_PARTE: ID_PARTE,
-        VALOR_MEDIDA: measureValue
+        ID_MEDIDA_INICIAL: ID_MEDIDA_INICIAL,
+        ID_MEDIDA_FINAL: ID_MEDIDA_FINAL,
+        ID_DETALLE_ORDEN: ID_DETALLE_ORDEN
       })
     }
-    fetch(URIMeasures, requestOption)
-    console.log("Medida agregada: "+ID_PARTE+', '+measureValue)
+    fetch(URIHistoric, requestOption)
+    console.log("Historico agregado: " + ID_MEDIDA_INICIAL + ', ' + ID_MEDIDA_FINAL + ", " + ID_DETALLE_ORDEN)
   }
 
   function getAllParts() {
@@ -257,12 +357,23 @@ function RegisterOrder() {
 
   function partMapTrial() {
     // console.log(IDOrder)
-    // console.log(engineId)
 
-    parts.map((part) => {
-      if (part.isChecked||part.quantity>0)
-        console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
-    })
+    // getCurrentIdMeasureID()
+    // console.log(currentMeasureID)
+
+    uploadMeasures(10, 15, 25, 0)
+    console.log("se va")
+
+    // getFinalMeasureId(15, 0)
+    // // getInitialMeasureId(10, 0)
+    // // console.log(initialMeasureId)
+    // console.log(finalMeasureId)
+
+
+    // parts.map((part) => {
+    //   if (part.isChecked || part.quantity > 0)
+    //     console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+    // })
   }
 
   function updateWork(index, name, price, checked) {
@@ -305,7 +416,7 @@ function RegisterOrder() {
         FECHA_RECIBIDO: orderDate
       }),
     };
-    console.log(idMotor + ', ' + idWorkshop + ', ' + document)
+    console.log("Agregada la orden base" + idMotor + ', ' + idWorkshop + ', ' + document)
     return fetch(URI, requestOption);
   }
 
@@ -344,7 +455,7 @@ function RegisterOrder() {
   }
 
   useEffect(() => {
-    getCount()
+    getEngineCount()
     getAllParts()
     getAllWorkshops()
     getAllWorks()
@@ -414,10 +525,10 @@ function RegisterOrder() {
               <label>Ingreso:</label>
             </div>
             <div className="col-md-2">
-              <input type="date" placeholder="Fecha de ingreso" id="current" onChange={({ target: { value } }) =>{
+              <input type="date" placeholder="Fecha de ingreso" id="current" onChange={({ target: { value } }) => {
                 setOrderDate(value)
                 console.log(value)
-                }}/>
+              }} />
             </div>
           </div>
           <br />
@@ -566,22 +677,22 @@ function RegisterOrder() {
           <div className="row">
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox1">
-                <input className="form-check-input" type="radio" id="inlineCheckbox1" value="option1" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox1" value="option1" name="option" />
                 Reparado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox2">
-                <input className="form-check-input" type="radio" id="inlineCheckbox2" value="option2" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox2" value="option2" name="option" />
                 Pagado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox3">
-                <input className="form-check-input" type="radio" id="inlineCheckbox3" value="option3" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox3" value="option3" name="option" />
                 Enviado</label>
             </div>
             <div className="col-sm">
               <label className="form-check-label" htmlFor="inlineCheckbox4">
-                <input className="form-check-input" type="radio" id="inlineCheckbox4" value="option4" name="option"/>
+                <input className="form-check-input" type="radio" id="inlineCheckbox4" value="option4" name="option" />
                 Pendiente de repuestos</label>
             </div>
           </div>
