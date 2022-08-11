@@ -546,10 +546,10 @@ export const createMeasures = async (req, res) => {
 }
 
 //Obtener id de una parte por nombre
-export const getMeasuresIdByName = async (req, res) => {
+export const getMeasuresIdByIdPartNValue = async (req, res) => {
     try {
         const engines = await db.query(
-            `SELECT ID_MEDIDA FROM MEDIDAS WHERE NOMBRE_MEDIDA = "${req.params.measure_name}";`);
+            `SELECT m.ID_MEDIDA FROM MEDIDAS m, PARTES p WHERE m.ID_PARTE = p.ID_PARTE AND p.ID_PARTE = ${req.body.id_parte} AND m.VALOR_MEDIDA = ${req.body.valor_medida};`);
         res.json(engines[0])
     } catch (error) {
         res.json({ message: error.message })
