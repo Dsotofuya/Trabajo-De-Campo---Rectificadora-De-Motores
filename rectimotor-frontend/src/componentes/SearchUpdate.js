@@ -79,7 +79,7 @@ function SearchUpdate() {
             <div>
                 <div className='contenedor-principal'>
 
-                    <h1 className='d-flex justify-content-center'>Actualizar órden</h1>
+                    <h1 className='d-flex justify-content-center'>Actualizar orden</h1>
                     <div className='d-flex justify-content-center'>
                         {/* Input de la Nombre de taller, nombre de vehículo/motor o número de orden */}
                 

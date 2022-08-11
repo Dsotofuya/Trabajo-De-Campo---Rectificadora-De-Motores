@@ -1,11 +1,12 @@
 import React, { useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import sweetAlert from 'sweetalert';
 import bcryptjs from 'bcryptjs';
 
 function RegisterUser() {
     const [nickName, setNickname] = useState('');
     const [password, setPass] = useState('');
+    const [passConfirmation, setPassConfirmation] = useState('');
     const URI = 'http://localhost:3412/users/'
     const navigate = useNavigate()
 
@@ -19,25 +20,35 @@ function RegisterUser() {
     const addUser = () => {
        
         let passwordEncripted = bcryptjs.hashSync(password, 8);
-        console.log(passwordEncripted)
-        const requestOption = {
-            method: "POST", 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                NOMBRE_USUARIO: nickName, 
-                CONTRASENIA_USUARIO: passwordEncripted, 
-                TIPO_USUARIO: 'Trabajador'
-            }),
-        };
-        sweetAlert('Usuario registrado');
-        navigate('/menu')
-        return fetch(URI, requestOption);
+
+        if(nickName != ''){
+            if(password == passConfirmation){
+                const requestOption = {
+                    method: "POST", 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        NOMBRE_USUARIO: nickName, 
+                        CONTRASENIA_USUARIO: passwordEncripted, 
+                        TIPO_USUARIO: 'Trabajador'
+                    }),
+                };
+                sweetAlert('Usuario registrado');
+                fetch(URI, requestOption); 
+                navigate('/menu');
+            }else{
+                sweetAlert('La contraseña no coincide');
+                navigate('/registrar')
+            }
+        }else{
+            sweetAlert('Debe ingresar un nombre');
+            navigate('/registrar')
+        }
     }
 
     return (
         <div style={styles.wrapper}>
             <div style={styles.window}>
-                <h2 className="text-center">Registrar usuario</h2>
+                <h2 className="text-center">Registrar trabajador</h2>
                 <br />
                 <br />
                 <div className="row">
@@ -65,25 +76,52 @@ function RegisterUser() {
                     <div className="col">
                         <input
                             onChange={({ target: { value } }) => setPass(value)}
-                           type="password" placeholder="Ingrese su contraseña"/>
+                           type="password" placeholder="Contraseña"/>
                     </div>
 
                 </div>
 
                 <br />
 
-                <div className="col text-center" onClick={addUser}>
-                    <button 
-                    style={styles.acceptBtn} 
-                    className="btn btn-info btn-center"
-                    
-                    ><h3 className="text-decoration-none">Registrar</h3></button>
-                    
+                <div className="row">
+                        <div className="col">
+                            <label>Confirmación de contraseña: </label>
+                        </div>
+
+                        <div className="col">
+                            <input
+                            onChange={({ target: { value } }) => setPassConfirmation(value)}
+                            type="password" placeholder="Contraseña"/>
+                        </div>
+
+                   
                 </div>
-                
+
+                <br />
+
+               
+                    <div className="col text-center" onClick={addUser}>
+                        <button 
+                        style={styles.acceptBtn} 
+                        className="btn btn-info btn-center"
+                        
+                        ><h3 className="text-decoration-none">Registrar</h3></button>
+                        
                     </div>
+
+                    <div className="col">
+                        <Link to='/buscar'>
+                        <button 
+                        style={styles.acceptBtn} 
+                        className="btn btn-info btn-center"
+                        
+                        ><h3 className="text-decoration-none">Salir</h3></button>
+                        </Link>
+                        
+                    </div>
+                </div>
                     
-                    <div style={styles.background}/>    
+            <div style={styles.background}/>    
         </div>
     );
 }
@@ -113,6 +151,7 @@ const styles = {
 
     acceptBtn:{
         margin:'0 auto',
+        marginTop: '10px',
         display: 'flex',
         justifyContent:'center',
         alignItems: 'bottom',

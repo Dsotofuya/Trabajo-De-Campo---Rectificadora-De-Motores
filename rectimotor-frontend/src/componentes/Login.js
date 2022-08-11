@@ -10,8 +10,7 @@ function Login() {
 
     const URI = 'http://localhost:3412/users/'
     const navigate = useNavigate()
-
-    console.log(nickName)
+    
     fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })
     
     function searchUser () {
@@ -19,12 +18,12 @@ function Login() {
          * */
          const hashSaved = user[0].CONTRASENIA_USUARIO;
          const compare = bcryptjs.compareSync(password, hashSaved)
-         if(user != '' && compare==true){
+         if(user !=null && compare==true){
              localStorage.setItem('User name', nickName)
              localStorage.setItem('Logged user', JSON.stringify(user))
-             navigate('/menu')
+             navigate('/buscar')
              
-         }else if(user == '' || compare==false){
+         }else if(user == null || compare==false){
            sweetAlert('Contraseña o usuario incorrectos');
          } 
     }
@@ -67,11 +66,11 @@ function Login() {
 
                 <br />
 
-                <div className="col text-center" onClick={searchUser}>
+                <div className="col text-center" >
                     <button 
                     style={styles.acceptBtn} 
                     className="btn btn-info btn-center"
-                    
+                    onClick={searchUser}
                     ><h3 className="text-decoration-none">Ingresar</h3></button>
                     
                 </div>

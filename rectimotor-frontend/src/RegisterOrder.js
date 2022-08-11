@@ -54,6 +54,10 @@ function RegisterOrder() {
   const [workshopID, setWorkshopId] = useState("");
   const [workshops, setWorkshops] = useState([])
 
+  //Datos de sesión de usuadio
+  let user = JSON.parse(localStorage.getItem('Logged user'));
+  let validation = user[0].TIPO_USUARIO == 'Administrador';
+
   function autoSetUsser(value) {
     setDocument(value)
     fetch(URIPersons + "/" + value).then((res) => res.json()).then((data) => {

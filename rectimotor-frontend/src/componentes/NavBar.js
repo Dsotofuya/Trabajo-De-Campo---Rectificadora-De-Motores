@@ -33,14 +33,30 @@ const NavBar = () => {
 
             <li className="nav-text">{userName}</li>
             {NavBarContent.map((item, index) => {
-                return(
-                    <li key={index} className={item.cName}>
-                        <Link to={item.path}>
-                            <span>{item.title}</span>
-                        </Link>
-                    </li>
-                )
+                if(index < 3){
+                    return(
+                        <li key={index} className={item.cName}>
+                            <Link to={item.path}>
+                                <span>{item.title}</span>
+                            </Link>
+                        </li>
+                    ) 
+                }
             })}
+
+            {NavBarContent.map((item, index) => {
+
+                if(user[0].TIPO_USUARIO == 'Administrador' && index >= 3){
+                    return(
+                        <li key={index} className={item.cName}>
+                            <Link to={item.path}>
+                                <span>{item.title}</span>
+                            </Link>
+                        </li>
+                    )
+                }
+            })}
+
             <li className="nav-text">
                 <Link to={'/login'}>
                     <span onClick={() => {
@@ -49,7 +65,6 @@ const NavBar = () => {
                    
                 </Link>
 
-                
             </li>
         </ul>
     </nav>
