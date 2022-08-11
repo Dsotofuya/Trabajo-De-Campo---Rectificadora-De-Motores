@@ -21,14 +21,18 @@ function App() {
       <div className='app'>
       <Routes>
         <Route path='/menu' element={<Menu />}/>
+
         <Route path='/' element={<CompShowOrders />}></Route>
-        <Route path='/buscar' element={<CompShowOrdersLogged />}></Route>
+        <Route path='/orders/:id' element={<CompShowOrders />} />
+
+        <Route path='logged/buscar' element={<CompShowOrdersLogged />}></Route>
+        <Route path='logged/orders/:id' element={<CompShowOrdersLogged />} />
+
         <Route path='/login' element={<Login />}/>
         <Route path='/registrar' element={<RegisterUser />}/>
         <Route path='/agregar' element={<RegisterOrder />}/>
         {/**<Route path='/menu/buscar' element={<CompShowOrders />}/> */}
         <Route path='/Busqueda_Actualizar' element={<SearchUpdate />}/>
-        <Route path='/orders/:id' element={<CompShowOrdersLogged />} />
         {/**<Route path='/menu/actualizar' element={<UpdateOrder />}/> */}
         <Route path='/actualizar' element={<SearchUpdate />}/>
         <Route path='/orders/details/:id_order' element={<CompShowReport />} />

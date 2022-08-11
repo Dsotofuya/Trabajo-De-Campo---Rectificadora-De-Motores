@@ -21,7 +21,7 @@ function Login() {
          if(user !=null && compare==true){
              localStorage.setItem('User name', nickName)
              localStorage.setItem('Logged user', JSON.stringify(user))
-             navigate('/buscar')
+             navigate('/logged/buscar')
              
          }else if(user == null || compare==false){
            sweetAlert('Contraseña o usuario incorrectos');

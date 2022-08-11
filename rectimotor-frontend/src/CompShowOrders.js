@@ -18,9 +18,7 @@ const CompShowOrders = () => {
 
     const validateInput = new RegExp('^[0-9]{0,10}$');
     const validation = true;
-
-    const user = JSON.parse(localStorage.getItem('Logged user'));
-
+    
     function formatDate(fecha){
         console.log(fecha)
         let fechaFormat = '';

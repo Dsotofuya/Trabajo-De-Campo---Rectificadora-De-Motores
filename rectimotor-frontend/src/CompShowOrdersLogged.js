@@ -71,7 +71,7 @@ const CompShowOrdersLogged = () => {
                     <div className='d-flex justify-content-center'>
                         {/* Input de la cedula u orden */}
                         <form onSubmit={() => {
-                            navigate(`/orders/${document.getElementById('cc').value}`)
+                            navigate(`/logged/orders/${document.getElementById('cc').value}`)
                             const val = document.getElementById('cc').value;
                             if (validateInput.test(val) != true) {
                                 alert('Entrada incorrecta')
@@ -108,7 +108,7 @@ const CompShowOrdersLogged = () => {
                                             (orders[0] || []).map((order, i) => {
                                                 if(validation){
                                                 
-                                                return <tr className='orderRow' key={i} onClick={() => navigate(`/orders/details/${order.id_orden}`)}>
+                                                return <tr className='orderRow' key={i} onClick={() => navigate(`/logged/orders/details/${order.id_orden}`)}>
                                                 <td>{order.id_orden}</td>
                                                 <td>{order.cc_persona}</td>
                                                 <td>{order.nombre_motor}</td>
