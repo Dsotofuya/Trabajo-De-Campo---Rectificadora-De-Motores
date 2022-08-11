@@ -17,6 +17,7 @@ function RegisterOrder() {
   const URIEngines = "http://localhost:3412/engines/";
   const URIEnginesCount = "http://localhost:3412/engines/count/";
   const URIPersons = "http://localhost:3412/persons";
+  const URIMeasures = "http://localhost:3412/measures/";
   const URIWorkshops = "http://localhost:3412/workshops/name/"
   const URIAllWorkshops = "http://localhost:3412/workshops/"
   const URIWorks = "http://localhost:3412/works/"
@@ -27,7 +28,7 @@ function RegisterOrder() {
   const [IDOrder, setIDOrder] = useState("");
   const [document, setDocument] = useState("");
   const [phone, setPhone] = useState("");
-  const [workshopName, setWorkshop] = useState("");
+  // const [workshopName, setWorkshop] = useState("");
   const [orderDate, setOrderDate] = useState(new Date())
   // const [vehicle, setVehicle] = useState(false);
 
@@ -35,6 +36,7 @@ function RegisterOrder() {
   const [parts, setParts] = useState([]);
   const [works, setWorks] = useState([]);
   const [replacements, setReplacements] = useState([]);
+  const [lastPartId, setLastPartId] = useState("")
 
   //constantes de motores
   const [engineName, setEngineName] = useState("");
@@ -148,34 +150,84 @@ function RegisterOrder() {
     parts.map((part) => {
       if (part.isChecked || part.quantity > 0) {
         if (part.ID_PARTE > 0) {
-          const requestOption = {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              ID_ORDEN: idOrder,
-              ID_PARTE: part.ID_PARTE,
-              CANTIDAD: part.quantity,
-              //no sé como meter lo de medida inicial y final, dejo una medida comentada
-              // VALOR_MEDIDA : part.initialMed,
-              // VALOR_MEDIDA : part.finalMed
-            })
-          }
-          fetch(URIDetails, requestOption)
-          console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+          uploadDetailPart(idOrder, part.ID_PARTE, part.quantity)
         }
         else {
-          const requestOption = {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              NOMBRE_PARTE: part.name
-            })
-          }
-          fetch(URIDetails, requestOption)
-          console.log(idOrder + ', ' + part.ID_PARTE + ', ' + part.quantity)
+          uploadNewPart(part.name)
+          getPartIdByName(part.name)
+          uploadDetailPart(idOrder, lastPartId, part.quantity)
         }
       }
     })
+  }
+
+  function getPartIdByName(name){
+    fetch(URIParts+"name/"+name).then((res) => res.json()).then((data) => {
+      let temp = data
+      console.log("temp: "+temp)
+      let num = temp.ID_PARTE
+      console.log("temp: "+num)
+
+      setLastPartId(num)
+    })
+  }
+
+  function uploadNewPart(name){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        NOMBRE_PARTE: name
+      })
+    }
+    fetch(URIParts, requestOption)
+    console.log(name)
+  }
+
+  //funcion para subir detalles de parte a db
+  function uploadDetailPart(idOrder, ID_PARTE, quantity){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: idOrder,
+        ID_PARTE: ID_PARTE,
+        CANTIDAD: quantity,
+        // no sé como meter lo de medida inicial y final, dejo una medida comentada
+        // VALOR_MEDIDA : part.initialMed,
+        // VALOR_MEDIDA : part.finalMed
+      })
+    }
+    fetch(URIDetails, requestOption)
+    console.log(idOrder + ', ' + ID_PARTE + ', ' + quantity)
+  }
+
+  //funcion que envio medidas a la base de datos
+  function uploadMeasure(ID_PARTE, measureValue){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_PARTE: ID_PARTE,
+        VALOR_MEDIDA: measureValue
+      })
+    }
+    fetch(URIMeasures, requestOption)
+    console.log("Medida agregada: "+ID_PARTE+', '+measureValue)
+  }
+
+  //funcion que envio medidas a la base de datos
+  function uploadHistoric(ID_PARTE, measureValue){
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_PARTE: ID_PARTE,
+        VALOR_MEDIDA: measureValue
+      })
+    }
+    fetch(URIMeasures, requestOption)
+    console.log("Medida agregada: "+ID_PARTE+', '+measureValue)
   }
 
   function getAllParts() {
@@ -208,13 +260,13 @@ function RegisterOrder() {
   }
 
   function partMapTrial() {
-    console.log(IDOrder)
-    console.log(engineId)
+    // console.log(IDOrder)
+    // console.log(engineId)
 
-    // parts.map((part) => {
-    //   if (part.isChecked)
-    //     console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
-    // })
+    parts.map((part) => {
+      if (part.isChecked||part.quantity>0)
+        console.log("nombre: " + part.NOMBRE_PARTE + "; cantidad: " + part.quantity + "; iMed: " + part.initialMed + "; fMed: " + part.finalMed + "; activo: " + part.isChecked)
+    })
   }
 
   function updateWork(index, name, price, checked) {
@@ -244,10 +296,6 @@ function RegisterOrder() {
   }
 
   const addOrderBase = () => {
-    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-    /* se retorna la id en base al nombre del motor en el campo */
-    // setPhone(engineId[0].ID_MOTOR)
-    // console.log(workshopID[0].ID_TALLER)
     const idMotor = engineId
     const idWorkshop = workshopID
     const requestOption = {
@@ -266,10 +314,6 @@ function RegisterOrder() {
   }
 
   const addOrderBaseAlter = (num) => {
-    // fetch(URIWorkshops + workshopName).then((res) => res.json()).then((data) => { setWorkshopId(data) })
-    /* se retorna la id en base al nombre del motor en el campo */
-    // setPhone(engineId[0].ID_MOTOR)
-    // console.log(workshopID[0].ID_TALLER)
     const idWorkshop = workshopID
     const requestOption = {
       method: "POST",
@@ -404,7 +448,7 @@ function RegisterOrder() {
           <hr />
           <div className="row">
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
-              <WorkshopModal toggle={toggleWorkshopModal} workshopName={setWorkshop} getWshops={getAllWorkshops} />
+              <WorkshopModal toggle={toggleWorkshopModal} getWshops={getAllWorkshops} />
             </Modal>
             <Modal active={activePersonModal} toggle={togglePersonModal} >
               <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />
@@ -415,7 +459,7 @@ function RegisterOrder() {
           <h1 className="text-center">Partes</h1>
 
           <div className="row">
-            <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar mapa de Trabajos</button>
+            <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar</button>
           </div>
 
           <div>
@@ -450,9 +494,9 @@ function RegisterOrder() {
           <div>
             <h1 className="text-center">Trabajos</h1>
 
-            <div className="row">
+            {/* <div className="row">
               <button className="btn btn-warning btn-lg" onClick={workMapTrial}>probar mapa de Trabajos</button>
-            </div>
+            </div> */}
 
             <div className="row">
               <div className="col"> <h5 className="font-weight-bold">Nombre de trabajo </h5> </div>

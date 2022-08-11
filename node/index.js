@@ -13,6 +13,9 @@ import DetOrdRoutes from './routes/RoutesDetOrd.js'
 import HistoricRoutes from './routes/RoutesHistoric.js'
 import UserRoutes from './routes/RoutesUser.js'
 
+import qrcode from 'qrcode-terminal'
+import { Client } from 'whatsapp-web.js'
+
 const app = express();
 
 app.use(cors())
@@ -35,6 +38,28 @@ try {
 } catch (error) {
     console.log(`Database conn error: ${error}`)
 }
+
+const client = new Client()
+
+client.initialize()
+
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true})
+})
+
+client.on('ready', () => {
+    console.log("La cuenta esta lista para enviar notificaciones")
+})
+
+app.post('/sendmessage', async (req, res, next) => {
+    try {
+        const { number, message } = req.body; // Get the body
+        const msg = await client.sendMessage(`57${number}@c.us`, message); // Send the message
+        res.send({ msg }); // Send the response
+    } catch (error) {
+      next(error)
+    }
+  })
 
 app.listen(3412, () => {
     console.log('Server Up, running in http://localhost:3412')

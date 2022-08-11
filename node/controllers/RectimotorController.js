@@ -216,6 +216,42 @@ export const getDetOrdId = async (req, res) => {
     }
 }
 
+//Obtener id actual de la tabla de partes
+export const getCurrentIdPart = async (req, res) => {
+    try {
+        const order = await db.query(
+            `SELECT (AUTO_INCREMENT-1) AS ID_PARTE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dsotofuya_trabajodecampo_rectimotor' AND TABLE_NAME = 'PARTES';`
+        );
+        res.json(order[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id actual de la tabla de trabajos
+export const getCurrentIdWork = async (req, res) => {
+    try {
+        const order = await db.query(
+            `SELECT (AUTO_INCREMENT-1) AS ID_TRABAJO FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dsotofuya_trabajodecampo_rectimotor' AND TABLE_NAME = 'TRABAJOS';`
+        );
+        res.json(order[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//Obtener id actual de la tabla de medidas
+export const getCurrentIdMeasure = async (req, res) => {
+    try {
+        const order = await db.query(
+            `SELECT (AUTO_INCREMENT-1) AS ID_MEDIDA FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dsotofuya_trabajodecampo_rectimotor' AND TABLE_NAME = 'MEDIDAS';`
+        );
+        res.json(order[0])
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
 // Buscar orden por número de orden
 export const getOrderByCC = async (req, res) => {
     try {
@@ -510,10 +546,10 @@ export const createMeasures = async (req, res) => {
 }
 
 //Obtener id de una parte por nombre
-export const getMeasuresIdByName = async (req, res) => {
+export const getMeasuresIdByIdPartNValue = async (req, res) => {
     try {
         const engines = await db.query(
-            `SELECT ID_MEDIDA FROM MEDIDAS WHERE NOMBRE_MEDIDA = "${req.params.measure_name}";`);
+            `SELECT m.ID_MEDIDA FROM MEDIDAS m, PARTES p WHERE m.ID_PARTE = p.ID_PARTE AND p.ID_PARTE = ${req.params.id_parte} AND m.VALOR_MEDIDA = ${req.params.valor_medida};`);
         res.json(engines[0])
     } catch (error) {
         res.json({ message: error.message })
@@ -659,6 +695,28 @@ export const getAuthuser = async (req, res) => {
         const engines = await db.query(
             `SELECT CONTRASENIA_USUARIO, TIPO_USUARIO FROM USUARIOS WHERE NOMBRE_USUARIO = "${req.params.nombre_usuario}";`);
             res.json(engines[0]);
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+//eliminar usuario 
+export const deleteUser = async (req, res) => {
+    try {
+        await UsuariosModel.destroy({
+            where: { nombre_usuario: req.params.nombre_usuario }
+        })
+        res.json({ message: "Usuario eliminado" })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+// Obtener todas las cuentas
+export const getAlluser = async (req, res) => {
+    try {
+        const orders = await UsuariosModel.findAll();
+        res.json(orders)
     } catch (error) {
         res.json({ message: error.message })
     }
