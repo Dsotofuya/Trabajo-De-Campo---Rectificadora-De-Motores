@@ -26,5 +26,10 @@ export const NavBarContent = [
         title: 'Ver trabajadores',
         path: '/logged/trabajadores',
         cName: 'nav-text'
+    },
+    {
+        title: 'Whatsapp',
+        path: '/whatsapp',
+        cName: 'nav-text'
     }
 ]

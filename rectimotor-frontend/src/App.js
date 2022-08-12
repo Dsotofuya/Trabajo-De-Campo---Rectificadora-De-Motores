@@ -13,6 +13,7 @@ import RegisterOrder from './RegisterOrder';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SearchUpdate from './componentes/SearchUpdate';
 import Workers from './componentes/Workers';
+import Whatsapp from './componentes/Whatssapp';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
     
       <div className='app'>
       <Routes>
-        <Route path='/menu' element={<Menu />}/>
+        <Route path='/whatsapp' element={<Whatsapp/>}/>
 
         <Route path='/' element={<CompShowOrders />}></Route>
         <Route path='/orders/:id' element={<CompShowOrders />} />

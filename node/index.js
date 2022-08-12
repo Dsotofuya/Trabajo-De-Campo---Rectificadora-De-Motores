@@ -36,37 +36,44 @@ app.use('/historic', HistoricRoutes)
 app.use('/users', UserRoutes)
 
 try {
-    await db.authenticate()
-    console.log('Database connected')
+  await db.authenticate()
+  console.log('Database connected')
 } catch (error) {
-    console.log(`Database conn error: ${error}`)
+  console.log(`Database conn error: ${error}`)
 }
 
-const client = new Client()
+const client = new Client({
+  puppeteer: {
+    args: [
+      '--no-sandbox',
+    ],
+  },
+})
 
 client.initialize()
 
 client.on('qr', qr => {
-    console.log('QR generado', qr);
-    app.get('/getqr', (req, res, next) => {
-      res.send({ qr });
-    });
+  console.log('QR generado', qr);
+  //qrcode.generate(qr, { small: true })
+  app.get('/getqr', (req, res, next) => {
+    res.send({ qr });
   });
+});
 
 client.on('ready', () => {
-    console.log("La cuenta esta lista para enviar notificaciones")
+  console.log("La cuenta esta lista para enviar notificaciones")
 })
 
 app.post('/sendmessage', async (req, res, next) => {
-    try {
-        const { number, message } = req.body; // Get the body
-        const msg = await client.sendMessage(`57${number}@c.us`, message); // Send the message
-        res.send({ msg }); // Send the response
-    } catch (error) {
-      next(error)
-    }
-  })
+  try {
+    const { number, message } = req.body; // Get the body
+    const msg = await client.sendMessage(`57${number}@c.us`, message); // Send the message
+    res.send({ msg }); // Send the response
+  } catch (error) {
+    next(error)
+  }
+})
 
 app.listen(port, () => {
-    console.log('Server Up, running in ' + port)
+  console.log('Server Up, running in ' + port)
 }) 
