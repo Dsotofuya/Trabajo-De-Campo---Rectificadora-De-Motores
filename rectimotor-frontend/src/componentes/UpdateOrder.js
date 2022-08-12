@@ -28,7 +28,12 @@ function RegisterOrder() {
   const URIDetails = "https://rectimotor-server.herokuapp.com/DetOrd/"
   const URIParts = "https://rectimotor-server.herokuapp.com/parts/"
   const URIReplacements = "https://rectimotor-server.herokuapp.com/newreplacement/"
+  
+  //URI de actualizaciones
   const URIDetils = "https://rectimotor-server.herokuapp.com/orders/details/"
+  const URIUParts = "https://rectimotor-server.herokuapp.com/detOrd/parts/";
+  const URIUWorks = "https://rectimotor-server.herokuapp.com/detOrd/works/";
+  const URIUReplacements = "https://rectimotor-server.herokuapp.com/detOrd/replacements/";
 
   const [name, setName] = useState("");
   const [IDOrder, setIDOrder] = useState("");
@@ -61,11 +66,13 @@ function RegisterOrder() {
   let user = JSON.parse(localStorage.getItem('Logged user'));
   let validation = user[0].TIPO_USUARIO == 'Administrador';
 
-  //constantes de edicion
-  
+  //constantes de actualizacion
   const params = useParams()
   const navigate = useNavigate()
   const [details, setDetails] = useState([])
+  const [uParts, setUParts] = useState([])
+  const [uWorks, setUWorks] = useState([])
+  const [uReplacements, setUReplacements] = useState([])
 
   function autoSetUsser(value) {
     setDocument(value)
@@ -649,9 +656,13 @@ function RegisterOrder() {
 
   useEffect(() => {
     getEngineCount()
-    getAllParts()
-    getAllWorkshops()
-    getAllWorks()
+    // getAllParts()
+    // getAllWorkshops()
+    // getAllWorks()
+    fetch(URIUParts + params.id_order).then((res) => res.json()).then((data) => { setParts(data) })
+    fetch(URIUWorks + params.id_order).then((res) => res.json()).then((data) => { setWorks(data) })
+    fetch(URIUReplacements + params.id_order).then((res) => res.json()).then((data) => { setReplacements(data) })
+
     setIDOrder(params.id_order)
     autosetOrderBase()
   }, [])

@@ -94,7 +94,7 @@ function RegisterOrder() {
     })
   }
 
-  function sendAll() {
+  async function sendAll() {
     // console.log(engineId)
     // console.log(engineCount)
     if (engineName == "") {
@@ -110,27 +110,33 @@ function RegisterOrder() {
         sendTheReplacementsToDB(IDOrder)
       }
       else {
-        sendVehicle()
-        addOrderBaseAlter(engineCount)
-        sendTheWorksToDB(IDOrder)
-        sendThePartsToDB(IDOrder)
-        setEngineId(engineCount)
-        sendTheReplacementsToDB(IDOrder)
-
+        let condition = false
+        condition = await sendVehicle()
+        if (condition) {
+          addOrderBaseAlter(engineCount)
+          sendTheWorksToDB(IDOrder)
+          sendThePartsToDB(IDOrder)
+          setEngineId(engineCount)
+          sendTheReplacementsToDB(IDOrder)
+        }
       }
     }
   }
 
-  function sendVehicle() {
-    const requestOption = {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        NOMBRE_MOTOR: engineName
-      })
-    }
-    fetch(URIEngines, requestOption)
-    console.log(engineName)
+  const sendVehicle = () => {
+    return new Promise((resolve, reject) => {
+      const requestOption = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          NOMBRE_MOTOR: engineName
+        })
+      }
+      fetch(URIEngines, requestOption)
+      console.log(engineName)
+      resolve(true)
+      reject(false)
+    })
   }
 
   //funcion para enviar trabajos a DB
@@ -162,7 +168,7 @@ function RegisterOrder() {
   function sendThePartsToDB(idOrder) {
     parts.map((part) => {
       if (part.isChecked || part.quantity > 0) {
-        if (part.ID_PARTE > 0) {
+        if (part.ID_PARTE >= 0) {
           uploadDetailPart(idOrder, part.ID_PARTE, part.quantity)
           getLastDetailID()
           uploadMeasures(part.initialMed, part.finalMed, part.currentDetailID, part.ID_PARTE)
@@ -203,7 +209,7 @@ function RegisterOrder() {
 
   //funcion para enviar repuestos
   async function sendTheReplacementsToDB(idOrder) {
-    replacements.map(async(replacement) => {
+    replacements.map(async (replacement) => {
       if (replacement.isActive || replacement.quantity > 0) {
         let idRep = await searchReplacement(replacement)
         if (idRep >= 0) {
@@ -231,7 +237,7 @@ function RegisterOrder() {
       fetch(URIReplacements + "name/" + replacement.nameRep).then((res) => res.json()).then((data) => {
         let temp = data
         // console.log("temp: " + temp)
-        if (temp === undefined) {
+        if (temp == undefined) {
           resolve(-1)
         }
         else {
@@ -634,7 +640,6 @@ function RegisterOrder() {
     let temp = event.target.value
     setWorkshopId(temp);
     console.log(temp)
-    console.log(workshopID)
   }
 
   useEffect(() => {
@@ -741,7 +746,7 @@ function RegisterOrder() {
               <WorkshopModal toggle={toggleWorkshopModal} getWshops={getAllWorkshops} />
             </Modal>
             <Modal active={activePersonModal} toggle={togglePersonModal}>
-              <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone}/>
+              <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />
             </Modal>
           </div>
           <hr />

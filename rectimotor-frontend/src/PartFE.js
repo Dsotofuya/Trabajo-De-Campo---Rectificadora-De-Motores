@@ -43,7 +43,7 @@ const PartFE = (props) => {
                         <input className="w-80 p-1" onChange={({ target: { value } }) => {
                             props.updater(props.idx, props.part.name, value, props.part.initialMed,
                                 props.part.finalMed, props.part.isChecked)
-                        }} type="number" placeholder="cantidad" defaultValue={props.part.quantity} />
+                        }} type="number" placeholder="cantidad" defaultValue={props.part.CANTIDAD} />
                     </div>
                     <div className="col-sm-3">
                         <input className="w-80 p-1" onChange={({ target: { value } }) => {
