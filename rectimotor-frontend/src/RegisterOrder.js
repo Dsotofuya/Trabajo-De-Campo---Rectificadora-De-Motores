@@ -13,21 +13,21 @@ import sweetAlert from 'sweetalert';
 function RegisterOrder() {
   const [activePersonModal, setActivePerson] = useState(false);
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
-  const URI = "http://localhost:3412/orders/";
-  const URI2 = "http://localhost:3412/engines/name/";
-  const URIEngines = "http://localhost:3412/engines/";
-  const URIEnginesCount = "http://localhost:3412/engines/count/";
-  const URIPersons = "http://localhost:3412/persons";
-  const URIMeasures = "http://localhost:3412/measures/";
-  const URIMeasuresName = "http://localhost:3412/measures/name/";
-  const URIHistoric = "http://localhost:3412/historic/";
-  const URIMeasuresCount = "http://localhost:3412/measures/count/";
-  const URIWorkshops = "http://localhost:3412/workshops/name/"
-  const URIAllWorkshops = "http://localhost:3412/workshops/"
-  const URIWorks = "http://localhost:3412/works/"
-  const URIDetails = "http://localhost:3412/DetOrd/"
-  const URIParts = "http://localhost:3412/parts/"
-  const URIReplacements = "http://localhost:3412/newreplacement/"
+  const URI = "https://rectimotor-server.herokuapp.com/orders/";
+  const URI2 = "https://rectimotor-server.herokuapp.com/engines/name/";
+  const URIEngines = "https://rectimotor-server.herokuapp.com/engines/";
+  const URIEnginesCount = "https://rectimotor-server.herokuapp.com/engines/count/";
+  const URIPersons = "https://rectimotor-server.herokuapp.com/persons";
+  const URIMeasures = "https://rectimotor-server.herokuapp.com/measures/";
+  const URIMeasuresName = "https://rectimotor-server.herokuapp.com/measures/name/";
+  const URIHistoric = "https://rectimotor-server.herokuapp.com/historic/";
+  const URIMeasuresCount = "https://rectimotor-server.herokuapp.com/measures/count/";
+  const URIWorkshops = "https://rectimotor-server.herokuapp.com/workshops/name/"
+  const URIAllWorkshops = "https://rectimotor-server.herokuapp.com/workshops/"
+  const URIWorks = "https://rectimotor-server.herokuapp.com/works/"
+  const URIDetails = "https://rectimotor-server.herokuapp.com/DetOrd/"
+  const URIParts = "https://rectimotor-server.herokuapp.com/parts/"
+  const URIReplacements = "https://rectimotor-server.herokuapp.com/newreplacement/"
 
   const [name, setName] = useState("");
   const [IDOrder, setIDOrder] = useState("");
@@ -740,8 +740,8 @@ function RegisterOrder() {
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
               <WorkshopModal toggle={toggleWorkshopModal} getWshops={getAllWorkshops} />
             </Modal>
-            <Modal active={activePersonModal} toggle={togglePersonModal} >
-              <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />
+            <Modal active={activePersonModal} toggle={togglePersonModal}>
+              <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone}/>
             </Modal>
           </div>
           <hr />

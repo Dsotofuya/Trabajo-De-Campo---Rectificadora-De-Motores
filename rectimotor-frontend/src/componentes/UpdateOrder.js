@@ -2,33 +2,33 @@ import React, { useEffect, useState } from "react";
 import '../ROrder.css';
 import PartFE from "../PartFE";
 import JobFE from "../JobFE";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate  } from 'react-router-dom';
 import WorkshopModal from "../componentes/WorkshopModal";
 import PersonModal from "../componentes/PersonModal";
 import Modal from "../componentes/Modal";
 import NavBar from "../componentes/NavBar";
 import ReplacementFE from "../ReplacementFE";
+import sweetAlert from 'sweetalert';
 
 function RegisterOrder() {
   const [activePersonModal, setActivePerson] = useState(false);
   const [activeWorkshopModal, setActiveWorkshop] = useState(false);
-  const URIParams = "http://localhost:3000/orders/get/"
-  const URI = "http://localhost:3412/orders/";
-  const URI2 = "http://localhost:3412/engines/name/";
-  const URIEngines = "http://localhost:3412/engines/";
-  const URIEnginesCount = "http://localhost:3412/engines/count/";
-  const URIPersons = "http://localhost:3412/persons";
-  const URIMeasures = "http://localhost:3412/measures/";
-  const URIMeasuresName = "http://localhost:3412/measures/name/";
-  const URIHistoric = "http://localhost:3412/historic/";
-  const URIMeasuresCount = "http://localhost:3412/measures/count/";
-  const URIWorkshops = "http://localhost:3412/workshops/name/"
-  const URIAllWorkshops = "http://localhost:3412/workshops/"
-  const URIWorks = "http://localhost:3412/works/"
-  const URIDetails = "http://localhost:3412/DetOrd/"
-  const URIParts = "http://localhost:3412/parts/"
-  const URIDetParts = "http://localhost:3412/detOrd/parts/"
-  const URIDetWorks = "http://localhost:3412/detOrd/works/"
+  const URI = "https://rectimotor-server.herokuapp.com/orders/";
+  const URI2 = "https://rectimotor-server.herokuapp.com/engines/name/";
+  const URIEngines = "https://rectimotor-server.herokuapp.com/engines/";
+  const URIEnginesCount = "https://rectimotor-server.herokuapp.com/engines/count/";
+  const URIPersons = "https://rectimotor-server.herokuapp.com/persons";
+  const URIMeasures = "https://rectimotor-server.herokuapp.com/measures/";
+  const URIMeasuresName = "https://rectimotor-server.herokuapp.com/measures/name/";
+  const URIHistoric = "https://rectimotor-server.herokuapp.com/historic/";
+  const URIMeasuresCount = "https://rectimotor-server.herokuapp.com/measures/count/";
+  const URIWorkshops = "https://rectimotor-server.herokuapp.com/workshops/name/"
+  const URIAllWorkshops = "https://rectimotor-server.herokuapp.com/workshops/"
+  const URIWorks = "https://rectimotor-server.herokuapp.com/works/"
+  const URIDetails = "https://rectimotor-server.herokuapp.com/DetOrd/"
+  const URIParts = "https://rectimotor-server.herokuapp.com/parts/"
+  const URIReplacements = "https://rectimotor-server.herokuapp.com/newreplacement/"
+  const URIDetils = "https://rectimotor-server.herokuapp.com/orders/details/"
 
   const [name, setName] = useState("");
   const [IDOrder, setIDOrder] = useState("");
@@ -36,8 +36,7 @@ function RegisterOrder() {
   const [phone, setPhone] = useState("");
   // const [workshopName, setWorkshop] = useState("");
   const [orderDate, setOrderDate] = useState(new Date())
-  const params = useParams();
-  const navigate = useNavigate()
+  // const [vehicle, setVehicle] = useState(false);
 
   //listas de partes, trabajos y repuestos
   const [parts, setParts] = useState([]);
@@ -61,6 +60,12 @@ function RegisterOrder() {
   //Datos de sesión de usuadio
   let user = JSON.parse(localStorage.getItem('Logged user'));
   let validation = user[0].TIPO_USUARIO == 'Administrador';
+
+  //constantes de edicion
+  
+  const params = useParams()
+  const navigate = useNavigate()
+  const [details, setDetails] = useState([])
 
   function autoSetUsser(value) {
     setDocument(value)
@@ -101,7 +106,7 @@ function RegisterOrder() {
     // console.log(engineCount)
     if (engineName == "") {
       //aca va la notificacion de error
-      console.log("falta el motor")
+      sweetAlert("falta el motor")
     }
     else {
 
@@ -109,6 +114,7 @@ function RegisterOrder() {
         addOrderBase()
         sendTheWorksToDB(IDOrder)
         sendThePartsToDB(IDOrder)
+        sendTheReplacementsToDB(IDOrder)
       }
       else {
         sendVehicle()
@@ -116,6 +122,7 @@ function RegisterOrder() {
         sendTheWorksToDB(IDOrder)
         sendThePartsToDB(IDOrder)
         setEngineId(engineCount)
+        sendTheReplacementsToDB(IDOrder)
 
       }
     }
@@ -134,21 +141,25 @@ function RegisterOrder() {
   }
 
   //funcion para enviar trabajos a DB
-  function sendTheWorksToDB(idOrder) {
+  async function sendTheWorksToDB(idOrder) {
     works.map((work) => {
-      //falta verificacion si no tiene id de trabajo
       if (work.isActive || work.priceJob > 0) {
-        const requestOption = {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ID_ORDEN: idOrder,
-            ID_TRABAJO: work.ID_TRABAJO,
-            VALOR_TRABAJO: work.priceJob
-          })
+        if (work.ID_TRABAJO >= 0) {
+          const requestOption = {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ID_ORDEN: idOrder,
+              ID_TRABAJO: work.ID_TRABAJO,
+              VALOR_TRABAJO: work.priceJob
+            })
+          }
+          fetch(URIDetails, requestOption)
+          console.log(idOrder + ', ' + work.ID_TRABAJO + ', ' + work.priceJob)
         }
-        fetch(URIDetails, requestOption)
-        console.log(idOrder + ', ' + work.ID_TRABAJO + ', ' + work.priceJob)
+        else {
+          coordinateWorksUploads(idOrder, work.priceJob, work.NOMBRE_TRABAJO)
+        }
       }
     })
   }
@@ -169,6 +180,145 @@ function RegisterOrder() {
           uploadDetailPart(idOrder, lastPartId, part.quantity)
         }
       }
+    })
+  }
+
+
+
+  async function coordinateWorksUploads(idOrder, priceJob, nameJob) {
+    let thisId = 0
+    thisId = await lastWorkID()
+    uploadNewWork(nameJob)
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: idOrder,
+        ID_TRABAJO: thisId,
+        VALOR_TRABAJO: priceJob
+      })
+    }
+    //una cochinada que sirve
+    setTimeout(sendAnithing(URIDetails, requestOption), 5000)
+    //
+    console.log("agregacion de detalle" + idOrder + ', ' + thisId + ', ' + priceJob)
+  }
+
+  function sendAnithing(linkTo, datas) {
+    fetch(linkTo, datas)
+  }
+
+  //funcion para enviar repuestos
+  async function sendTheReplacementsToDB(idOrder) {
+    replacements.map(async(replacement) => {
+      if (replacement.isActive || replacement.quantity > 0) {
+        let idRep = await searchReplacement(replacement)
+        if (idRep >= 0) {
+          const requestOption = {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ID_ORDEN: idOrder,
+              ID_REPUESTO: idRep,
+              CANTIDAD: replacement.quantity
+            })
+          }
+          fetch(URIDetails, requestOption)
+          console.log(idOrder + ', ' + replacement.idRep + ', ' + replacement.quantity)
+        }
+        else {
+          coordinateReplacementsUploads(idOrder, replacement.quantity, replacement.nameRep)
+        }
+      }
+    })
+  }
+
+  const searchReplacement = (replacement) => {
+    return new Promise((resolve, reject) => {
+      fetch(URIReplacements + "name/" + replacement.nameRep).then((res) => res.json()).then((data) => {
+        let temp = data
+        // console.log("temp: " + temp)
+        if (temp === undefined) {
+          resolve(-1)
+        }
+        else {
+          let num = temp[0].ID_REPUESTO
+          console.log("idActual obtenida: " + num)
+          resolve(num)
+          reject(0)
+        }
+      })
+    })
+  }
+
+  async function coordinateReplacementsUploads(idOrder, quantity, nameRep) {
+    let idRep = 0
+    idRep = await lastRepID()
+    uploadReplacement(nameRep)
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: idOrder,
+        ID_REPUESTO: idRep,
+        CANTIDAD: quantity
+      })
+    }
+    //una cochinada que sirve
+    setTimeout(sendAnithing(URIDetails, requestOption), 5000)
+    //
+    console.log("agregacion de detalle" + idOrder + ', ' + idRep + ', ' + quantity)
+  }
+
+  const uploadReplacement = (NOMBRE_REPUESTO) => {
+    return new Promise(() => {
+      const requestOption = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          NOMBRE_REPUESTO: NOMBRE_REPUESTO
+        })
+      }
+      fetch(URIReplacements, requestOption)
+    })
+  }
+
+  const lastRepID = () => {
+    return new Promise((resolve, reject) => {
+      fetch(URIReplacements + "count").then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        let num = temp.ID_REPUESTO + 1
+        console.log("idActual obtenida: " + num)
+        resolve(num)
+        reject(0)
+      })
+    })
+  }
+
+  const uploadNewWork = (NOMBRE_TRABAJO) => {
+    return new Promise(() => {
+      const requestOption = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          NOMBRE_TRABAJO: NOMBRE_TRABAJO
+        })
+      }
+      fetch(URIWorks, requestOption)
+    })
+  }
+
+  const lastWorkID = () => {
+    return new Promise((resolve, reject) => {
+      fetch(URIWorks + "count/").then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        let num = temp.ID_TRABAJO + 1
+        console.log("idActual obtenida: " + num)
+        resolve(num)
+        reject(0)
+      })
     })
   }
 
@@ -354,13 +504,11 @@ function RegisterOrder() {
   }
 
   function getAllParts() {
-    fetch(URIDetParts+IDOrder).then((res) => res.json()).then((data) => { setParts(data) })
+    fetch(URIParts).then((res) => res.json()).then((data) => { setParts(data) })
   }
 
   function getAllWorks() {
-    fetch(URIDetWorks+IDOrder).then((res) => res.json()).then((data) => { 
-        console.log(data)
-        setWorks(data) })
+    fetch(URIWorks).then((res) => res.json()).then((data) => { setWorks(data) })
   }
 
   function defineVoidLine() {
@@ -389,14 +537,21 @@ function RegisterOrder() {
   }
 
   async function partMapTrial() {
-    // console.log(IDOrder)
+    // console.log(IDOrder) // :3
 
     // getCurrentIdMeasureID()
     // console.log(currentMeasureID)
 
-    uploadMeasures("15mm", "20mm", 25, 0)
-    console.log("se va")
+    // uploadMeasures("15mm", "20mm", 25, 0)
+    // console.log("se va")
 
+    sendTheReplacementsToDB(43)
+    // replacements.map((replacement) => {
+    //   console.log("id: " + 0 + "; nombre: " + replacement.nameRep + "; cantidad: " + replacement.quantity )
+    // })
+
+    // let temp = works[0]
+    // console.log(temp)
     // let mun = 0
     // mun = await getFinalMeasureId(2, 0)
     // console.log("mun " + mun)
@@ -411,9 +566,9 @@ function RegisterOrder() {
     // })
   }
 
-  function updateWork(index, name, price, checked) {
+  function updateWork(index, NOMBRE_TRABAJO, price, checked) {
     let worksTemp = [...works]
-    worksTemp[index].nameJob = name
+    worksTemp[index].NOMBRE_TRABAJO = NOMBRE_TRABAJO
     worksTemp[index].priceJob = price
     worksTemp[index].isActive = checked
     setWorks(worksTemp)
@@ -429,10 +584,10 @@ function RegisterOrder() {
     setParts(partsTemp)
   }
 
-  function updateReplacement(index, nameRep, measure, isActive) {
+  function updateReplacement(index, nameRep, quantity, isActive) {
     let replacementTemp = [...replacements]
     replacementTemp[index].nameRep = nameRep
-    replacementTemp[index].measure = measure
+    replacementTemp[index].quantity = quantity
     replacementTemp[index].isActive = isActive
     setReplacements(replacementTemp)
   }
@@ -481,6 +636,9 @@ function RegisterOrder() {
     // getAllWorkshops()
   }
 
+  const autosetOrderBase=()=>{
+  }
+
   const handleChange = (event) => {
     getAllWorkshops()
     let temp = event.target.value
@@ -495,8 +653,9 @@ function RegisterOrder() {
     getAllWorkshops()
     getAllWorks()
     setIDOrder(params.id_order)
-    // fetch(URI + "/count").then((res) => res.json()).then((data) => { setIDOrder(data[0].ID_ORDEN + 1) })
+    autosetOrderBase()
   }, [])
+
 
   return (
     <>
@@ -593,17 +752,19 @@ function RegisterOrder() {
             <Modal active={activeWorkshopModal} toggle={toggleWorkshopModal}>
               <WorkshopModal toggle={toggleWorkshopModal} getWshops={getAllWorkshops} />
             </Modal>
-            <Modal active={activePersonModal} toggle={togglePersonModal} >
-              <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone} />
+            <Modal active={activePersonModal} toggle={togglePersonModal}>
+              <PersonModal toggle={togglePersonModal} name={setName} document={setDocument} phone={setPhone}/>
             </Modal>
           </div>
           <hr />
 
           <h1 className="text-center">Partes</h1>
 
-          <div className="row">
+          {/* <div className="row">
             <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar</button>
-          </div>
+          </div> */}
+          <br />
+          <br />
 
           <div>
 
@@ -681,7 +842,7 @@ function RegisterOrder() {
 
             <div className="row">
               <div className="col"> <h5 className="font-weight-bold">Nombre del repuesto </h5> </div>
-              <div className="col"> <h5 className="font-weight-bold">Medida del repuesto</h5> </div>
+              <div className="col"> <h5 className="font-weight-bold">Cantidad del repuesto</h5> </div>
             </div>
             <br />
 
