@@ -8,6 +8,7 @@ import PersonModal from "./componentes/PersonModal";
 import Modal from "./componentes/Modal";
 import NavBar from "./componentes/NavBar";
 import ReplacementFE from "./ReplacementFE";
+import sweetAlert from 'sweetalert';
 
 function RegisterOrder() {
   const [activePersonModal, setActivePerson] = useState(false);
@@ -98,7 +99,7 @@ function RegisterOrder() {
     // console.log(engineCount)
     if (engineName == "") {
       //aca va la notificacion de error
-      console.log("falta el motor")
+      sweetAlert("falta el motor")
     }
     else {
 
@@ -106,6 +107,7 @@ function RegisterOrder() {
         addOrderBase()
         sendTheWorksToDB(IDOrder)
         sendThePartsToDB(IDOrder)
+        sendTheReplacementsToDB(IDOrder)
       }
       else {
         sendVehicle()
@@ -113,6 +115,7 @@ function RegisterOrder() {
         sendTheWorksToDB(IDOrder)
         sendThePartsToDB(IDOrder)
         setEngineId(engineCount)
+        sendTheReplacementsToDB(IDOrder)
 
       }
     }
@@ -188,33 +191,36 @@ function RegisterOrder() {
         VALOR_TRABAJO: priceJob
       })
     }
-    setTimeout(sendAnithing(URIDetails, requestOption),5000)
+    //una cochinada que sirve
+    setTimeout(sendAnithing(URIDetails, requestOption), 5000)
+    //
     console.log("agregacion de detalle" + idOrder + ', ' + thisId + ', ' + priceJob)
   }
 
-  function sendAnithing(linkTo, datas){
+  function sendAnithing(linkTo, datas) {
     fetch(linkTo, datas)
   }
 
   //funcion para enviar repuestos
   async function sendTheReplacementsToDB(idOrder) {
-    replacements.map((replacement) => {
-      if (replacement.isActive || replacement.priceJob > 0) {
-        if (replacement.ID_TRABAJO >= 0) {
+    replacements.map(async(replacement) => {
+      if (replacement.isActive || replacement.quantity > 0) {
+        let idRep = await searchReplacement(replacement)
+        if (idRep >= 0) {
           const requestOption = {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               ID_ORDEN: idOrder,
-              ID_TRABAJO: replacement.ID_TRABAJO,
-              VALOR_TRABAJO: replacement.priceJob
+              ID_REPUESTO: idRep,
+              CANTIDAD: replacement.quantity
             })
           }
           fetch(URIDetails, requestOption)
-          console.log(idOrder + ', ' + replacement.ID_TRABAJO + ', ' + replacement.priceJob)
+          console.log(idOrder + ', ' + replacement.idRep + ', ' + replacement.quantity)
         }
         else {
-          coordinateWorksUploads(idOrder, replacement.priceJob, replacement.NOMBRE_TRABAJO)
+          coordinateReplacementsUploads(idOrder, replacement.quantity, replacement.nameRep)
         }
       }
     })
@@ -223,13 +229,13 @@ function RegisterOrder() {
   const searchReplacement = (replacement) => {
     return new Promise((resolve, reject) => {
       fetch(URIReplacements + "name/" + replacement.nameRep).then((res) => res.json()).then((data) => {
-        let temp = data[0]
-        console.log("temp: " + temp)
-        if (temp == undefined) {
+        let temp = data
+        // console.log("temp: " + temp)
+        if (temp === undefined) {
           resolve(-1)
         }
         else {
-          let num = temp.ID_REPUESTO
+          let num = temp[0].ID_REPUESTO
           console.log("idActual obtenida: " + num)
           resolve(num)
           reject(0)
@@ -238,24 +244,27 @@ function RegisterOrder() {
     })
   }
 
-  async function coordinateReplacementsUploads(quantity, nameJob) {
-    let thisId = 0
-    thisId = await uploadReplacement(nameJob)
+  async function coordinateReplacementsUploads(idOrder, quantity, nameRep) {
+    let idRep = 0
+    idRep = await lastRepID()
+    uploadReplacement(nameRep)
     const requestOption = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ID_ORDEN: IDOrder,
-        ID_REPUESTO: thisId,
+        ID_ORDEN: idOrder,
+        ID_REPUESTO: idRep,
         CANTIDAD: quantity
       })
     }
-    fetch(URIDetails, requestOption)
-    console.log("agregacion de detalle" + IDOrder + ', ' + thisId + ', ' + quantity)
+    //una cochinada que sirve
+    setTimeout(sendAnithing(URIDetails, requestOption), 5000)
+    //
+    console.log("agregacion de detalle" + idOrder + ', ' + idRep + ', ' + quantity)
   }
 
   const uploadReplacement = (NOMBRE_REPUESTO) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const requestOption = {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
@@ -264,20 +273,19 @@ function RegisterOrder() {
         })
       }
       fetch(URIReplacements, requestOption)
-      fetch(URIReplacements + "/name/" + NOMBRE_REPUESTO).then((res) => res.json()).then((data) => {
+    })
+  }
+
+  const lastRepID = () => {
+    return new Promise((resolve, reject) => {
+      fetch(URIReplacements + "count").then((res) => res.json()).then((data) => {
         let temp = data[0]
         console.log("temp: " + temp)
-        if (temp == undefined) {
-          resolve(-1)
-        }
-        else {
-          let num = temp.ID_REPUESTO
-          console.log("idActual obtenida: " + num)
-          resolve(num)
-          reject(0)
-        }
+        let num = temp.ID_REPUESTO + 1
+        console.log("idActual obtenida: " + num)
+        resolve(num)
+        reject(0)
       })
-
     })
   }
 
@@ -522,7 +530,7 @@ function RegisterOrder() {
   }
 
   async function partMapTrial() {
-    // console.log(IDOrder)
+    // console.log(IDOrder) // :3
 
     // getCurrentIdMeasureID()
     // console.log(currentMeasureID)
@@ -530,9 +538,9 @@ function RegisterOrder() {
     // uploadMeasures("15mm", "20mm", 25, 0)
     // console.log("se va")
 
-    sendTheWorksToDB(43)
-    // works.map((work) => {
-    //   console.log("id: " + work.ID_TRABAJO + "; nombre: " + work.NOMBRE_TRABAJO + "; precio: " + work.priceJob + "; activo: " + work.isActive)
+    sendTheReplacementsToDB(43)
+    // replacements.map((replacement) => {
+    //   console.log("id: " + 0 + "; nombre: " + replacement.nameRep + "; cantidad: " + replacement.quantity )
     // })
 
     // let temp = works[0]
@@ -569,10 +577,10 @@ function RegisterOrder() {
     setParts(partsTemp)
   }
 
-  function updateReplacement(index, nameRep, measure, isActive) {
+  function updateReplacement(index, nameRep, quantity, isActive) {
     let replacementTemp = [...replacements]
     replacementTemp[index].nameRep = nameRep
-    replacementTemp[index].measure = measure
+    replacementTemp[index].quantity = quantity
     replacementTemp[index].isActive = isActive
     setReplacements(replacementTemp)
   }
@@ -740,9 +748,11 @@ function RegisterOrder() {
 
           <h1 className="text-center">Partes</h1>
 
-          <div className="row">
+          {/* <div className="row">
             <button className="btn btn-warning btn-lg" onClick={partMapTrial}>probar</button>
-          </div>
+          </div> */}
+          <br />
+          <br />
 
           <div>
 
