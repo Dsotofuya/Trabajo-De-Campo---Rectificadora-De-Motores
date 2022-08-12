@@ -14,7 +14,7 @@ function RegisterUser() {
     
    useEffect(() => {
         if(user[0].TIPO_USUARIO != 'Administrador'){
-          navigate('/menu')
+          navigate('/')
         }
     }, [])
     const addUser = () => {
@@ -34,7 +34,7 @@ function RegisterUser() {
                 };
                 sweetAlert('Usuario registrado');
                 fetch(URI, requestOption); 
-                navigate('/menu');
+                navigate('/logged/buscar');
             }else{
                 sweetAlert('La contraseña no coincide');
                 navigate('/registrar')
@@ -110,7 +110,7 @@ function RegisterUser() {
                     </div>
 
                     <div className="col">
-                        <Link to='/buscar'>
+                        <Link to='/logged/buscar'>
                         <button 
                         style={styles.acceptBtn} 
                         className="btn btn-info btn-center"

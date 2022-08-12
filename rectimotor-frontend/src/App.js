@@ -12,6 +12,7 @@ import Menu from './componentes/Menu.js';
 import RegisterOrder from './RegisterOrder';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SearchUpdate from './componentes/SearchUpdate';
+import Workers from './componentes/Workers';
 
 function App() {
   return (
@@ -25,11 +26,14 @@ function App() {
         <Route path='/' element={<CompShowOrders />}></Route>
         <Route path='/orders/:id' element={<CompShowOrders />} />
 
-        <Route path='logged/buscar' element={<CompShowOrdersLogged />}></Route>
-        <Route path='logged/orders/:id' element={<CompShowOrdersLogged />} />
+        <Route path='/logged/buscar' element={<CompShowOrdersLogged />}></Route>
+        <Route path='/logged/orders/:id' element={<CompShowOrdersLogged />} />
 
         <Route path='/login' element={<Login />}/>
+        
         <Route path='/registrar' element={<RegisterUser />}/>
+        <Route path='/logged/trabajadores' element={<Workers />}/>
+
         <Route path='/agregar' element={<RegisterOrder />}/>
         {/**<Route path='/menu/buscar' element={<CompShowOrders />}/> */}
         <Route path='/Busqueda_Actualizar' element={<SearchUpdate />}/>

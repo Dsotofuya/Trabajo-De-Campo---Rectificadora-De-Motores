@@ -9,7 +9,7 @@ export const NavBarContent = [
     },
     {
         title: 'Buscar orden',
-        path: '/buscar',
+        path: '/logged/buscar',
         cName: 'nav-text'
     },
     {
@@ -24,7 +24,7 @@ export const NavBarContent = [
     },
     {
         title: 'Ver trabajadores',
-        path: '/trabajadores',
+        path: '/logged/trabajadores',
         cName: 'nav-text'
     }
 ]

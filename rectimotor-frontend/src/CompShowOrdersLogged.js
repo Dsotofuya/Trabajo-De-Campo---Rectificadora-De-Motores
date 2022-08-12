@@ -24,7 +24,7 @@ const CompShowOrdersLogged = () => {
         }
     
         if(user!= null){
-            sweetAlert('Bienvenido ' + user[0].TIPO_USUARIO + " " + userName)
+            // sweetAlert('Bienvenido ' + user[0].TIPO_USUARIO + " " + userName)
         
         }
     }, [])
