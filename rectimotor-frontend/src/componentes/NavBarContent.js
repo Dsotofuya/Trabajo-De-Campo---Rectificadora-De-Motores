@@ -29,7 +29,7 @@ export const NavBarContent = [
     },
     {
         title: 'Whatsapp',
-        path: '/whatsapp xd',
+        path: '/whatsapp',
         cName: 'nav-text'
     }
 ]
