@@ -26,6 +26,7 @@ function RegisterOrder() {
   const URIWorks = "http://localhost:3412/works/"
   const URIDetails = "http://localhost:3412/DetOrd/"
   const URIParts = "http://localhost:3412/parts/"
+  const URIReplacements = "http://localhost:3412/newreplacement/"
 
   const [name, setName] = useState("");
   const [IDOrder, setIDOrder] = useState("");
@@ -130,21 +131,25 @@ function RegisterOrder() {
   }
 
   //funcion para enviar trabajos a DB
-  function sendTheWorksToDB(idOrder) {
+  async function sendTheWorksToDB(idOrder) {
     works.map((work) => {
-      //falta verificacion si no tiene id de trabajo
       if (work.isActive || work.priceJob > 0) {
-        const requestOption = {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ID_ORDEN: idOrder,
-            ID_TRABAJO: work.ID_TRABAJO,
-            VALOR_TRABAJO: work.priceJob
-          })
+        if (work.ID_TRABAJO >= 0) {
+          const requestOption = {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ID_ORDEN: idOrder,
+              ID_TRABAJO: work.ID_TRABAJO,
+              VALOR_TRABAJO: work.priceJob
+            })
+          }
+          fetch(URIDetails, requestOption)
+          console.log(idOrder + ', ' + work.ID_TRABAJO + ', ' + work.priceJob)
         }
-        fetch(URIDetails, requestOption)
-        console.log(idOrder + ', ' + work.ID_TRABAJO + ', ' + work.priceJob)
+        else {
+          coordinateWorksUploads(idOrder, work.priceJob, work.NOMBRE_TRABAJO)
+        }
       }
     })
   }
@@ -154,7 +159,7 @@ function RegisterOrder() {
   function sendThePartsToDB(idOrder) {
     parts.map((part) => {
       if (part.isChecked || part.quantity > 0) {
-        if (part.ID_PARTE >= 0) {
+        if (part.ID_PARTE > 0) {
           uploadDetailPart(idOrder, part.ID_PARTE, part.quantity)
           getLastDetailID()
           uploadMeasures(part.initialMed, part.finalMed, part.currentDetailID, part.ID_PARTE)
@@ -168,92 +173,245 @@ function RegisterOrder() {
     })
   }
 
-  async function uploadMeasures(initialMed, finalMed, currentDetailID, ID_PARTE) {
-    if (initialMed > 0 && finalMed > 0) {
-      console.log("pasa a la primera")
-      await getInitialMeasureId(initialMed, ID_PARTE)
-      await getFinalMeasureId(finalMed, ID_PARTE)
-      console.log("a"+initialMeasureId)
-      console.log("e"+initialMeasureId)
-      if (initialMeasureId > 0 && finalMeasureId > 0) {
-        uploadHistoric(initialMeasureId, finalMeasureId, currentDetailID)
-      }
-      else{
-        if(initialMeasureId > 0){
-          getCurrentIdMeasureID()
-          uploadMeasure(ID_PARTE, finalMed)
-          uploadHistoric(initialMeasureId, currentMeasureId, currentDetailID)
+
+
+  async function coordinateWorksUploads(idOrder, priceJob, nameJob) {
+    let thisId = 0
+    thisId = await lastWorkID()
+    uploadNewWork(nameJob)
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: idOrder,
+        ID_TRABAJO: thisId,
+        VALOR_TRABAJO: priceJob
+      })
+    }
+    setTimeout(sendAnithing(URIDetails, requestOption),5000)
+    console.log("agregacion de detalle" + idOrder + ', ' + thisId + ', ' + priceJob)
+  }
+
+  function sendAnithing(linkTo, datas){
+    fetch(linkTo, datas)
+  }
+
+  //funcion para enviar repuestos
+  async function sendTheReplacementsToDB(idOrder) {
+    replacements.map((replacement) => {
+      if (replacement.isActive || replacement.priceJob > 0) {
+        if (replacement.ID_TRABAJO >= 0) {
+          const requestOption = {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ID_ORDEN: idOrder,
+              ID_TRABAJO: replacement.ID_TRABAJO,
+              VALOR_TRABAJO: replacement.priceJob
+            })
+          }
+          fetch(URIDetails, requestOption)
+          console.log(idOrder + ', ' + replacement.ID_TRABAJO + ', ' + replacement.priceJob)
         }
-        if(finalMeasureId > 0){
-          getCurrentIdMeasureID()
+        else {
+          coordinateWorksUploads(idOrder, replacement.priceJob, replacement.NOMBRE_TRABAJO)
+        }
+      }
+    })
+  }
+
+  const searchReplacement = (replacement) => {
+    return new Promise((resolve, reject) => {
+      fetch(URIReplacements + "name/" + replacement.nameRep).then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        if (temp == undefined) {
+          resolve(-1)
+        }
+        else {
+          let num = temp.ID_REPUESTO
+          console.log("idActual obtenida: " + num)
+          resolve(num)
+          reject(0)
+        }
+      })
+    })
+  }
+
+  async function coordinateReplacementsUploads(quantity, nameJob) {
+    let thisId = 0
+    thisId = await uploadReplacement(nameJob)
+    const requestOption = {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ID_ORDEN: IDOrder,
+        ID_REPUESTO: thisId,
+        CANTIDAD: quantity
+      })
+    }
+    fetch(URIDetails, requestOption)
+    console.log("agregacion de detalle" + IDOrder + ', ' + thisId + ', ' + quantity)
+  }
+
+  const uploadReplacement = (NOMBRE_REPUESTO) => {
+    return new Promise((resolve, reject) => {
+      const requestOption = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          NOMBRE_REPUESTO: NOMBRE_REPUESTO
+        })
+      }
+      fetch(URIReplacements, requestOption)
+      fetch(URIReplacements + "/name/" + NOMBRE_REPUESTO).then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        if (temp == undefined) {
+          resolve(-1)
+        }
+        else {
+          let num = temp.ID_REPUESTO
+          console.log("idActual obtenida: " + num)
+          resolve(num)
+          reject(0)
+        }
+      })
+
+    })
+  }
+
+  const uploadNewWork = (NOMBRE_TRABAJO) => {
+    return new Promise(() => {
+      const requestOption = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          NOMBRE_TRABAJO: NOMBRE_TRABAJO
+        })
+      }
+      fetch(URIWorks, requestOption)
+    })
+  }
+
+  const lastWorkID = () => {
+    return new Promise((resolve, reject) => {
+      fetch(URIWorks + "count/").then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        let num = temp.ID_TRABAJO + 1
+        console.log("idActual obtenida: " + num)
+        resolve(num)
+        reject(0)
+      })
+    })
+  }
+
+  async function uploadMeasures(initialMed, finalMed, currentDetailID, ID_PARTE) {
+    let finalId = 0
+    let initialId = 0
+    let currentId = 0
+    if (initialMed != "" && finalMed != "") {
+      initialId = await getInitialMeasureId(initialMed, ID_PARTE)
+      finalId = await getFinalMeasureId(finalMed, ID_PARTE)
+      console.log("pasa a la primera")
+      console.log("a" + initialId)
+      console.log("e" + finalId)
+      if (initialId !== 0 && finalId !== 0) {
+        uploadHistoric(initialId, finalId, currentDetailID)
+      }
+      else {
+        currentId = await getCurrentIdMeasureID()
+        if (initialId !== 0) {
+          uploadMeasure(ID_PARTE, finalMed)
+          uploadHistoric(initialId, currentId, currentDetailID)
+        }
+        if (finalId !== 0) {
+          currentId = await getCurrentIdMeasureID()
           uploadMeasure(ID_PARTE, initialMed)
-          uploadHistoric(currentMeasureId, finalMeasureId, currentDetailID)
+          uploadHistoric(currentId, finalId, currentDetailID)
         }
       }
     }
     else {
-      if (initialMed > 0) {
-        getInitialMeasureId(initialMed)
-        if (initialMeasureId > 0) {
-          uploadHistoric(initialMeasureId, "", currentDetailID)
+      if (initialMed !== "") {
+        initialId = await getInitialMeasureId(initialMed, ID_PARTE)
+        if (initialId > 0) {
+          uploadHistoric(initialId, 0, currentDetailID)
         } else {
           uploadMeasure(ID_PARTE, initialMed)
-          getCurrentIdMeasureID()
-          uploadHistoric(currentMeasureId, "", currentDetailID)
+          currentId = await getCurrentIdMeasureID()
+          uploadHistoric(currentId, 0, currentDetailID)
         }
       }
-      if (finalMed > 0) {
-        if (finalMeasureId > 0) {
-          uploadHistoric("", finalMeasureId, currentDetailID)
+      if (finalMed !== 0) {
+        finalId = await getFinalMeasureId(finalMed, ID_PARTE)
+        if (finalId > 0) {
+          uploadHistoric(0, finalId, currentDetailID)
         }
         else {
           uploadMeasure(ID_PARTE, finalMed)
-          getCurrentIdMeasureID()
-          uploadHistoric(currentMeasureId, "", currentDetailID)
+          currentId = await getCurrentIdMeasureID()
+          uploadHistoric(0, currentId, currentDetailID)
         }
       }
     }
   }
 
-  function getCurrentIdMeasureID() {
-    fetch(URIMeasuresCount).then((res) => res.json()).then((data) => {
-      let temp = data[0]
-      console.log("temp: " + temp)
-      let num = temp.ID_MEDIDA
-      console.log("idActual obtenida: " + num)
-      if (num > 0)
-        setCurrentMeasureId(num)
-      else
-        setCurrentMeasureId(0)
+  const getCurrentIdMeasureID = () => {
+    return new Promise((resolve, reject) => {
+      fetch(URIMeasuresCount).then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        let num = temp.ID_MEDIDA
+        console.log("idActual obtenida: " + num)
+        resolve(num)
+        reject(0)
+      })
     })
   }
 
 
   //funciones para obtener el id de las medidas
-  async function getInitialMeasureId(VALOR_MEDIDA, ID_PARTE) {
-    fetch(URIMeasuresName+ID_PARTE+"&"+VALOR_MEDIDA).then((res) =>
-      res.json()).then((data) => {
-        let temp = data[0]
-        let num = temp.ID_MEDIDA
-        console.log("idmedida obtenida: " + num)
-        if (num > 0)
-          setInitialMeasureId(num)
-        else
-          setInitialMeasureId(0)
-      })
+  const getInitialMeasureId = (VALOR_MEDIDA, ID_PARTE) => {
+    return new Promise((resolve, reject) => {
+      fetch(URIMeasuresName + ID_PARTE + "&" + VALOR_MEDIDA).then((res) =>
+        res.json()).then((data) => {
+          let temp = data[0]
+          if (temp == undefined) {
+            resolve(-1)
+            console.log("es indefinido")
+          }
+          else {
+            let num = temp.ID_MEDIDA
+            console.log("idmedida obtenida: " + num)
+            resolve(num)
+            reject(0)
+          }
+        })
+    })
   }
 
-  async function getFinalMeasureId(VALOR_MEDIDA, ID_PARTE) {
-    fetch(URIMeasuresName+ID_PARTE+"&"+VALOR_MEDIDA).then((res) => res.json()).then((data) => {
-      let temp = data[0]
-      console.log("temp: " + temp)
-      let num = temp.ID_MEDIDA
-      console.log("idmedida obtenida: " + num)
-      if (num > 0)
-        setInitialMeasureId(num)
-      else
-        setInitialMeasureId(0)
+  const getFinalMeasureId = (VALOR_MEDIDA, ID_PARTE) => {
+    return new Promise((resolve, reject) => {
+      fetch(URIMeasuresName + ID_PARTE + "&" + VALOR_MEDIDA).then((res) => res.json()).then((data) => {
+        let temp = data[0]
+        console.log("temp: " + temp)
+        if (temp == undefined) {
+          resolve(-1)
+          console.log("es indefinido")
+        }
+        else {
+
+          let num = temp.ID_MEDIDA
+          console.log("idmedida obtenida: " + num)
+          setFinalMeasureId(num)
+          resolve(num)
+          reject(0)
+        }
+      })
     })
+
   }
 
   function getLastDetailID() {
@@ -359,19 +517,32 @@ function RegisterOrder() {
     })
   }
 
-  function partMapTrial() {
+  function printfm() {
+    console.log(finalMeasureId)
+  }
+
+  async function partMapTrial() {
     // console.log(IDOrder)
 
     // getCurrentIdMeasureID()
     // console.log(currentMeasureID)
 
-    uploadMeasures(10, 15, 25, 0)
-    console.log("se va")
+    // uploadMeasures("15mm", "20mm", 25, 0)
+    // console.log("se va")
 
-    // getFinalMeasureId(15, 0)
-    // // getInitialMeasureId(10, 0)
-    // // console.log(initialMeasureId)
-    // console.log(finalMeasureId)
+    sendTheWorksToDB(43)
+    // works.map((work) => {
+    //   console.log("id: " + work.ID_TRABAJO + "; nombre: " + work.NOMBRE_TRABAJO + "; precio: " + work.priceJob + "; activo: " + work.isActive)
+    // })
+
+    // let temp = works[0]
+    // console.log(temp)
+    // let mun = 0
+    // mun = await getFinalMeasureId(2, 0)
+    // console.log("mun " + mun)
+
+    // mun = await getInitialMeasureId(3, 0)
+    // console.log("mun " + mun)
 
 
     // parts.map((part) => {
@@ -380,9 +551,9 @@ function RegisterOrder() {
     // })
   }
 
-  function updateWork(index, name, price, checked) {
+  function updateWork(index, NOMBRE_TRABAJO, price, checked) {
     let worksTemp = [...works]
-    worksTemp[index].nameJob = name
+    worksTemp[index].NOMBRE_TRABAJO = NOMBRE_TRABAJO
     worksTemp[index].priceJob = price
     worksTemp[index].isActive = checked
     setWorks(worksTemp)
@@ -649,7 +820,7 @@ function RegisterOrder() {
 
             <div className="row">
               <div className="col"> <h5 className="font-weight-bold">Nombre del repuesto </h5> </div>
-              <div className="col"> <h5 className="font-weight-bold">Medida del repuesto</h5> </div>
+              <div className="col"> <h5 className="font-weight-bold">Cantidad del repuesto</h5> </div>
             </div>
             <br />
 
