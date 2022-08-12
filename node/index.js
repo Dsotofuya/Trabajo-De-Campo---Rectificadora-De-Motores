@@ -15,7 +15,10 @@ import UserRoutes from './routes/RoutesUser.js'
 
 import qrcode from 'qrcode-terminal'
 import { Client } from 'whatsapp-web.js'
+import { config } from 'dotenv';
+config();
 
+const port = process.env.PORT || 3412
 const app = express();
 
 app.use(cors())
@@ -44,8 +47,11 @@ const client = new Client()
 client.initialize()
 
 client.on('qr', qr => {
-    qrcode.generate(qr, {small: true})
-})
+    console.log('QR generado', qr);
+    app.get('/getqr', (req, res, next) => {
+      res.send({ qr });
+    });
+  });
 
 client.on('ready', () => {
     console.log("La cuenta esta lista para enviar notificaciones")
@@ -61,6 +67,6 @@ app.post('/sendmessage', async (req, res, next) => {
     }
   })
 
-app.listen(3412, () => {
-    console.log('Server Up, running in http://localhost:3412')
+app.listen(port, () => {
+    console.log('Server Up, running in ' + port)
 }) 
