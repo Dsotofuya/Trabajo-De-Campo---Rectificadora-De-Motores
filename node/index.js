@@ -47,8 +47,11 @@ const client = new Client()
 client.initialize()
 
 client.on('qr', qr => {
-    qrcode.generate(qr, {small: true})
-})
+    console.log('QR generado', qr);
+    app.get('/getqr', (req, res, next) => {
+      res.send({ qr });
+    });
+  });
 
 client.on('ready', () => {
     console.log("La cuenta esta lista para enviar notificaciones")
