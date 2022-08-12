@@ -5,7 +5,7 @@ import './estilos/reporte.css';
 
 const CompShowReports = () => {
     
-    const URI = 'http://localhost:3412/orders/details/'
+    const URI = 'https://rectimotor-server.herokuapp.com/orders/details/'
     const [details, setDetails] = useState([])
     var total = 0
     const params = useParams()
@@ -14,19 +14,19 @@ const CompShowReports = () => {
         fetch(URI + params.id_order).then((res) => res.json()).then((data) => { setDetails(data) })
     }, [])
 
-    const URIParts = "http://localhost:3412/detOrd/parts/";
+    const URIParts = "https://rectimotor-server.herokuapp.com/detOrd/parts/";
     const [parts, setParts] = useState([])
     useEffect(() => {
         fetch(URIParts + params.id_order).then((res) => res.json()).then((data) => { setParts(data) })
     }, [])
 
-    const URIWorks = "http://localhost:3412/detOrd/works/";
+    const URIWorks = "https://rectimotor-server.herokuapp.com/detOrd/works/";
     const [works, setWorks] = useState([])
     useEffect(() => {
         fetch(URIWorks + params.id_order).then((res) => res.json()).then((data) => { setWorks(data) })
     }, [])
 
-    const URIReplacements = "http://localhost:3412/detOrd/replacements/";
+    const URIReplacements = "https://rectimotor-server.herokuapp.com/detOrd/replacements/";
     const [replacements, setReplacements] = useState([])
     useEffect(() => {
         fetch(URIReplacements + params.id_order).then((res) => res.json()).then((data) => { setReplacements(data) })

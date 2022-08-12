@@ -5,7 +5,7 @@ import './estilos/reporte.css';
 
 const CompShowOrders = () => {
     // Getting the data from de database and setting the variable to render
-    const URI = 'http://localhost:3412/orders/'
+    const URI = 'https://rectimotor-server.herokuapp.com/orders/'
     const [orders, setOrders] = useState([])
     const params = useParams()
     const navigate = useNavigate()

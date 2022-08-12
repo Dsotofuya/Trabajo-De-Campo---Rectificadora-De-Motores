@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import sweetAlert from 'sweetalert';
 function Workers(){
 
-    const URI = 'http://localhost:3412/users/';
+    const URI = 'https://rectimotor-server.herokuapp.com/users/';
     const [users, setUsers] = useState('');
     const navigate = useNavigate()
     useEffect(() => {

@@ -8,7 +8,7 @@ function Login() {
     const [password, setPass] = useState('');
     const [user, setUser] = useState('');
 
-    const URI = 'http://localhost:3412/users/'
+    const URI = 'https://rectimotor-server.herokuapp.com/users/'
     const navigate = useNavigate()
     
     fetch(URI + nickName).then((res) => res.json()).then((data) => { setUser(data) })

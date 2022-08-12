@@ -12,7 +12,7 @@ function PersonModal(props) {
     const [personDoc, setPersonDoc] = useState('');
     const [phoneNumber, setPhone] = useState('');
 
-    const URI = "http://localhost:3412/persons"; 
+    const URI = "https://rectimotor-server.herokuapp.com/persons"; 
 
     const num=(value)=>{
         setPersonDoc(value)

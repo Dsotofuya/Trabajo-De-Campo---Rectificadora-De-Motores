@@ -7,7 +7,7 @@ function RegisterUser() {
     const [nickName, setNickname] = useState('');
     const [password, setPass] = useState('');
     const [passConfirmation, setPassConfirmation] = useState('');
-    const URI = 'http://localhost:3412/users/'
+    const URI = 'https://rectimotor-server.herokuapp.com/users/'
     const navigate = useNavigate()
 
     const user = JSON.parse(localStorage.getItem('Logged user'));

@@ -8,7 +8,7 @@ function WorkshopModal(props) {
     const [OwnerName, setOwnerName] = useState('');
     const [number, setNumber] = useState('');
 
-    const URI = "http://localhost:3412/workshops/";
+    const URI = "https://rectimotor-server.herokuapp.com/workshops/";
 
     const addWorkShop = () => {
 

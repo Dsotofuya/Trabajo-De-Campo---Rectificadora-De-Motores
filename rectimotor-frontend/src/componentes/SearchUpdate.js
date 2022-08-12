@@ -16,9 +16,9 @@ function SearchUpdate() {
     const [vehicles, setVehicles] = useState('');
     const [AllOrders, setAllORders] = useState('');
 
-    const workShopsURI = 'http://localhost:3412/workshops/';
-    const vehiclesURI = 'http://localhost:3412/engines/';
-    const ordesURI = 'http://localhost:3412/orders/';
+    const workShopsURI = 'https://rectimotor-server.herokuapp.com/workshops/';
+    const vehiclesURI = 'https://rectimotor-server.herokuapp.com/engines/';
+    const ordesURI = 'https://rectimotor-server.herokuapp.com/orders/';
 
     fetch(ordesURI).then((res) => res.json()).then((data) => { setAllORders(data) })
 
