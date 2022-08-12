@@ -15,7 +15,10 @@ import UserRoutes from './routes/RoutesUser.js'
 
 import qrcode from 'qrcode-terminal'
 import { Client } from 'whatsapp-web.js'
+import { config } from 'dotenv';
+config();
 
+const port = process.env.PORT || 3412
 const app = express();
 
 app.use(cors())
@@ -61,6 +64,6 @@ app.post('/sendmessage', async (req, res, next) => {
     }
   })
 
-app.listen(3412, () => {
-    console.log('Server Up, running in http://localhost:3412')
+app.listen(port, () => {
+    console.log('Server Up, running in ' + port)
 }) 
